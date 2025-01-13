@@ -1,12 +1,12 @@
-using UnityEngine;
-using UnityEngine.UI;
+ï»¿using UnityEngine;
+using TMPro;
 
 public class InGameTime : MonoBehaviour
 {
     [SerializeField]
     Light directionalLight;
     [SerializeField]
-    Text timeText;
+    TMP_Text timeText;
 
     public float inGameTime;
     float updateInterval = 60f;
@@ -23,14 +23,14 @@ public class InGameTime : MonoBehaviour
     void Update()
     {
         timeCounter += Time.deltaTime;
-        inGameTime += Time.deltaTime * 10; // 10¹è ºü¸£°Ô ½Ã°£Èå¸§
+        inGameTime += Time.deltaTime * 10; // 10ë°° ë¹ ë¥´ê²Œ ì‹œê°„íë¦„
         if (timeCounter>= updateInterval)
         {
             timeCounter = 0;
             UpdateTimeText();
         }
 
-        if(inGameTime >= 86400) // 24½Ã°£ Áö³ª¸é
+        if(inGameTime >= 86400) // 24ì‹œê°„ ì§€ë‚˜ë©´
         {
             inGameTime = 0f;
         }
@@ -47,17 +47,17 @@ public class InGameTime : MonoBehaviour
 
     void UpdateLightPosition()
     {
-        if (inGameTime >= 330*60 && inGameTime < 1170*60) // 05:30 (330ºÐ)ºÎÅÍ 19:30 (1170ºÐ)±îÁö
+        if (inGameTime >= 330*60 && inGameTime < 1170*60) // 05:30ë¶€í„° 19:30ê¹Œì§€
         {
             directionalLight.enabled = true;
 
-            float t = (inGameTime - 330 * 60) / (1170*60 - 330 * 60); // 0¿¡¼­ 1 »çÀÌÀÇ °ª
-            float angle = t * 360; // ÀüÃ¼ ¿øÀ» ±×¸®±â À§ÇØ °¢µµ °è»ê
-            float radius = 10f; // ¿øÀÇ ¹ÝÁö¸§
-            float x = radius * Mathf.Cos(angle * Mathf.Deg2Rad); // xÁÂÇ¥
-            float z = radius * Mathf.Sin(angle * Mathf.Deg2Rad); // zÁÂÇ¥
+            float t = (inGameTime - 330 * 60) / (1170*60 - 330 * 60); 
+            float angle = t * 360; // ì „ì²´ ì›ì„ ê·¸ë¦¬ê¸° ìœ„í•´ ê°ë„ ê³„ì‚°
+            float radius = 10f; // ì›ì˜ ë°˜ì§€ë¦„
+            float x = radius * Mathf.Cos(angle * Mathf.Deg2Rad); 
+            float z = radius * Mathf.Sin(angle * Mathf.Deg2Rad); 
 
-            // Á¶¸í À§Ä¡¸¦ ¿øÀ» ±×¸®¸ç ÀÌµ¿
+            // ì¡°ëª… ìœ„ì¹˜ë¥¼ ì›ì„ ê·¸ë¦¬ë©° ì´ë™
             directionalLight.transform.position = new Vector3(x, 10, z);
         }
         else

@@ -1,4 +1,4 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
 
         if (controller.isGrounded)
         {
-            verticalVelocity = -0.5f; // ¡ﬂ∑¬
+            verticalVelocity = -0.5f; // Ï§ëÎ†•
             if (Input.GetButtonDown("Jump"))
             {
                 verticalVelocity = jumpForce;
@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            verticalVelocity -= 9.81f * Time.deltaTime; // ¡ﬂ∑¬ ¿˚øÎ
+            verticalVelocity -= 9.81f * Time.deltaTime; // Ï§ëÎ†• Ï†ÅÏö©
         }
 
         moveDirection.y = verticalVelocity;
