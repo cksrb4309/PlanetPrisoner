@@ -8,9 +8,9 @@ public class InGameTime : MonoBehaviour
     [SerializeField]
     TMP_Text timeText;
 
-    public float inGameTime;
+    float inGameTime;
     float updateInterval = 60f;
-    public float timeCounter;
+    float timeCounter;
 
     
     void Start()
