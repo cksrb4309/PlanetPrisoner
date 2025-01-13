@@ -1,15 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using UnityEngine;
-
-
-// Enum으로 몬스터 스텟 관리
-enum MonsterName
-{
-    Golem,
-    Eye,
-    Murloc,
-    Splinter
-}
 
 public class Monster : MonoBehaviour
 {
@@ -32,14 +23,50 @@ public class Monster : MonoBehaviour
     private MeshCollider collider;
     private Rigidbody rb;
 
-    private float sightAngle = 60f;    // 시야각 (degree)
-    private float maxSightDistance = 20f; // 시야 최대 거리
-    private float minSightDistance = 10f;      // 시야 최소 거리
+    private float sightAngle = 60f;             // 시야각 (degree)
+    private float maxSightDistance = 20f;       // 시야 최대 거리
+    private float minSightDistance = 10f;       // 시야 최소 거리
+
+    #region FSM
+    // TODO : 따로 뺼까?
+    protected EState _state = EState.Idle;
+    public virtual EState State
+    {
+        get { return _state; }
+        set
+        {
+            _state = value;
+
+            Animator anim = GetComponent<Animator>();
+            switch (_state)
+            {
+                case EState.Die:
+                    break;
+                case EState.Idle:
+                    anim.CrossFade("Idle", 0.1f);
+                    break;
+                case EState.Moving:
+                    anim.CrossFade("Walk", 0.1f);
+                    break;
+                case EState.Skill:
+                    anim.CrossFade("Attack02", 0.1f, -1, 0);
+                    break;
+            }
+        }
+    }
+    public enum EState
+    {
+        Idle,
+        Moving,
+        Skill,
+        Die
+    }
+    #endregion FSM
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        animator = GetComponent<Animator>();
+        //animator = GetComponent<Animator>();
         collider = GetComponent<MeshCollider>();
         rb = GetComponent<Rigidbody>();
     }
@@ -47,22 +74,22 @@ public class Monster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        FindTarget();
-        SelectState();
-    }
-    private void FixedUpdate()
-    {
-        Move();
+        //FindTarget();
 
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.down, out hit))
+        switch (State)
         {
-            float groundY = hit.point.y;  // 지면의 Y축 위치
-            Vector3 position = transform.position;
-
-            // Y값을 지면 위치로 맞추기
-            position.y = Mathf.Max(position.y, groundY);  // 지면을 기준으로 Y축 위치를 고정
-            transform.position = position;
+            case EState.Idle:
+                UpdateIdle();
+                break;
+            case EState.Moving:
+                UpdateMoving();
+                break;
+            case EState.Skill:
+                UpdateSkill();
+                break;
+            case EState.Die:
+                UpdateDie();
+                break;
         }
     }
 
@@ -83,7 +110,7 @@ public class Monster : MonoBehaviour
                 if (target != null && distance < maxSightDistance)
                 {
                     // 플레이어를 찾았다.
-                    Debug.Log($"Player Tracking! distance{distance}");
+                    //Debug.Log($"Player Tracking! distance{distance}");
                     target = hitCollider.gameObject;
                     return;
                 }
@@ -93,7 +120,7 @@ public class Monster : MonoBehaviour
                 if (distance < minSightDistance)
                 {
                     // 플레이어를 찾았다.
-                    Debug.Log($"Player in minimum sight! distance{distance}");
+                    //Debug.Log($"Player in minimum sight! distance{distance}");
                     target = hitCollider.gameObject;
                     return;
                 }
@@ -101,11 +128,10 @@ public class Monster : MonoBehaviour
                 // 최대 탐지 거리 안이고 시야각 내에서 플레이어를 찾을 때
                 Vector3 directionToPlayer = hitCollider.transform.position - transform.position; // 몬스터와 플레이어의 방향 벡터
                 float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer); // 몬스터와 플레이어의 각도
-
                 if (angleToPlayer <= sightAngle / 2) // 좌, 우 때문에 1/2씩 나눔
                 {
                     // 시야 내에 플레이어가 있음
-                    Debug.Log($"Player detected in sight! Angle {angleToPlayer}, distance{directionToPlayer}");
+                    //Debug.Log($"Player detected in sight! Angle {angleToPlayer}, distance{directionToPlayer}");
                     target = hitCollider.gameObject;
                     return;
                 }
@@ -115,31 +141,52 @@ public class Monster : MonoBehaviour
         // 못 찾았으면 타겟을 밀어준다.
         target = null;
         destination = transform.position;
-        animator.Play("Idle");
     }
 
-    // Idle, Move, Attack 결정
-    void SelectState()
+    void UpdateIdle()
     {
-        if (target == null)
+        FindTarget();
+        if (target != null)
         {
-            // 
+            State = EState.Moving;
         }
         else
         {
-            //  패트롤
+            // TODO : 패트롤
+            // TODO : IDLE 유지 등
         }
     }
 
-    void Move()
+    void UpdateMoving()
     {
         // TODO 무브가 완료됐을 때까지 플레이어가 없다면 타겟 제거
-        if(target == null)
+        if (target == null)
         {
-            //TODO 패트롤
+            State = EState.Idle;
         }
         else if(target !=null)
-        {
+        {        
+            // 공격 범위 안으로 왔음
+            float maxDistance = 5f; // 레이의 최대 길이
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, transform.forward, out hit, maxDistance))
+            {
+                if (hit.collider.tag == "Player")
+                {
+                    State = EState.Skill;
+                    return;
+                }
+            }
+
+            // 탐지 범위 밖으로 나감
+            float distance = Vector3.Distance(transform.position, target.transform.position);
+            if (distance>maxSightDistance)
+            {
+                target = null;
+                State = EState.Idle;
+                return;
+            }
+
             destination = target.transform.position;
             Vector3 direction = (destination - transform.position).normalized;
             float step = tempSpeed * Time.deltaTime;
@@ -150,20 +197,41 @@ public class Monster : MonoBehaviour
             direction.y = 0f;  // y축 회전만 하도록 제한
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 1 * Time.deltaTime);
-
-            animator.Play("Walk");
         }
-
     }
 
-    void Attack()
+    void UpdateSkill()
     {
 
     }
 
-    void Die()
+    void UpdateDie()
     {
+        // TODO 소멸
+    }
 
+    // 공격 애니메이션이 완료되는 시점
+    void OnHitEvent()
+    {
+        if (target != null)
+        {
+            //if (target.Hp > 0)
+            {
+                float distance = (target.transform.position - transform.position).magnitude;
+                if (distance <= 5) //TODO 하드코딩 삭제
+                    State = EState.Skill;
+                else
+                    State = EState.Moving;
+            }
+            //else
+            //{
+            //    State = EState.Idle;
+            //}
+        }
+        else
+        {
+            State = EState.Idle;
+        }
     }
 
     #region 기즈모
@@ -185,6 +253,11 @@ public class Monster : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, transform.position + leftBoundary);
         Gizmos.DrawLine(transform.position, transform.position + rightBoundary);
+
+        // 공격용 직선 레이
+        Gizmos.color = Color.green;
+        float maxDistance = 5f; // 레이의 최대 길이
+        Gizmos.DrawRay(transform.position, transform.forward * maxDistance);
     }
     #endregion 기즈모
 }
