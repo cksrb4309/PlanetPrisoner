@@ -76,4 +76,4 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # Ignore TagManager settings
-ProjectSettings/TagManager.asset
+/ProjectSettings/TagManager.asset
