@@ -1100,7 +1100,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.56
+  near clip plane: 0.05
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -1129,7 +1129,7 @@ Transform:
   m_GameObject: {fileID: 789265942}
   serializedVersion: 2
   m_LocalRotation: {x: 0.05152554, y: -0, z: -0, w: 0.99867165}
-  m_LocalPosition: {x: 0, y: 1.657, z: 0}
+  m_LocalPosition: {x: 0, y: 1.657, z: 0.149}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1963,6 +1963,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1463605127}
   - component: {fileID: 1463605128}
+  - component: {fileID: 1463605131}
   - component: {fileID: 1463605130}
   - component: {fileID: 1463605129}
   m_Layer: 0
@@ -2002,17 +2003,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 789265945}
-  moveSpeed: 7
+  playerPivotTransform: {fileID: 585909478}
+  walkMoveSpeed: 3.5
+  runMoveSpeed: 7
   acceleration: 100
   deceleration: 100
-  jumpSpeed: 10
+  crouchRatioSpeed: 0.5
+  jumpSpeed: 8
   gravity: -30
   pitchClampMax: 70
   pitchClampMin: -70
   rotateSpeed: 10
+  cameraCrouchHeight: 0.891
+  maxJumpHeightTime: 0.3
   keyboardMoveInputAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   mouseMoveInputAction: {fileID: 8712381626380531270, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   jumpInputAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  crouchInputAction: {fileID: 7040659881675835329, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  runInputAction: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!54 &1463605129
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2059,12 +2067,24 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 1.88
-  m_Radius: 0.17
+  m_Radius: 0.05
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.0001
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0.9398, z: 0}
+--- !u!114 &1463605131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463605126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fc2085ce15692b4089cd71b8ebeebad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1534299357
 GameObject:
   m_ObjectHideFlags: 0
@@ -2425,7 +2445,7 @@ SkinnedMeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -2461,8 +2481,8 @@ SkinnedMeshRenderer:
   m_SortingOrder: 0
   serializedVersion: 2
   m_Quality: 0
-  m_UpdateWhenOffscreen: 0
-  m_SkinnedMotionVectors: 1
+  m_UpdateWhenOffscreen: 1
+  m_SkinnedMotionVectors: 0
   m_Mesh: {fileID: 4300000, guid: 5d205b6179c014545ba48ed3a8fe8f52, type: 2}
   m_Bones:
   - {fileID: 1252330257}
