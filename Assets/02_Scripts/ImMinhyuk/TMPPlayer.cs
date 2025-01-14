@@ -69,4 +69,9 @@ public class TEMPPlayer : MonoBehaviour
         playerCamera.transform.localRotation = Quaternion.Euler(pitch, 0f, 0f);  // 카메라의 상하 회전
         transform.rotation = Quaternion.Euler(0f, yaw, 0f);  // 플레이어의 좌우 회전
     }
+
+    public void Damaged(float attacKPower)
+    {
+        Debug.Log($"플레이어 피격 {attacKPower}");
+    }
 }
