@@ -3,14 +3,12 @@ using TMPro;
 
 public class InGameTime : MonoBehaviour
 {
-    [SerializeField]
-    Light directionalLight;
-    [SerializeField]
-    TMP_Text timeText;
+    [SerializeField] Light directionalLight;
+    [SerializeField] TMP_Text timeText;
 
-    float inGameTime;
-    float updateInterval = 60f;
-    float timeCounter;
+    [SerializeField] float inGameTime;
+    float updateInterval = 30f;
+    [SerializeField] float timeCounter;
 
     
     void Start()
