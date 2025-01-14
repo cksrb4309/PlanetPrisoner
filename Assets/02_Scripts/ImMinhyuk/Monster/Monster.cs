@@ -5,7 +5,8 @@ using UnityEngine;
 public abstract class Monster : MonoBehaviour
 {
     public int Hp { get; private set; }
-    public int Speed { get; private set; } = 3; // TODO : 2는 삭제
+    public int MoveSpeed { get; private set; } = 5; // TODO : 2는 삭제
+    public int RotationSpeed { get; private set; } = 5; // TODO : 2는 삭제
 
     protected GameObject target; // 플레이어
     protected Vector3 destination; // 이동할 목표 지점 
