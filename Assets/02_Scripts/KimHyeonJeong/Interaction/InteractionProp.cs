@@ -7,6 +7,10 @@ public class InteractionProp : MonoBehaviour
     GameObject interactionText;
     [SerializeField]
     GameObject shopUI;
+    [SerializeField]
+    GameObject inGameUI;
+    [SerializeField]
+    PlayerController player;
 
     private bool isNearObject;
 
@@ -20,7 +24,9 @@ public class InteractionProp : MonoBehaviour
     {
         if(isNearObject && Input.GetKeyDown(KeyCode.E))
         {
-            // 상점 UI 띄우기
+            inGameUI.SetActive(false);
+            shopUI.SetActive(true);
+            player.canMove = false;
         }
     }
 
@@ -28,7 +34,7 @@ public class InteractionProp : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("상호작용 떠라");
+            //Debug.Log("상호작용 떠라");
             isNearObject = true;
             interactionText.SetActive(true);
         }
@@ -38,9 +44,10 @@ public class InteractionProp : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("상호작용 없어져라");
+            //Debug.Log("상호작용 없어져라");
             isNearObject = false;
             interactionText.SetActive(false);
         }
     }
+
 }

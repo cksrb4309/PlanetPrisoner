@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveDirection;
     private float verticalVelocity;
 
+    public bool canMove = true;
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -17,8 +19,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        MovePlayer();
-        LookAround();
+        if (canMove)
+        {
+            MovePlayer();
+            LookAround();
+        }
     }
 
     void MovePlayer()
