@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public abstract class Monster : MonoBehaviour
 {
@@ -16,8 +17,7 @@ public abstract class Monster : MonoBehaviour
 
     // 하위 컴포넌트
     protected Animator animator;
-    protected MeshCollider collider;
-    protected Rigidbody rb;
+    protected NavMeshAgent agent;
 
     #region STAT, TODO : Json으로 빼기
     // Enum으로 몬스터 스텟 관리
@@ -26,6 +26,9 @@ public abstract class Monster : MonoBehaviour
     protected int[] masterWalkSpeed = new int[4] { 8, 6, 4, 2 };
     protected int[] masterRunSpeed = new int[4] { 8, 6, 4, 2 };
     protected int[] masterRotationSpeed = new int[4] { 1, 2, 3, 4 };
+
+    protected int[] maxSightRange = new int[4] { 50, 59, 58, 57 };
+
     protected int[] masterAttackPower = new int[4] { 1, 2, 3, 4 };
     #endregion STAT, TODO : Json으로 빼기
     #region FSM
@@ -41,15 +44,19 @@ public abstract class Monster : MonoBehaviour
             switch (_state)
             {
                 case EState.Die:
+                    agent.isStopped = false; 
                     animator.CrossFade("Die", 0.1f);
                     break;
                 case EState.Idle:
+                    agent.isStopped = true;  
                     animator.CrossFade("Idle", 0.1f);
                     break;
                 case EState.Moving:
+                    agent.isStopped = false;
                     animator.CrossFade("Walk", 0.1f);
                     break;
                 case EState.Skill:
+                    agent.isStopped = true; 
                     animator.CrossFade("Attack02", 0.1f, -1, 0);
                     break;
             }
@@ -68,8 +75,7 @@ public abstract class Monster : MonoBehaviour
     protected virtual void Start()
     {
         animator = GetComponent<Animator>();
-        collider = GetComponent<MeshCollider>();
-        rb = GetComponent<Rigidbody>();
+        agent = GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
@@ -92,6 +98,21 @@ public abstract class Monster : MonoBehaviour
                 UpdateDie();
                 break;
         }
+    }
+
+    protected Vector3 GetRandomPosition()
+    {
+        Vector3 randomPosition = Random.insideUnitSphere * maxSightRange[0]; // 반경 내 임의의 지점
+        randomPosition += transform.position; // 현재 위치 기준으로 계산
+
+        NavMeshHit hit;
+        // NavMesh.SamplePosition()은 randomPosition 기준 가장 가깝고 유효한 NavMesh지점을 찾아줌
+        if (NavMesh.SamplePosition(randomPosition, out hit, maxSightRange[0], NavMesh.AllAreas))
+        {
+            return hit.position; // NavMesh 위의 유효한 위치 반환
+        }
+
+        return transform.position; // 유효한 위치를 찾지 못하면 현재 위치 유지
     }
 
     protected abstract void UpdateIdle();
