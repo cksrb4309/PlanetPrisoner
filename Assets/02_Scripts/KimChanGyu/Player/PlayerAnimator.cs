@@ -1,57 +1,70 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour
 {
-    Animator playerAnimator; // ÇÃ·¹ÀÌ¾î ¾Ö´Ï¸ŞÀÌÅÍ
+    Animator playerAnimator; // í”Œë ˆì´ì–´ ì• ë‹ˆë©”ì´í„°
 
-    bool isGround = true; // ÇöÀç isGround »óÅÂ
+    bool isGround = true; // í˜„ì¬ isGround ìƒíƒœ
 
     private void Start()
     {
-        // Animator °¡Á®¿À±â
+        // Animator ê°€ì ¸ì˜¤ê¸°
         playerAnimator = GetComponentInChildren<Animator>();
     }
-    void SetMoveSpeed(float value) // ÀÌµ¿¼Óµµ °ª Àû¿ë
+    void SetMoveSpeed(float value) // ì´ë™ì†ë„ ê°’ ì ìš© 
     {
+        // ì´ë™ ê°’ ì• ë‹ˆë©”ì´í„°ì— ì ìš©
         playerAnimator.SetFloat("Move", value);
     }
-    public void SetIsCrouch(bool isCrouch) // ¾ÉÀº »óÅÂ ¿©ºÎ Àû¿ë
+    public void SetIsCrouch(bool isCrouch) // ì•‰ì€ ìƒíƒœ ì—¬ë¶€ ì ìš© 
     {
         playerAnimator.SetBool("IsCrouch", isCrouch);
     }
-    public bool SetJumpTrigger() // Á¡ÇÁ ¾Ö´ÔÀÌ ºÒ°¡´ÉÇÏ¸é False, °¡´ÉÇÏ¸é True ¹İÈ¯ ÈÄ ¾Ö´Ï¸ŞÀÌ¼Ç Àû¿ë
+    public bool SetJumpTrigger() // ì í”„ ì• ë‹˜ì´ ë¶ˆê°€ëŠ¥í•˜ë©´ False, ê°€ëŠ¥í•˜ë©´ True ë°˜í™˜ í›„ ì• ë‹ˆë©”ì´ì…˜ ì ìš© 
     {
-        // ÇöÀç ÂŞ±¸¸®°í ÀÖÀ» ¶§
+        // í˜„ì¬ ì­ˆêµ¬ë¦¬ê³  ìˆì„ ë•Œ
         if (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("CrouchMove"))
         {
-            // false¸¦ ¹İÈ¯
+            // falseë¥¼ ë°˜í™˜
             return false;
         }
-        // ¸¸¾à ¼­ÀÖ´Ù¸é Jump Trigger ½ÇÇà
+        // ë§Œì•½ ì„œìˆë‹¤ë©´ Jump Trigger ì‹¤í–‰
         playerAnimator.SetTrigger("Jump");
 
-        // true¸¦ ¹İÈ¯
+        // trueë¥¼ ë°˜í™˜
         return true;
     }
-    public void SetIsGround(bool isGround) // IsGround ¿©ºÎ Àû¿ë
+    public void SetIsGround(bool isGround) // IsGround ì—¬ë¶€ ì ìš©
     {
-        // ÇöÀç »óÅÂ¿Í µ¿ÀÏÇÏ´Ù¸é ¹İÈ¯
+        // í˜„ì¬ ìƒíƒœì™€ ë™ì¼í•˜ë‹¤ë©´ ë°˜í™˜
         if (this.isGround == isGround) return;
 
-        // ÇöÀç »óÅÂ¿¡ Àû¿ë
+        // í˜„ì¬ ìƒíƒœì— ì ìš©
         this.isGround = isGround;
 
-        // IsGround Àû¿ë
+        // IsGround ì ìš©
         playerAnimator.SetBool("IsGround", isGround);
+    }
+    public void SetItemChangeTrigger(string triggerName) // ì•„ì´í…œ ë³€ê²½ ì‹œì˜ íŠ¸ë¦¬ê±° ì…‹íŒ…
+    {
+        return;
+
+        playerAnimator.SetTrigger(triggerName);
+    }
+    public void SetItemUseTrigger(string triggerName)
+    {
+        return;
+
+        playerAnimator.SetTrigger(triggerName);
     }
     private void OnEnable()
     {
-        // ÇÔ¼ö ±¸µ¶ ½ÃÄÑ³õ±â
+        // í•¨ìˆ˜ êµ¬ë… ì‹œì¼œë†“ê¸°
         GetComponent<PlayerController>().BindToPlayerAnimator(SetMoveSpeed);
     }
     private void OnDisable()
     {
-        // ÇÔ¼ö ±¸µ¶ ÇØÁ¦ÇÏ±â
+        // í•¨ìˆ˜ êµ¬ë… í•´ì œí•˜ê¸°
         GetComponent<PlayerController>().UnbindFromPlayerAnimator(SetMoveSpeed);
     }
 }

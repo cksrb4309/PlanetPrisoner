@@ -240,7 +240,7 @@ public class PlayerController : MonoBehaviour
         float currMagnitude = prevMagnitude > moveSpeedLimit ? moveSpeedLimit : prevMagnitude;
 
         // 만약 벡터 크기의 값이 이동속도보다 크다면 벡터 크기 값을 이동속도 값으로 초기화 한다
-        if (prevMagnitude > moveSpeedLimit) prevMagnitude = moveSpeedLimit;
+        if (prevMagnitude > moveSpeedLimit) prevMagnitude = moveSpeedLimit; // TODO 확인
 
         // X와 Z는 prevMagnitude로 나눈 다음에 제한을 둔 currMagnitude를 곱해준다
         velocity.Set(
