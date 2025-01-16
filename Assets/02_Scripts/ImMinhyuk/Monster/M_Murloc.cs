@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class M_Murloc : Monster
 {
-    protected override void UpdateDie()
+    protected override void UpdateDeath()
     {
         throw new System.NotImplementedException();
     }
@@ -17,7 +17,7 @@ public class M_Murloc : Monster
         throw new System.NotImplementedException();
     }
 
-    protected override void UpdateSkill()
+    protected override void UpdateAttack()
     {
         throw new System.NotImplementedException();
     }

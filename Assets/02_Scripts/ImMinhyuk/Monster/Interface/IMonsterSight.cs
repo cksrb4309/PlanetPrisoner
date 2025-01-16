@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface IMonsterSight
 {
-    GameObject FindTarget();
+    GameObject FindTargetInSight();
 }

@@ -9,7 +9,7 @@ public class M_Eye : Monster
         combatEye = new M_CombatEye();
     }
 
-    protected override void UpdateDie()
+    protected override void UpdateDeath()
     {
         throw new System.NotImplementedException();
     }
@@ -24,7 +24,7 @@ public class M_Eye : Monster
         throw new System.NotImplementedException();
     }
 
-    protected override void UpdateSkill()
+    protected override void UpdateAttack()
     {
         throw new System.NotImplementedException();
     }

@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface IMonsterHearing
 {
-    GameObject FindTarget();
+    Vector3 FindTargetInHearing();
 }
