@@ -1,0 +1,59 @@
+{
+  "Monsters": [
+    {
+      "name": "Golem",
+      "hp": "100",
+      "speed": "5.0",
+      "attackPower": "1",
+      "attackRange": "5",
+      "sightAngle": "60.0",
+      "maxSightRange": "20.0",
+      "minSightRange": "10.0",
+      "patrolRange": "50"
+    },
+    {
+      "name": "Splinter",
+      "hp": "3",
+      "speed": "5.0",
+      "attackPower": "1",
+      "attackRange": "5",
+      "sightAngle": "0.0",
+      "maxSightRange": "0.0",
+      "minSightRange": "0.0",
+      "patrolRange": "50"
+    },
+    {
+      "name": "PatrolEye",
+      "hp": "1",
+      "speed": "5.0",
+      "attackPower": "1",
+      "attackRange": "3",
+      "sightAngle": "120.0",
+      "maxSightRange": "20.0",
+      "minSightRange": "10.0",
+      "patrolRange": "50"
+    },
+    {
+      "name": "CombatEye",
+      "hp": "1",
+      "speed": "5.0",
+      "attackPower": "3",
+      "attackRange": "3",
+      "sightAngle": "120.0",
+      "maxSightRange": "20.0",
+      "minSightRange": "10.0",
+      "patrolRange": "5"
+    },
+    {
+      "name": "Murloc",
+      "hp": "1",
+      "speed": "5.0",
+      "attackPower": "1",
+      "attackRange": "3",
+      "sightAngle": "60.0",
+      "maxSightRange": "10.0",
+      "minSightRange": "50.0",
+      "patrolRange": "50"
+    }
+  ]
+} 
