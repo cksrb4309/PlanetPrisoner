@@ -5215,7 +5215,7 @@ GameObject:
   - component: {fileID: 7536222786358763296}
   m_Layer: 9
   m_Name: M_Murloc
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5247,7 +5247,7 @@ Animator:
   m_GameObject: {fileID: 8118258632014096957}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 828de9cb623d745cb8ff5791c9ed8c62, type: 3}
-  m_Controller: {fileID: 9100000, guid: 6a4111bb54c9565418c4b1e0a5d4b1a3, type: 2}
+  m_Controller: {fileID: 9100000, guid: 247ee412a8e92014496962b73a9f6bdd, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1

@@ -11,21 +11,21 @@ public class M_Eye : Monster
 
     protected override void UpdateDeath()
     {
-        throw new System.NotImplementedException();
     }
 
     protected override void UpdateIdle()
     {
-        throw new System.NotImplementedException();
     }
 
     protected override void UpdateMoving()
     {
-        throw new System.NotImplementedException();
     }
 
     protected override void UpdateAttack()
     {
-        throw new System.NotImplementedException();
+    }
+
+    protected override void SetStat()
+    {
     }
 }

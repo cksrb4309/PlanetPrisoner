@@ -71,7 +71,6 @@ public class M_Splinter : Monster, IMonsterHearing
             if (distanceToPlayer < attackRange)
             {
                 // 중복 상태 세팅 방지
-                // TODO 프로퍼티 단에서 처리할까?
                 if (State != EState.Attack)
                 {
                     // 소리난 방향으로 회전
@@ -95,5 +94,8 @@ public class M_Splinter : Monster, IMonsterHearing
 
         // 플레이어가 낸 소리가 재생 범위 밖이라면 기존 이동 목표 지점 리턴
         return destination;
+    }
+    protected override void SetStat()
+    {
     }
 }

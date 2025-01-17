@@ -21,8 +21,8 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     #region STAT, TODO : Json으로 빼기
     // Enum으로 몬스터 스텟 관리
     // TODO JSON으로 뺀다.
-    public int Hp { get; private set; }
-    public int AttackPower { get; private set; } = 5; // TODO : 2는 삭제
+    public int Hp { get; private set; } = 3;
+    public int AttackPower { get; private set; } = 5;
 
     protected float sightAngle = 60f;             // 시야각 (degree)
     protected float maxSightDistance = 20f;       // 시야 최대 거리
@@ -47,10 +47,6 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
 
             switch (_state)
             {
-                case EState.Death:
-                    agent.isStopped = false;
-                    animator.CrossFade("Death", 0.1f);
-                    break;
                 case EState.Idle:
                     agent.isStopped = true;
                     animator.CrossFade("Idle", 0.1f);
@@ -63,6 +59,14 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
                     agent.isStopped = true;
                     animator.CrossFade("Attack02", 0.1f, -1, 0);
                     break;
+                case EState.Stun:
+                    agent.isStopped = true;
+                    animator.CrossFade("Stun", 0.1f);
+                    break;
+                case EState.Death:
+                    agent.isStopped = true;
+                    animator.CrossFade("Death", 0.1f);
+                    break;
             }
         }
     }
@@ -71,6 +75,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         Idle,
         Moving,
         Attack,
+        Stun,
         Death
     }
     #endregion FSM
@@ -80,6 +85,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     {
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        SetStat();
     }
 
     // Update is called once per frame
@@ -98,27 +104,14 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
             case EState.Attack:
                 UpdateAttack();
                 break;
+            case EState.Stun:
+                UpdateStun();
+                break;
             case EState.Death:
                 UpdateDeath();
                 break;
         }
     }
-
-    protected Vector3 GetRandomPosition()
-    {
-        Vector3 randomPosition = Random.insideUnitSphere * patrolRange; // 반경 내 임의의 지점
-        randomPosition += transform.position; // 현재 위치 기준으로 계산
-
-        NavMeshHit hit;
-        // NavMesh.SamplePosition()은 randomPosition 기준 가장 가깝고 유효한 NavMesh지점을 찾아줌
-        if (NavMesh.SamplePosition(randomPosition, out hit, patrolRange, NavMesh.AllAreas))
-        {
-            return hit.position; // NavMesh 위의 유효한 위치 반환
-        }
-
-        return transform.position; // 유효한 위치를 찾지 못하면 현재 위치 유지
-    }
-
 
     // FSM은 Idle로 부터 시작
     protected virtual void UpdateIdle()
@@ -192,21 +185,53 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         }
     }
 
-    protected virtual void UpdateAttack()
-    {
+    protected virtual void UpdateAttack() { }
+    protected virtual void UpdateDeath() { }
 
+    protected virtual void UpdateStun()
+    {
+        if (Hp < 0) State = EState.Death;
     }
 
-    protected virtual void UpdateDeath()
-    {
+    protected abstract void SetStat();
 
+    // 네브매쉬 영역에서 이동할 랜덤 위치를 반환
+    protected Vector3 GetRandomPosition()
+    {
+        Vector3 randomPosition = Random.insideUnitSphere * patrolRange; // 반경 내 임의의 지점
+        randomPosition += transform.position; // 현재 위치 기준으로 계산
+
+        NavMeshHit hit;
+        // NavMesh.SamplePosition()은 randomPosition 기준 가장 가깝고 유효한 NavMesh지점을 찾아줌
+        if (NavMesh.SamplePosition(randomPosition, out hit, patrolRange, NavMesh.AllAreas))
+        {
+            return hit.position; // NavMesh 위의 유효한 위치 반환
+        }
+
+        return transform.position; // 유효한 위치를 찾지 못하면 현재 위치 유지
     }
 
-    public void Damaged()
+    public void Damaged(int damage)
     {
-        // TODO
+        Hp -= damage;
+        if (Hp<0)
+        {
+            State= EState.Death;
+        }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        // TODO : 태그와 컴포넌트 이름 맞추기
+        if (other.tag == "Trap")
+        {
+            TMPTrap tmptrap = other.GetComponent<TMPTrap>();
+            Damaged(tmptrap.damage);
+            State = EState.Stun;
+        }
+    }
+
+    #region 애니메이션 이벤트 영역
 
     // 공격 애니메이션이 Hit되는 애니메이션 프레임
     // TODO 공격 히트 방식 변경
@@ -240,6 +265,16 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         }
     }
 
+    // 스턴 애니메이션이 끝나고 다음 행동을 결정하는 애니메이션 프레임
+    void OnAnimStunEndEvent()
+    {
+        if (State != EState.Death)
+        {
+            State = EState.Idle;
+        }
+    }
+
+    #endregion 애니메이션 이벤트 영역
     #region 기즈모
     private void OnDrawGizmos()
     {

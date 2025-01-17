@@ -69,4 +69,8 @@ public class M_Golem : Monster, IMonsterSight
         // 여끼까지 왔으면 플레이어를 못 찾았으므로 타겟을 밀어준다.
         return null;
     }
+    protected override void SetStat()
+    {
+
+    }
 }

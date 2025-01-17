@@ -1268,7 +1268,7 @@ GameObject:
   - component: {fileID: 8795063051113593303}
   m_Layer: 9
   m_Name: M_PatrolEye
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1300,7 +1300,7 @@ Animator:
   m_GameObject: {fileID: 5763444536179213801}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: eda0f6b98ac3c4884a4a765ce5cf664e, type: 3}
-  m_Controller: {fileID: 9100000, guid: 3e8f856ea27104591b9b2391739834c6, type: 2}
+  m_Controller: {fileID: 9100000, guid: 04c0c07ccdfaeb34b8130c6f89369ef4, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
