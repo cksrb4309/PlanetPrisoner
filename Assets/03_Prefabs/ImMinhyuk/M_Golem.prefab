@@ -6480,6 +6480,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfb9aec3a3679eb418806acfbf204212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stat:
+    name: 
+    hp: 0
+    speed: 0
+    attackPower: 0
+    attackRange: 0
+    sightAngle: 0
+    maxSightRange: 0
+    minSightRange: 0
+    patrolRange: 0
 --- !u!195 &104361778716058710
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -6525,7 +6535,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1

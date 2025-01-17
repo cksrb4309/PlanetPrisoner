@@ -14,43 +14,50 @@ public class M_Splinter : Monster, IMonsterHearing
 
     protected override void Start()
     {
-        base.Start(); 
-        SetPlayer();
+        base.Start();
+        player = ((IMonsterHearing)this).SetPlayer();
         StartCoroutine(CoFindTarget());
     }
 
     /// <summary>
     /// Start()할 때 추적 대상(플레이어)를 세팅
     /// </summary>
-    void SetPlayer()
+    GameObject IMonsterHearing.SetPlayer()
     {
+        GameObject retPlayer;
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         if (players.Length > 0)
         {
-            player = players[0]; // 싱글플레이어 기준 기본 0번
-            playerAudioSource = player.GetComponent<AudioSource>();
+            retPlayer = players[0]; // 싱글플레이어 기준 기본 0번
+            playerAudioSource = retPlayer.GetComponent<AudioSource>();
             if (playerAudioSource == null)
             {
                 Debug.Log("스플린터 : 플레이어 태그를 가진 오브젝트에 오디오소스 컴포넌트가 없습니다.");
+                return null;
             }
         }
         else
         {
             Debug.Log("스플린터 : 플레이어 태그를 가진 오브젝트가 없습니다");
+            return null;
         }
+        return retPlayer;
     }
 
     IEnumerator CoFindTarget()
     {
         while (true)
         {
-            destination = FindTargetInHearing();
+            destination = ((IMonsterHearing)this).FindTargetInHearing();
             yield return new WaitForSeconds(0.1f);  // N초마다 타겟을 탐색
         }
     }
 
-    public Vector3 FindTargetInHearing()
+    Vector3 IMonsterHearing.FindTargetInHearing()
     {
+        // 죽었다면 아무것도 하지 않는다.
+        if (State == EState.Death) return destination;
+
         // 플레이어가 소리를 내지 않는다면 기존 이동 목표 지점 리턴
         if (playerAudioSource.isPlaying == false) return destination; 
 
@@ -99,6 +106,14 @@ public class M_Splinter : Monster, IMonsterHearing
     protected override Stat SetStat()
     {
         Stat _stat;
-        return stat;
+        if (MonsterStat.Instance.StatDict.TryGetValue("Splinter", out _stat))
+        {
+            Debug.Log(stat.hp);
+        }
+        else
+        {
+            Debug.LogWarning($"Splinter not found in stat Dictionary");
+        }
+        return _stat;
     }
 }

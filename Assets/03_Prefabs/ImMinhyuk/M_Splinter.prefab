@@ -1455,7 +1455,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
@@ -1478,10 +1478,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.34377152
-  m_Height: 1.9252641
+  m_Radius: 0.34377155
+  m_Height: 1.4607658
   m_Direction: 2
-  m_Center: {x: -0.029109836, y: 0.8840353, z: 0.18388689}
+  m_Center: {x: -0.029109836, y: 0.8840353, z: -0.048362575}
 --- !u!195 &3190696861130723074
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1516,6 +1516,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ecc9515a4697cf4f912bb4b8f90d1f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stat:
+    name: 
+    hp: 0
+    speed: 0
+    attackPower: 0
+    attackRange: 0
+    sightAngle: 0
+    maxSightRange: 0
+    minSightRange: 0
+    patrolRange: 0
 --- !u!1 &4998455786466101935
 GameObject:
   m_ObjectHideFlags: 0

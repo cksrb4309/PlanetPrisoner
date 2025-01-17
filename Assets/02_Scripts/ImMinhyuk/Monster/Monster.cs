@@ -20,6 +20,15 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     protected Stat stat; // json으로부터 데이터를 받아온다.
 
     #region FSM
+    public enum EState
+    {
+        Idle,
+        Moving,
+        Attack,
+        Stun,
+        Death
+    }
+
     protected EState _state = EState.Idle;
     public virtual EState State
     {
@@ -55,15 +64,6 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
                     break;
             }
         }
-    }
-
-    public enum EState
-    {
-        Idle,
-        Moving,
-        Attack,
-        Stun,
-        Death
     }
     #endregion FSM
 
@@ -162,6 +162,8 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         agent.SetDestination(destination);
 
         // 도착하면 Idle로 바꿔준다. 타겟이 있다면 알아서 공격상태로 전환될 것이다. (Moving -> Idle -> Moving -> Attack)
+        // TODO 이슈 : 내브매쉬 목적지와 Y축 차이가 있으면 도착하지 못하고 해당 지점에서 회전함
+        // 좀 더 지켜보고 Y축을 제외하고 보정하던지 해서 개선해야할 듯
         if (Vector3.Distance(transform.position, destination) < 0.1f)
         {
             isArrivedDestination = true;
@@ -211,7 +213,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     private void OnTriggerEnter(Collider other)
     {
         // TODO : 태그와 컴포넌트 이름 맞추기
-        if (other.tag == "Trap")
+        if (other.tag == "Trap" && State!=EState.Death)
         {
             TMPTrap tmptrap = other.GetComponent<TMPTrap>();
             Damaged(tmptrap.damage);

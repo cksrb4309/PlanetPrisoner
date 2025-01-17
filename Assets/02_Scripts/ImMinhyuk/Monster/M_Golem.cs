@@ -15,7 +15,7 @@ public class M_Golem : Monster, IMonsterSight
     {
         while (true)
         {
-            target = FindTargetInSight();
+            target = ((IMonsterSight)this).FindTargetInSight();
             yield return new WaitForSeconds(0.1f);  // N초마다 타겟을 탐색
         }
     }
@@ -24,7 +24,7 @@ public class M_Golem : Monster, IMonsterSight
     /// 1. OverlapSphere로 범위내의 모든 콜라이더를 탐지한다.
     /// 2. 각 콜라이더방향으로 Ray를 쏴서 Player인지 확인한다.
     /// </summary>
-    public GameObject FindTargetInSight()
+    GameObject IMonsterSight.FindTargetInSight()
     {
         Collider[] hitCollidersInMaxSight = Physics.OverlapSphere(transform.position, stat.maxSightRange); // 최대 범위 내의 hit되는 콜라이더를 모두 탐색한다.
 
