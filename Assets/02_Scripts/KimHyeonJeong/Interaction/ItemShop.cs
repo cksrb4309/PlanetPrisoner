@@ -9,7 +9,6 @@ public class ItemShop : MonoBehaviour
     [SerializeField] GameManager gameManager;
     [SerializeField] Image oxygenTankForeground;
 
-
     void Start()
     {
         
@@ -21,7 +20,7 @@ public class ItemShop : MonoBehaviour
         FillOxygenTank();
     }
 
-    public void OnClickedXbutton() // 상점 닫기
+    public void OnClickedXbutton() // 상점 닫기 클릭
     {
         shopUI.SetActive(false);
         inGameUI.SetActive(true);
@@ -32,11 +31,13 @@ public class ItemShop : MonoBehaviour
     {
         // 게임매니저에서 산소 0.3L(300ml)감소
         gameManager.ChangeOxygen(-300f);
-        // TODO: 캐릭터 인벤토리에 손전등 추가
+
+        // TODO: 전송기에서 아이템 뱉어내기
     }
 
     public void FillOxygenTank()
     {
+        // 산소량을 Tank이미지에 표시
         oxygenTankForeground.fillAmount = gameManager.GetOxygen() / 2000f;
     }
 }

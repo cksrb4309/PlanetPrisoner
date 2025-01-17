@@ -9,31 +9,44 @@ public class RequiredQuest : MonoBehaviour
     {
         { "큐브", 3},
         { "스피어", 1},
-        { "큐브", 1 }
+        { "캡슐", 1 }
     };
 
     [SerializeField] string currentQuest; // 현재 진행중인 퀘스트
     [SerializeField] int currentProgress; // 현재 진행중인 퀘스트 진행도?
     [SerializeField] TMP_Text questText;
 
+    public bool questCompeleted;
+
     void Start()
     {
         UpdateQuest();
     }
 
+
     public void UpdateQuest()
     {
+        questCompeleted = false; // 퀘스트 성공 여부 초기화
         currentProgress = 0; // 진행도 0으로 초기화
-        int randomIndex=Random.Range(0,quests.Count);
+        int randomIndex = Random.Range(0, quests.Count);
         int i = 0;
         foreach (var quest in quests) // 딕셔너리 하나씩 훑기
         {
             if (i == randomIndex)
             {
-                currentQuest = $"[필수퀘스트] {quest.Key} currentProgress/{quest.Value}";
-                questText.text=currentQuest;
+                currentQuest = quest.Key;
+                questText.text = $"[필수퀘스트] {quest.Key} {currentProgress}/{quest.Value}";
             }
+            // TODO: 퀘스트 물품 얻으면 text 업데이트 필요(얻을때니까 Player? 상의해봐야할듯)
             i++;
+        }
+    }
+
+    void QuestCompleted() // 퀘스트 완료 (퀘스트 물품 얻을 때 호출)
+    {
+        if (quests[currentQuest] == currentProgress) // 현재 퀘스트 수량 도달
+        {
+            questCompeleted = true;
         }
     }
 }

@@ -10,7 +10,7 @@ public class InGameTime : MonoBehaviour
     float updateInterval = 30f;
     [SerializeField] float timeCounter;
 
-    private RequiredQuest requiredQuest;
+    [SerializeField] RequiredQuest requiredQuest;
     
     void Start()
     {
@@ -32,6 +32,10 @@ public class InGameTime : MonoBehaviour
         if(inGameTime >= 86400) // 24시간 지나면
         {
             inGameTime = 0f;
+            if (requiredQuest.questCompeleted) // 퀘스트 성공했는지 여부
+            {
+                // TODO: 패널티
+            }
             requiredQuest.UpdateQuest(); // 퀘스트 업데이트
         }
 
@@ -48,7 +52,7 @@ public class InGameTime : MonoBehaviour
     void UpdateLightPosition()
     {
         float dayProgress = (inGameTime % 86400) / 86400f; // 시간 흐름 비율(0~1)
-        float rotationAngle = dayProgress * 360f; // 0도에서 360도까지
+        float rotationAngle = 270f - dayProgress * 360f; // 0도에서 360도까지
 
         // directionalLight의 x회전값 업데이트
         directionalLight.transform.rotation = Quaternion.Euler(rotationAngle, 0, 0); 
