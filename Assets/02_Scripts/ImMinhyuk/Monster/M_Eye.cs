@@ -25,7 +25,9 @@ public class M_Eye : Monster
     {
     }
 
-    protected override void SetStat()
+    protected override Stat SetStat()
     {
+        Stat _stat;
+        return stat;
     }
 }

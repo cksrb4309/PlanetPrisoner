@@ -17,7 +17,10 @@ public class M_Murloc : Monster
     protected override void UpdateAttack()
     {
     }
-    protected override void SetStat()
+
+    protected override Stat SetStat()
     {
+        Stat _stat;
+        return stat;
     }
 }

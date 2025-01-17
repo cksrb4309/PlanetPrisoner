@@ -5,35 +5,21 @@ using UnityEngine.AI;
 
 public abstract class Monster : MonoBehaviour, IMonsterDamagable
 {
-
     protected GameObject target; // 플레이어
     protected Vector3 destination; // 이동할 목표 지점 
+    protected bool isArrivedDestination = false; // 목표지점에 도착했는지 토글용
 
-    protected float decisionInterval = 5.0f; // 움직임 여부를 결정하는 시간 간격 (초)
+    protected const float decisionInterval = 5.0f; // 움직임 여부를 결정하는 시간 간격 (초)
     protected float nextDecisionTime = 0f;
-
-    protected bool isArrivedDestination = false;
 
     // 하위 컴포넌트
     protected Animator animator;
     protected NavMeshAgent agent;
 
-    #region STAT, TODO : Json으로 빼기
-    // Enum으로 몬스터 스텟 관리
-    // TODO JSON으로 뺀다.
-    public int Hp { get; private set; } = 3;
-    public int AttackPower { get; private set; } = 5;
+    [SerializeField] // 스텟 확인용으로 달아줬음
+    protected Stat stat; // json으로부터 데이터를 받아온다.
 
-    protected float sightAngle = 60f;             // 시야각 (degree)
-    protected float maxSightDistance = 20f;       // 시야 최대 거리
-    protected float minSightDistance = 10f;       // 시야 최소 거리
-    protected float attackRange = 5f;
-
-    protected float patrolRange = 50;
-
-    #endregion STAT, TODO : Json으로 빼기
     #region FSM
-    // State가 바뀔 때 해당 애니메이션을 재생
     protected EState _state = EState.Idle;
     public virtual EState State
     {
@@ -70,6 +56,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
             }
         }
     }
+
     public enum EState
     {
         Idle,
@@ -83,9 +70,10 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected virtual void Start()
     {
+        stat = SetStat();
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        SetStat();
+        agent.speed = stat.speed;
     }
 
     // Update is called once per frame
@@ -116,7 +104,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     // FSM은 Idle로 부터 시작
     protected virtual void UpdateIdle()
     {
-        // 타게팅이 되어있을 경우 트래킹한다. 
+        // 타게팅이 되어있을 경우 추적한다. 
         if (target != null)
         {
             State = EState.Moving;
@@ -132,7 +120,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
                 }
                 else
                 {
-                    destination = GetRandomPosition();
+                    destination = GetRandomDestination();
                     State = EState.Moving;
                 }
                 nextDecisionTime = 0f;
@@ -148,7 +136,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
             // 공격 범위 안으로 왔음 => 공격
             // TODO : forward 방향 벡터로 탐지하는건 한계가 있음. 고쳐야함
             RaycastHit hit;
-            if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out hit, attackRange))
+            if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out hit, stat.attackRange))
             {
                 if (hit.collider.tag == "Player")
                 {
@@ -159,7 +147,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
 
             // 탐지 범위 밖으로 나감 => IDLE 상태로
             float distance = Vector3.Distance(transform.position, target.transform.position);
-            if (distance > maxSightDistance)
+            if (distance > stat.maxSightRange)
             {
                 target = null;
                 State = EState.Idle;
@@ -174,7 +162,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         agent.SetDestination(destination);
 
         // 도착하면 Idle로 바꿔준다. 타겟이 있다면 알아서 공격상태로 전환될 것이다. (Moving -> Idle -> Moving -> Attack)
-        if (Vector3.Distance(transform.position, destination) < 1f)
+        if (Vector3.Distance(transform.position, destination) < 0.1f)
         {
             isArrivedDestination = true;
             State = EState.Idle;
@@ -190,20 +178,20 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
 
     protected virtual void UpdateStun()
     {
-        if (Hp < 0) State = EState.Death;
+        if (stat.hp < 0) State = EState.Death;
     }
 
-    protected abstract void SetStat();
+    protected abstract Stat SetStat();
 
     // 네브매쉬 영역에서 이동할 랜덤 위치를 반환
-    protected Vector3 GetRandomPosition()
+    protected Vector3 GetRandomDestination()
     {
-        Vector3 randomPosition = Random.insideUnitSphere * patrolRange; // 반경 내 임의의 지점
+        Vector3 randomPosition = Random.insideUnitSphere * stat.patrolRange; // 반경 내 임의의 지점
         randomPosition += transform.position; // 현재 위치 기준으로 계산
 
         NavMeshHit hit;
         // NavMesh.SamplePosition()은 randomPosition 기준 가장 가깝고 유효한 NavMesh지점을 찾아줌
-        if (NavMesh.SamplePosition(randomPosition, out hit, patrolRange, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(randomPosition, out hit, stat.patrolRange, NavMesh.AllAreas))
         {
             return hit.position; // NavMesh 위의 유효한 위치 반환
         }
@@ -213,8 +201,8 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
 
     public void Damaged(int damage)
     {
-        Hp -= damage;
-        if (Hp<0)
+        stat.hp -= damage;
+        if (stat.hp <0)
         {
             State= EState.Death;
         }
@@ -238,7 +226,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     void OnAnimAttackHitEvent()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out hit, attackRange))
+        if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out hit, stat.attackRange))
         {
             if (hit.collider.tag == "Player")
             {
@@ -246,7 +234,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
                 TEMPPlayer player = hit.collider.gameObject.GetComponent<TEMPPlayer>();
                 if (player != null)
                 {
-                    player.Damaged(AttackPower);
+                    player.Damaged(stat.attackPower);
                 }
             }
         }
@@ -275,20 +263,21 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     }
 
     #endregion 애니메이션 이벤트 영역
+
     #region 기즈모
     private void OnDrawGizmos()
     {
         // 최대 시야 거리 원
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, maxSightDistance);
+        Gizmos.DrawWireSphere(transform.position, stat.maxSightRange);
 
         // 최소 시야 거리 원
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, minSightDistance);
+        Gizmos.DrawWireSphere(transform.position, stat.minSightRange);
 
         // 시야각을 그리기 위한 벡터
-        Vector3 leftBoundary = Quaternion.Euler(0, -sightAngle / 2, 0) * transform.forward * maxSightDistance;
-        Vector3 rightBoundary = Quaternion.Euler(0, sightAngle / 2, 0) * transform.forward * maxSightDistance;
+        Vector3 leftBoundary = Quaternion.Euler(0, -stat.sightAngle / 2, 0) * transform.forward * stat.maxSightRange;
+        Vector3 rightBoundary = Quaternion.Euler(0, stat.sightAngle / 2, 0) * transform.forward * stat.minSightRange;
 
         // 시야각 경계선
         Gizmos.color = Color.red;
@@ -300,7 +289,5 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         float maxDistance = 5f; // 레이의 최대 길이, TODO 하드코딩 삭제
         Gizmos.DrawRay(transform.position + Vector3.up, transform.forward * maxDistance);
     }
-
     #endregion 기즈모
-
 }

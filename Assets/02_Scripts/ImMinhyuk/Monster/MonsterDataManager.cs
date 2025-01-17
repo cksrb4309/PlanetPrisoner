@@ -4,14 +4,25 @@ using UnityEngine;
 
 public class MonsterStat : MonoBehaviour
 {
+    public static MonsterStat Instance { get; private set; }
+
     [SerializeField]
     private TextAsset monsterData;
     public Dictionary<string, Stat> StatDict { get; private set; } = new Dictionary<string, Stat>();
-
-    void Start()
+    private void Awake()
     {
-        StatData statData = JsonUtility.FromJson<StatData>(monsterData.text);
-        StatDict = statData.MakeDict();
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+
+            StatData statData = JsonUtility.FromJson<StatData>(monsterData.text);
+            StatDict = statData.MakeDict();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }
 

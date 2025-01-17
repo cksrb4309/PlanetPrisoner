@@ -58,7 +58,7 @@ public class M_Splinter : Monster, IMonsterHearing
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
         // 감지 범위 내에서만 유효
-        if (distanceToPlayer <= patrolRange)
+        if (distanceToPlayer <= stat.patrolRange)
         {
             // 거리와 비례한 소리 크기 추출 0 ~ 1
             float volumeLevel = Mathf.Clamp01(playerAudioSource.volume / distanceToPlayer);
@@ -68,7 +68,7 @@ public class M_Splinter : Monster, IMonsterHearing
             if (volumeLevel < 0.01) return destination;
 
             // 가까운 거리에서 소리를 들으면 해당 '방향으로' 공격한다.
-            if (distanceToPlayer < attackRange)
+            if (distanceToPlayer < stat.attackRange)
             {
                 // 중복 상태 세팅 방지
                 if (State != EState.Attack)
@@ -95,7 +95,10 @@ public class M_Splinter : Monster, IMonsterHearing
         // 플레이어가 낸 소리가 재생 범위 밖이라면 기존 이동 목표 지점 리턴
         return destination;
     }
-    protected override void SetStat()
+
+    protected override Stat SetStat()
     {
+        Stat _stat;
+        return stat;
     }
 }
