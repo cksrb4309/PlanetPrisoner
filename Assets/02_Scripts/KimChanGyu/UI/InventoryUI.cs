@@ -30,4 +30,12 @@ public class InventoryUI : MonoBehaviour
     {
         slots[index].RemoveItem();
     }
+    public void ItemSlotEquipSetting(int index)
+    {
+        slots[index].Equip();
+    }
+    public void ItemSlotUnEquipSetting(int index)
+    {
+        slots[index].UnEquip();
+    }
 }

@@ -1,8 +1,17 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerItemHandler : MonoBehaviour
 {
+    static PlayerItemHandler instance = null;
+    public static PlayerItemHandler Instance
+    {
+        get { return instance; }
+    }
+
+    [SerializeField] Transform rightHand;
+
     [SerializeField] InputActionReference scrollWheelInputAction; // 스크롤 입력
     [SerializeField] InputActionReference itemUseInputAction; // 아이템 사용 입력
     [SerializeField] InputActionReference itemDropInputAction; // 아이템 드랍 입력
@@ -24,10 +33,15 @@ public class PlayerItemHandler : MonoBehaviour
     int maxSelectedIndex = 5; // 선택할 수 있는 아이템 최대 인덱스
 
     string unEquipTriggerName = "UnEquip"; // 장착해제 TriggerName
-
+    private void Awake()
+    {
+        instance = this;
+    }
     private void Start()
     {
         playerAnimator = GetComponent<PlayerAnimator>();
+
+        InventoryUI.Instance.ItemSlotEquipSetting(0);
     }
     private void OnEnable()
     {
@@ -63,8 +77,14 @@ public class PlayerItemHandler : MonoBehaviour
         {
             // TODO 들고 있다가 놓은 아이템에 대한 처리 (찬규)
 
+            // 인벤토리에서 제거
+            PlayerInventory.Instance.RemoveItem(currentSelectedIndex);
+
             // 아이템 오브젝트 활성화 !
             selectedItem.Activate();
+
+            // 아이템 연결 끊기
+            selectedItem = null;
         }
 
         #endregion
@@ -76,6 +96,7 @@ public class PlayerItemHandler : MonoBehaviour
 
         // 아이템 사용 입력하고, 해당 아이템이 Default 타입이 아닐 경우
         if (itemUseInputAction.action.WasPressedThisFrame() &&
+            selectedItem != null &&
             selectedItem.itemData.itemType != ItemType.Default)
         {
             // 아이템 사용 중 트리거 변수 활성화
@@ -96,29 +117,30 @@ public class PlayerItemHandler : MonoBehaviour
         // 마우스 휠 스크롤 입력 받기
         Vector2 scrollDelta = scrollWheelInputAction.action.ReadValue<Vector2>();
 
-        // 입력된 값이 없다면
-        if (Mathf.Abs(scrollDelta.y) <= float.Epsilon) return;
-
-        // 증가 값을 받았을 때
-        if (scrollDelta.y > 0)
+        // 입력된 값이 있다면
+        if (Mathf.Abs(scrollDelta.y) > float.Epsilon)
         {
-            currentSelectedIndex = (currentSelectedIndex + 1) > maxSelectedIndex ? 0 : currentSelectedIndex + 1;
-        }
-        // 감소 값을 받았을 때
-        else
-        {
-            currentSelectedIndex = (currentSelectedIndex - 1) < 0 ? maxSelectedIndex - 1 : currentSelectedIndex - 1;
+            // 감소 값을 받았을 때
+            if (scrollDelta.y < 0)
+            {
+                currentSelectedIndex = (currentSelectedIndex + 1) >= maxSelectedIndex ? 0 : currentSelectedIndex + 1;
+            }
+            // 증가 값을 받았을 때
+            else
+            {
+                currentSelectedIndex = (currentSelectedIndex - 1) < 0 ? maxSelectedIndex - 1 : currentSelectedIndex - 1;
+            }
         }
 
         // 눌른 단축키 Index 저장
         int pressedHotkeyIndex = -1;
 
         // 아이템 선택 단축키 입력을 확인한다
-        if (itemSelectHotkey1.action.WasPressedThisFrame()) pressedHotkeyIndex = 1;
-        if (itemSelectHotkey2.action.WasPressedThisFrame()) pressedHotkeyIndex = 2;
-        if (itemSelectHotkey3.action.WasPressedThisFrame()) pressedHotkeyIndex = 3;
-        if (itemSelectHotkey4.action.WasPressedThisFrame()) pressedHotkeyIndex = 4;
-        if (itemSelectHotkey5.action.WasPressedThisFrame()) pressedHotkeyIndex = 5;
+        if (itemSelectHotkey1.action.WasPressedThisFrame()) pressedHotkeyIndex = 0;
+        if (itemSelectHotkey2.action.WasPressedThisFrame()) pressedHotkeyIndex = 1;
+        if (itemSelectHotkey3.action.WasPressedThisFrame()) pressedHotkeyIndex = 2;
+        if (itemSelectHotkey4.action.WasPressedThisFrame()) pressedHotkeyIndex = 3;
+        if (itemSelectHotkey5.action.WasPressedThisFrame()) pressedHotkeyIndex = 4;
 
         // 누른 버튼이 있다면
         if (pressedHotkeyIndex != -1) currentSelectedIndex = pressedHotkeyIndex;
@@ -129,8 +151,12 @@ public class PlayerItemHandler : MonoBehaviour
             // 이전 아이템 Null이 아닐 때손에서 가리기
             selectedItem?.DisableInHand();
 
+            InventoryUI.Instance.ItemSlotUnEquipSetting(beforeSelectedIndex);
+
             // 갱신
             beforeSelectedIndex = currentSelectedIndex;
+
+            InventoryUI.Instance.ItemSlotEquipSetting(currentSelectedIndex);
 
             // 아이템 장착
             EquipItem();
@@ -138,16 +164,23 @@ public class PlayerItemHandler : MonoBehaviour
 
         #endregion
     }
-    void EquipItem() // 아이템 장착
+    public void EquipItem() // 아이템 장착
     {
         // 현재 Index의 아이템을 가져온다
         Item targetItem = PlayerInventory.Instance.GetItemFromInventory(currentSelectedIndex);
+
+        // 선택 중인 아이템을 비활성화
+        selectedItem?.DisableInHand();
 
         // 만약 전에 선택한 아이템과 다를 경우
         if (selectedItem != targetItem)
         {
             // 아이템에 따른 손 애니메이션 트리거 재생
             playerAnimator.SetItemChangeTrigger(selectedItem == null ? unEquipTriggerName : selectedItem.itemData.equipTriggerName);
+
+            selectedItem = targetItem;
+
+            selectedItem?.EnableInHand(rightHand);
         }
         // 만약 전에 선택한 아이템과 같을 경우에는 슬롯을 여러 개 사용하는
         // 아이템이라서 같기 때문에 변경 시의 조작을 해줄 필요가 없다
@@ -161,7 +194,7 @@ public class PlayerItemHandler : MonoBehaviour
         selectedItem.itemData.itemUseAction.Invoke(true);
 
         // 만약 아이템이 사용 아이템일 경우
-        if (selectedItem.itemData.itemType == ItemType.Consumable) 
+        if (selectedItem.itemData.itemType == ItemType.Consumable)
         {
             // 현재 인덱스의 아이템 제거
             PlayerInventory.Instance.RemoveItem(currentSelectedIndex);

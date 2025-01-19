@@ -1380,3 +1380,10 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 184219
+  packageName: LOW POLY ASTRONAULTS
+  packageVersion: 1.0
+  assetPath: Assets/04_Animation/KimChanGyu/Player/HumanoidWalk.fbx
+  uploadId: 404320
