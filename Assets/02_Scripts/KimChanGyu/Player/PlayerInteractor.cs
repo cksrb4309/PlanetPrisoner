@@ -1,8 +1,11 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerInteractor : MonoBehaviour
 {
     public InteractionGuideTextUI interactionGuideTextUI;
+
+    public InputActionReference interactionInputAction;
 
     public Transform cameraTransform;
 
@@ -14,47 +17,62 @@ public class PlayerInteractor : MonoBehaviour
 
     IInteractable interactable = null;
 
+    private void OnEnable()
+    {
+        interactionInputAction.action.Enable();
+    }
+    private void OnDisable()
+    {
+        interactionInputAction.action.Disable();
+    }
+
     private void Update()
     {
+        Debug.Log("A : " + this.interactable);
+
         ray.origin = cameraTransform.position;
         ray.direction = cameraTransform.forward;
-
-        // 충돌 O
+        
+        // TODO 상호작용 레이 점검 (찬규)
         if (Physics.Raycast(ray, out RaycastHit hit, range, layerMask))
         {
             IInteractable interactable = hit.collider.GetComponent<IInteractable>();
 
-            if (interactable != null)
+            if (this.interactable == null)
             {
-                if (this.interactable == null)
-                {
-                    this.interactable = interactable;
+                this.interactable = interactable;
 
-                    // UI Tooltip 꺼내기
-                    interactionGuideTextUI.ShowInteractText(interactable.TooltipText);
-                }
-
-                else if (this.interactable != interactable)
-                {
-                    this.interactable = interactable;
-
-                    // UI Tooltip 꺼내기
-                    interactionGuideTextUI.ShowInteractText(interactable.TooltipText);
-                }
+                interactionGuideTextUI.ShowInteractText(this.interactable.TooltipText);
             }
-            else
+            else if (this.interactable != null && this.interactable != interactable)
             {
+                this.interactable = interactable;
+
+                interactionGuideTextUI.ShowInteractText(this.interactable.TooltipText);
+            }
+
+            Debug.Log("B : " + interactable);
+        }
+        else
+        {
+            if (this.interactable != null)
+            {
+                this.interactable = null;
+
                 interactionGuideTextUI.HideInteractText();
             }
         }
 
-        // 충돌 X
-        else
+        
+        if (interactionInputAction.action.WasPressedThisFrame() && this.interactable != null)
         {
-            if (interactable != null)
-            {
-                interactionGuideTextUI.HideInteractText();
-            }
+            Debug.Log("C : " + this.interactable);
+
+            interactionGuideTextUI.HideInteractText();
+
+            this.interactable.Interact();
+
+            this.interactable = null;
         }
     }
 }

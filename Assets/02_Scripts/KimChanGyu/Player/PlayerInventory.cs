@@ -116,22 +116,26 @@ public class PlayerInventory : MonoBehaviour
         items[index] = null; // 현재 인덱스 null 전환
         InventoryUI.Instance.RemoveItem(index); // 아이템 제거
 
+        itemCount--;
+
         // 해당 인덱스와 연결된 슬롯만큼 반복
         for (int i = 0; i < linkedItemSlots[index].Count; i++)
         {
             items[index] = null; // 연결된 슬롯의 아이템 제거
             InventoryUI.Instance.RemoveItem(index); // 슬롯 비우기
+
+            itemCount--;
         }
     }
     int CanAddItem(int itemSize)
     {
         // 아이템이 최소 들어갈 수 있는 위치만큼 반복
-        for (int i = 0; i <= itemMaxCount - itemSize; i++)
+        for (int index = 0; index <= itemMaxCount - itemSize; index++)
         {
             for (int j = 0; j < itemSize; j++)
             {
                 // 만약 아이템이 들어있다면
-                if (items[i + j] != null)
+                if (items[index + j] != null)
                 {
                     // 현재 반복문을 스킵한다
                     break;
@@ -139,7 +143,7 @@ public class PlayerInventory : MonoBehaviour
                 // 만약 아이템이 들어있지 않고 마지막 반복문이라면
                 else if (j == itemSize - 1)
                 {
-                    return i; // 들어갈 수 있는 공간의 Index를 반환한다
+                    return index; // 들어갈 수 있는 공간의 Index를 반환한다
                 }
             }
         }
@@ -153,11 +157,11 @@ public class PlayerInventory : MonoBehaviour
         {
             if (items[i] != null)
             {
-                InventoryUI.Instance.RemoveItem(i);
+                InventoryUI.Instance.SetItem(i, items[i]);
             }
             else
             {
-                InventoryUI.Instance.SetItem(i, items[i]);
+                InventoryUI.Instance.RemoveItem(i);
             }
         }
     }

@@ -44,6 +44,7 @@ public class ItemSlot : MonoBehaviour
         {
             StopCoroutine(unEquipCoroutine);
         }
+        equipCoroutine = StartCoroutine(EquipCoroutine());
     }
     public void UnEquip() // 아이템 장착 해제 시
     {
@@ -52,6 +53,7 @@ public class ItemSlot : MonoBehaviour
         {
             StopCoroutine(equipCoroutine);
         }
+        unEquipCoroutine = StartCoroutine(UnEquipCoroutine());
     }
     IEnumerator EquipCoroutine()
     {
@@ -70,15 +72,22 @@ public class ItemSlot : MonoBehaviour
     IEnumerator UnEquipCoroutine()
     {
         Color color = slotBackgroundUI.color;
+
+        Debug.Log("currAlpha : " + currAlpha.ToString());
+        Debug.Log("unEquipAlpha : " + unEquipAlpha.ToString());
+
         for (; currAlpha > unEquipAlpha; currAlpha -= Time.deltaTime * alphaSpeed)
         {
             color.a = currAlpha;
+
             slotBackgroundUI.color = color;
 
             yield return null;
         }
         currAlpha = unEquipAlpha;
+
         color.a = currAlpha;
+
         slotBackgroundUI.color = color;
     }
 }
