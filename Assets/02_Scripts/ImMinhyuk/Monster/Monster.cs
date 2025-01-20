@@ -12,12 +12,16 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     protected const float decisionInterval = 5.0f; // 움직임 여부를 결정하는 시간 간격 (초)
     protected float nextDecisionTime = 0f;
 
+    [SerializeField] protected CapsuleCollider DetectInAttackRangeCollider; // 공격 범위 안에 들어왔는지 확인용
+    [SerializeField] protected GameObject headSight; //헤드 To 플레이어 시력 탐지 레이용
+
     // 하위 컴포넌트
     protected Animator animator;
     protected NavMeshAgent agent;
 
+
     [SerializeField] // 스텟 확인용으로 달아줬음
-    protected Stat stat; // json으로부터 데이터를 받아온다.
+    protected M_Stat stat; // json으로부터 데이터를 받아온다.
 
     #region FSM
     public enum EState
@@ -73,6 +77,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         stat = SetStat();
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        DetectInAttackRangeCollider = GetComponent<CapsuleCollider>();
         agent.speed = stat.speed;
     }
 
@@ -133,18 +138,6 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         // 타겟팅이 되어 있을 경우 
         if (target != null)
         {
-            // 공격 범위 안으로 왔음 => 공격
-            // TODO : forward 방향 벡터로 탐지하는건 한계가 있음. 고쳐야함
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out hit, stat.attackRange))
-            {
-                if (hit.collider.tag == "Player")
-                {
-                    State = EState.Attack;
-                    return;
-                }
-            }
-
             // 탐지 범위 밖으로 나감 => IDLE 상태로
             float distance = Vector3.Distance(transform.position, target.transform.position);
             if (distance > stat.maxSightRange)
@@ -176,6 +169,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     }
 
     protected virtual void UpdateAttack() { }
+
     protected virtual void UpdateDeath() { }
 
     protected virtual void UpdateStun()
@@ -183,7 +177,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         if (stat.hp < 0) State = EState.Death;
     }
 
-    protected abstract Stat SetStat();
+    protected abstract M_Stat SetStat();
 
     // 네브매쉬 영역에서 이동할 랜덤 위치를 반환
     protected Vector3 GetRandomDestination()
@@ -213,11 +207,26 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     private void OnTriggerEnter(Collider other)
     {
         // TODO : 태그와 컴포넌트 이름 맞추기
-        if (other.tag == "Trap" && State!=EState.Death)
+        if (other.tag == "Trap" && State != EState.Death)
         {
             TMPTrap tmptrap = other.GetComponent<TMPTrap>();
             Damaged(tmptrap.damage);
             State = EState.Stun;
+        }
+
+        // TODO : 태그와 컴포넌트 이름 맞추기
+        if (other.tag == "Player" && State != EState.Death)
+        {
+            State = EState.Attack;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        // TODO : 태그와 컴포넌트 이름 맞추기
+        if (other.tag == "Player" && State != EState.Death)
+        {
+            State = EState.Attack;
         }
     }
 
@@ -225,22 +234,23 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
 
     // 공격 애니메이션이 Hit되는 애니메이션 프레임
     // TODO 공격 히트 방식 변경
-    void OnAnimAttackHitEvent()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out hit, stat.attackRange))
-        {
-            if (hit.collider.tag == "Player")
-            {
-                //TODO 데미지 계산 ex
-                TEMPPlayer player = hit.collider.gameObject.GetComponent<TEMPPlayer>();
-                if (player != null)
-                {
-                    player.Damaged(stat.attackPower);
-                }
-            }
-        }
-    }
+    // 생각해보니까 맞는 쪽에서 처리하는게 더 합리적일 수도 있어..
+    //void OnAnimAttackHitEvent()
+    //{
+    //    RaycastHit hit;
+    //    if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out hit, stat.attackRange))
+    //    {
+    //        if (hit.collider.tag == "Player")
+    //        {
+    //            //TODO 데미지 계산 ex
+    //            TEMPPlayer player = hit.collider.gameObject.GetComponent<TEMPPlayer>();
+    //            if (player != null)
+    //            {
+    //                player.Damaged(stat.attackPower);
+    //            }
+    //        }
+    //    }
+    //}
 
     // 공격 애니메이션이 끝나고 다음 행동을 결정하는 애니메이션 프레임
     void OnAnimAttackEndEvent()
@@ -285,11 +295,6 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, transform.position + leftBoundary);
         Gizmos.DrawLine(transform.position, transform.position + rightBoundary);
-
-        // 공격용 직선 레이
-        Gizmos.color = Color.green;
-        float maxDistance = 5f; // 레이의 최대 길이, TODO 하드코딩 삭제
-        Gizmos.DrawRay(transform.position + Vector3.up, transform.forward * maxDistance);
     }
     #endregion 기즈모
 }

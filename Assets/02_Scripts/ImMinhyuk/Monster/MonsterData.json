@@ -7,9 +7,10 @@
       "attackPower": "1",
       "attackRange": "5",
       "sightAngle": "60.0",
-      "maxSightRange": "20.0",
-      "minSightRange": "10.0",
-      "patrolRange": "50"
+      "maxSightRange": "50.0",
+      "minSightRange": "20.0",
+      "patrolRange": "50",
+      "canHearingRange": "0"
     },
     {
       "name": "Splinter",
@@ -20,7 +21,8 @@
       "sightAngle": "0.0",
       "maxSightRange": "0.0",
       "minSightRange": "0.0",
-      "patrolRange": "50"
+      "patrolRange": "50",
+      "canHearingRange": "50"
     },
     {
       "name": "PatrolEye",
@@ -28,10 +30,11 @@
       "speed": "5.0",
       "attackPower": "1",
       "attackRange": "3",
-      "sightAngle": "120.0",
-      "maxSightRange": "20.0",
-      "minSightRange": "10.0",
-      "patrolRange": "50"
+      "sightAngle": "180.0",
+      "maxSightRange": "40.0",
+      "minSightRange": "1.0",
+      "patrolRange": "50",
+      "canHearingRange": "0"
     },
     {
       "name": "CombatEye",
@@ -39,10 +42,11 @@
       "speed": "5.0",
       "attackPower": "3",
       "attackRange": "3",
-      "sightAngle": "120.0",
-      "maxSightRange": "20.0",
-      "minSightRange": "10.0",
-      "patrolRange": "5"
+      "sightAngle": "180.0",
+      "maxSightRange": "40.0",
+      "minSightRange": "1.0",
+      "patrolRange": "50",
+      "canHearingRange": "0"
     },
     {
       "name": "Murloc",
@@ -51,9 +55,10 @@
       "attackPower": "1",
       "attackRange": "3",
       "sightAngle": "60.0",
-      "maxSightRange": "10.0",
-      "minSightRange": "50.0",
-      "patrolRange": "50"
+      "maxSightRange": "30.0",
+      "minSightRange": "10.0",
+      "patrolRange": "50",
+      "canHearingRange": "50"
     }
   ]
 } 

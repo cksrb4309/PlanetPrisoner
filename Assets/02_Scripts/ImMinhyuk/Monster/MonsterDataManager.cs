@@ -8,7 +8,7 @@ public class MonsterStat : MonoBehaviour
 
     [SerializeField]
     private TextAsset monsterData;
-    public Dictionary<string, Stat> StatDict { get; private set; } = new Dictionary<string, Stat>();
+    public Dictionary<string, M_Stat> StatDict { get; private set; } = new Dictionary<string, M_Stat>();
     private void Awake()
     {
         if (Instance == null)
@@ -27,7 +27,7 @@ public class MonsterStat : MonoBehaviour
 }
 
 [Serializable]
-public struct Stat
+public struct M_Stat
 {
     public string name;
     public int hp;
@@ -38,17 +38,18 @@ public struct Stat
     public float maxSightRange;
     public float minSightRange;
     public int patrolRange;
+    public int canHearingRange;
 }
 
 [Serializable]
 public class StatData
 {
-    public List<Stat> Monsters = new List<Stat>();
+    public List<M_Stat> Monsters = new List<M_Stat>();
 
-    public Dictionary<string, Stat> MakeDict()
+    public Dictionary<string, M_Stat> MakeDict()
     {
-        Dictionary<string, Stat> dict = new Dictionary<string, Stat>();
-        foreach (Stat monster in Monsters)
+        Dictionary<string, M_Stat> dict = new Dictionary<string, M_Stat>();
+        foreach (M_Stat monster in Monsters)
         {
             dict.Add(monster.name, monster);
         }

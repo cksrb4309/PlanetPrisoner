@@ -1,77 +1,80 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class M_Splinter : Monster, IMonsterHearing
+public class M_Splinter : Monster
 {
-    private GameObject player; // 오디오소스를 감지하기 위한 오브젝트로, Monster 클래스의 target이랑은 엄연히 구분할 것
-    private AudioSource playerAudioSource;
+    // 스플린터의 기본 컨셉은 시야가 없어 Monster 클래스의 target을 지정할 수 없다.
 
     private float moveChanceLow = 0.1f; // 작은 소리를 들을 때 트래킹 확률 (낮은 확률)
     private float moveChanceHigh = 0.5f; // 큰 소리일 들을 때 트래킹 확률 (높은 확률)
 
-    // 스플린터의 기본 컨셉은 시야가 없어 Monster 크래스의 target을 지정할 수 없다.
+    MonsterHearing monsterhearing;
+    List<AudioSource> playingAudioSources = new List<AudioSource>();
+    GameObject closetAudioCandidate;
 
     protected override void Start()
     {
         base.Start();
-        player = ((IMonsterHearing)this).SetPlayer();
+        monsterhearing = new MonsterHearing(this);
         StartCoroutine(CoFindTarget());
-    }
-
-    /// <summary>
-    /// Start()할 때 추적 대상(플레이어)를 세팅
-    /// </summary>
-    GameObject IMonsterHearing.SetPlayer()
-    {
-        GameObject retPlayer;
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        if (players.Length > 0)
-        {
-            retPlayer = players[0]; // 싱글플레이어 기준 기본 0번
-            playerAudioSource = retPlayer.GetComponent<AudioSource>();
-            if (playerAudioSource == null)
-            {
-                Debug.Log("스플린터 : 플레이어 태그를 가진 오브젝트에 오디오소스 컴포넌트가 없습니다.");
-                return null;
-            }
-        }
-        else
-        {
-            Debug.Log("스플린터 : 플레이어 태그를 가진 오브젝트가 없습니다");
-            return null;
-        }
-        return retPlayer;
     }
 
     IEnumerator CoFindTarget()
     {
         while (true)
         {
-            destination = ((IMonsterHearing)this).FindTargetInHearing();
+            playingAudioSources = monsterhearing.IsPlayingList();
+            Debug.Log($"{playingAudioSources.Count}개 재생중");
+
+            closetAudioCandidate = FindClosetAudioSource();
+            if (closetAudioCandidate != null)
+            {
+                destination = FindTargetInHearing();
+            }
+
             yield return new WaitForSeconds(0.1f);  // N초마다 타겟을 탐색
         }
     }
 
-    Vector3 IMonsterHearing.FindTargetInHearing()
+    // 현재 재생되는 오디오 소스만 추출
+    GameObject FindClosetAudioSource()
+    {
+        float candidate=0; // (볼륨/거리)가 가장 큰 녀석
+        GameObject ret = null;
+        // playingAudioSources의 모든 오디오 소스에 대해 거리 계산
+        for (int i = 0; i < playingAudioSources.Count; i++)
+        {
+            float distance = Vector3.Distance(playingAudioSources[i].transform.position, transform.position);
+            if(distance <= stat.canHearingRange)
+            {
+                if (candidate < (playingAudioSources[i].volume / distance))
+                {
+                    ret = playingAudioSources[i].gameObject;
+                }
+            }
+        }
+        return ret;
+    }
+
+    Vector3 FindTargetInHearing()
     {
         // 죽었다면 아무것도 하지 않는다.
         if (State == EState.Death) return destination;
 
-        // 플레이어가 소리를 내지 않는다면 기존 이동 목표 지점 리턴
-        if (playerAudioSource.isPlaying == false) return destination; 
-
         // 플레이어와 몬스터 간의 거리 계산
-        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, closetAudioCandidate.transform.position);
 
-        // 감지 범위 내에서만 유효
-        if (distanceToPlayer <= stat.patrolRange)
+        // 감청 범위 내에서만 유효
+        if (distanceToPlayer <= stat.canHearingRange)
         {
             // 거리와 비례한 소리 크기 추출 0 ~ 1
-            float volumeLevel = Mathf.Clamp01(playerAudioSource.volume / distanceToPlayer);
+            float volumeLevel = Mathf.Clamp01(closetAudioCandidate.GetComponent<AudioSource>().volume / distanceToPlayer);
             Debug.Log($"소리 레밸 {volumeLevel}");
 
             // 소리를 죽이면 아무 행동도 하지 않는다.
+            // TODO? 삭제?
             if (volumeLevel < 0.01) return destination;
 
             // 가까운 거리에서 소리를 들으면 해당 '방향으로' 공격한다.
@@ -82,7 +85,7 @@ public class M_Splinter : Monster, IMonsterHearing
                 {
                     // 소리난 방향으로 회전
                     // 네브매쉬랑 같이 사용하고 있어서 부자연스러울지도?? 지금은 괜찮음
-                    Vector3 direction = player.transform.position - transform.position;
+                    Vector3 direction = closetAudioCandidate.transform.position - transform.position;
                     Quaternion targetRotation = Quaternion.LookRotation(direction);
                     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5);
 
@@ -95,7 +98,7 @@ public class M_Splinter : Monster, IMonsterHearing
             float moveChance = (volumeLevel > 0.1f) ? moveChanceHigh : moveChanceLow;
             if (Random.value < moveChance)
             {
-                return player.transform.position;
+                return closetAudioCandidate.transform.position;
             }
         }
 
@@ -103,9 +106,9 @@ public class M_Splinter : Monster, IMonsterHearing
         return destination;
     }
 
-    protected override Stat SetStat()
+    protected override M_Stat SetStat()
     {
-        Stat _stat;
+        M_Stat _stat;
         if (MonsterStat.Instance.StatDict.TryGetValue("Splinter", out _stat))
         {
             Debug.Log(stat.hp);

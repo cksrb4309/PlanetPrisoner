@@ -33,15 +33,15 @@ public class M_Golem : Monster, IMonsterSight
             if (hitCollider.CompareTag("Player"))
             {
                 // 벽 따위의 장애물을 고려해서 레이로 다시 체크해준다.
-                Vector3 directionToTarget = hitCollider.transform.position - transform.position; // 몬스터와 플레이어의 방향 벡터
-                float distanceToTarget = Vector3.Distance(transform.position, hitCollider.transform.position); // 거리 계산
+                Vector3 directionToTarget = hitCollider.transform.position - headSight.transform.position; // 몬스터와 플레이어의 방향 벡터
+                float distanceToTarget = Vector3.Distance(headSight.transform.position, hitCollider.transform.position); // 거리 계산
 
                 // 레이 쏴서 플레이어 아니면 Continue
-                if (Physics.Raycast(transform.position + Vector3.up, directionToTarget.normalized, out RaycastHit hitInfo, distanceToTarget))
+                if (Physics.Raycast(headSight.transform.position, directionToTarget.normalized, out RaycastHit hitInfo, distanceToTarget))
                 {                    
                     if (!hitInfo.collider.CompareTag("Player"))
                     {
-                        continue; 
+                        continue;  
                     }
                 }
 
@@ -70,9 +70,9 @@ public class M_Golem : Monster, IMonsterSight
         return null;
     }
 
-    protected override Stat SetStat()
+    protected override M_Stat SetStat()
     {
-        Stat _stat;
+        M_Stat _stat;
         if (MonsterStat.Instance.StatDict.TryGetValue("Golem", out _stat))
         {
             Debug.Log(stat.hp);

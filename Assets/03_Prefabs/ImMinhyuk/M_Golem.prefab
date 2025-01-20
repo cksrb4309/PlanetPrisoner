@@ -1001,6 +1001,61 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.65895903, y: -0.18207504, z: -0.8167133}
     m_Extent: {x: 1.4094785, y: 0.5742379, z: 1.4864342}
   m_DirtyAABB: 0
+--- !u!1 &4294707686417940864
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8094754461101069971}
+  - component: {fileID: 1221496955413363293}
+  m_Layer: 9
+  m_Name: HitPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8094754461101069971
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4294707686417940864}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7844897718397385596}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1221496955413363293
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4294707686417940864}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.8566745
+  m_Height: 2.9800003
+  m_Direction: 0
+  m_Center: {x: 0, y: 0, z: 1.6229652}
 --- !u!1 &4303651377062631859
 GameObject:
   m_ObjectHideFlags: 0
@@ -1600,6 +1655,7 @@ Transform:
   - {fileID: 5000475932849134012}
   - {fileID: 7189162303181715250}
   - {fileID: 6866159764444764758}
+  - {fileID: 8094754461101069971}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &40128883228525741
@@ -6480,6 +6536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfb9aec3a3679eb418806acfbf204212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitPointCollider: {fileID: 1221496955413363293}
   stat:
     name: 
     hp: 0
