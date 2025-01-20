@@ -33,6 +33,7 @@ public class M_Golem : Monster, IMonsterSight
             if (hitCollider.CompareTag("Player"))
             {
                 // 벽 따위의 장애물을 고려해서 레이로 다시 체크해준다.
+                // TODO 턱살에 걸려서 타게팅 못하는 중. 헤드 사이즈를 재조정해야할 듯. 빈 오브젝트 하나 만들던지
                 Vector3 directionToTarget = hitCollider.transform.position - headSight.transform.position; // 몬스터와 플레이어의 방향 벡터
                 float distanceToTarget = Vector3.Distance(headSight.transform.position, hitCollider.transform.position); // 거리 계산
 

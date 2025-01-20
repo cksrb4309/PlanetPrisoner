@@ -12,7 +12,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     protected const float decisionInterval = 5.0f; // 움직임 여부를 결정하는 시간 간격 (초)
     protected float nextDecisionTime = 0f;
 
-    [SerializeField] protected CapsuleCollider DetectInAttackRangeCollider; // 공격 범위 안에 들어왔는지 확인용
+    [SerializeField] protected CapsuleCollider[] hitRangeColliders; // 공격 Hit 판정용
     [SerializeField] protected GameObject headSight; //헤드 To 플레이어 시력 탐지 레이용
 
     // 하위 컴포넌트
@@ -77,7 +77,6 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         stat = SetStat();
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        DetectInAttackRangeCollider = GetComponent<CapsuleCollider>();
         agent.speed = stat.speed;
     }
 
@@ -138,6 +137,24 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         // 타겟팅이 되어 있을 경우 
         if (target != null)
         {
+            // 공격 범위 안으로 왔음 => 공격
+            Collider[] hitCollidersInMaxSight = Physics.OverlapSphere(transform.position, stat.attackRange); // 공격 범위 내의 hit되는 콜라이더를 모두 탐색한다.
+
+            foreach (Collider hitCollider in hitCollidersInMaxSight)
+            {
+                if (hitCollider.CompareTag("Player"))
+                {
+                    // 타겟 방향으로 회전
+                    // 네브매쉬랑 같이 사용하고 있어서 부자연스러울지도?? 지금은 괜찮음
+                    Vector3 direction = hitCollider.transform.position - transform.position;
+                    Quaternion targetRotation = Quaternion.LookRotation(direction);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5);
+
+                    State = EState.Attack;
+                    return;
+                }
+            }
+
             // 탐지 범위 밖으로 나감 => IDLE 상태로
             float distance = Vector3.Distance(transform.position, target.transform.position);
             if (distance > stat.maxSightRange)
@@ -217,40 +234,30 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         // TODO : 태그와 컴포넌트 이름 맞추기
         if (other.tag == "Player" && State != EState.Death)
         {
-            State = EState.Attack;
-        }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        // TODO : 태그와 컴포넌트 이름 맞추기
-        if (other.tag == "Player" && State != EState.Death)
-        {
-            State = EState.Attack;
+            TEMPlayer tmptrap = other.GetComponent<TEMPlayer>();
+            tmptrap.Damaged(stat.attackPower);
         }
     }
 
     #region 애니메이션 이벤트 영역
 
-    // 공격 애니메이션이 Hit되는 애니메이션 프레임
-    // TODO 공격 히트 방식 변경
-    // 생각해보니까 맞는 쪽에서 처리하는게 더 합리적일 수도 있어..
-    //void OnAnimAttackHitEvent()
-    //{
-    //    RaycastHit hit;
-    //    if (Physics.Raycast(transform.position + Vector3.up, transform.forward, out hit, stat.attackRange))
-    //    {
-    //        if (hit.collider.tag == "Player")
-    //        {
-    //            //TODO 데미지 계산 ex
-    //            TEMPPlayer player = hit.collider.gameObject.GetComponent<TEMPPlayer>();
-    //            if (player != null)
-    //            {
-    //                player.Damaged(stat.attackPower);
-    //            }
-    //        }
-    //    }
-    //}
+    // 공격 애니메이션이 끝나고 다음 행동을 결정하는 애니메이션 프레임
+    void OnAnimAttackRangeColliderOn()
+    {
+        foreach( var hitRangeCollider in hitRangeColliders)
+        {
+            hitRangeCollider.enabled = true;
+        }
+    }
+
+    // 공격 애니메이션이 끝나고 다음 행동을 결정하는 애니메이션 프레임
+    void OnAnimAttackRangeColliderOff()
+    {
+        foreach (var hitRangeCollider in hitRangeColliders)
+        {
+            hitRangeCollider.enabled = false;
+        }
+    }
 
     // 공격 애니메이션이 끝나고 다음 행동을 결정하는 애니메이션 프레임
     void OnAnimAttackEndEvent()
