@@ -51,7 +51,7 @@ public class PlayerInteractor : MonoBehaviour
                 { // 현재 상호작용 중인 오브젝트가 없을 때 or 감지한 오브젝트가 현재 상호작용 중인 오브젝트와 다를 때
                     this.interactable = interactable;
 
-                    Debug.Log(this.interactable);
+                    //Debug.Log(this.interactable);
                     
                     // UI Tooltip 꺼내기
                     UIManager.Instance.OnShowInteractText(interactable.TooltipText);

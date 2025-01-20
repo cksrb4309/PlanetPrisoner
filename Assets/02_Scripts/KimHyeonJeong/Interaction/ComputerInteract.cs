@@ -22,10 +22,5 @@ public class ComputerInteract : MonoBehaviour, IInteractable
         shopUI.SetActive(true);
     }
 
-    /*// Gizmo로 Raycast 경로 표시
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(Camera.main.transform.position, Camera.main.transform.position + Camera.main.transform.forward * 2f);
-    }*/
+    
 }
