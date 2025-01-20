@@ -2060,7 +2060,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.043769296}
+  m_AnchoredPosition: {x: 0, y: 0.00038940826}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &600000153
@@ -2316,7 +2316,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 1
-  m_FillAmount: 0.424
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -4059,10 +4059,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ef009b5914eea4f879f68da35301b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionText: {fileID: 870131494}
   shopUI: {fileID: 534869875}
   inGameUI: {fileID: 1622626215}
-  player: {fileID: 1293925155}
 --- !u!1001 &1228408063
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4360,6 +4358,7 @@ GameObject:
   - component: {fileID: 1293925156}
   - component: {fileID: 1293925155}
   - component: {fileID: 1293925160}
+  - component: {fileID: 1293925161}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -4500,6 +4499,30 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1293925161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1293925154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7434c70cf13c4340b47bb23d6a611ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraTransform: {fileID: 1823010253}
+  range: 1
+  inputAction:
+    m_Name: Input
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 5c415f14-430f-432e-b249-e2a8f3fadfa0
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  player: {fileID: 1293925155}
 --- !u!1001 &1312884879
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4806,7 +4829,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2137176908}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9854359
+  m_Size: 0.9999497
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5727,6 +5750,7 @@ GameObject:
   - component: {fileID: 1622626218}
   - component: {fileID: 1622626217}
   - component: {fileID: 1622626216}
+  - component: {fileID: 1622626220}
   m_Layer: 5
   m_Name: GameUI
   m_TagString: Untagged
@@ -5820,6 +5844,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1622626220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622626215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1df84e59dd2866d4f9f40e63e5dbd847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipTextUI: {fileID: 870131496}
 --- !u!1 &1669868488
 GameObject:
   m_ObjectHideFlags: 0
@@ -6933,7 +6970,7 @@ RectTransform:
   m_Father: {fileID: 1001149487}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.9854359}
+  m_AnchorMax: {x: 1, y: 0.9999497}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}

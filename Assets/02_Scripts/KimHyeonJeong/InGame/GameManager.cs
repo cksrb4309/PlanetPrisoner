@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
         oxygen += amount;
     }
 
-    void Start()
+    void Awake()
     {
         
     }

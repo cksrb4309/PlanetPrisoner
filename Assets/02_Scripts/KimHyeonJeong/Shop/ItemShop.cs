@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 
 public class ItemShop : MonoBehaviour
@@ -17,27 +17,28 @@ public class ItemShop : MonoBehaviour
     
     void Update()
     {
-        FillOxygenTank();
+        
     }
 
-    public void OnClickedXbutton() // »óÁ¡ ´İ±â Å¬¸¯
+    public void OnClickedXbutton() // ìƒì  ë‹«ê¸° í´ë¦­
     {
         shopUI.SetActive(false);
         inGameUI.SetActive(true);
         player.canMove = true;
     }
 
-    public void OnClickedFlashlight() // ¼ÕÀüµî ¾ÆÀÌÅÛ Å¬¸¯
+    public void OnClickedFlashlight() // ì†ì „ë“± ì•„ì´í…œ í´ë¦­
     {
-        // °ÔÀÓ¸Å´ÏÀú¿¡¼­ »ê¼Ò 0.3L(300ml)°¨¼Ò
+        // ê²Œì„ë§¤ë‹ˆì €ì—ì„œ ì‚°ì†Œ 0.3L(300ml)ê°ì†Œ
         gameManager.ChangeOxygen(-300f);
+        FillOxygenTank(); // ì‚°ì†Œ ì´ë¯¸ì§€ ì—…ë°ì´íŠ¸
 
-        // TODO: Àü¼Û±â¿¡¼­ ¾ÆÀÌÅÛ ¹ñ¾î³»±â
+        // TODO: ì „ì†¡ê¸°ì—ì„œ ì•„ì´í…œ ë±‰ì–´ë‚´ê¸°
     }
-
+ 
     public void FillOxygenTank()
     {
-        // »ê¼Ò·®À» TankÀÌ¹ÌÁö¿¡ Ç¥½Ã
+        // ì‚°ì†ŒëŸ‰ì„ Tankì´ë¯¸ì§€ì— í‘œì‹œ
         oxygenTankForeground.fillAmount = gameManager.GetOxygen() / 2000f;
     }
 }

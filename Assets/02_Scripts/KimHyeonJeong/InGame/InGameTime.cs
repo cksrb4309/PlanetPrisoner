@@ -22,7 +22,7 @@ public class InGameTime : MonoBehaviour
     void Update()
     {
         timeCounter += Time.deltaTime;
-        inGameTime += Time.deltaTime * 60; // 10배 빠르게 시간흐름
+        inGameTime += Time.deltaTime * 60; // 60배 빠르게 시간흐름
         if (timeCounter>= updateInterval)
         {
             timeCounter = 0;

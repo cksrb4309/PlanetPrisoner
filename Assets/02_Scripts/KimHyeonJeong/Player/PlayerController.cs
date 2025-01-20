@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class PlayerController : MonoBehaviour
 
     public bool canMove = true;
 
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -24,6 +26,7 @@ public class PlayerController : MonoBehaviour
             MovePlayer();
             LookAround();
         }
+
     }
 
     void MovePlayer()

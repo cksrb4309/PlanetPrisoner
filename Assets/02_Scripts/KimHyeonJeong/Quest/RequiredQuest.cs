@@ -37,7 +37,7 @@ public class RequiredQuest : MonoBehaviour
                 currentQuest = quest.Key;
                 questText.text = $"[필수퀘스트] {quest.Key} {currentProgress}/{quest.Value}";
             }
-            // TODO: 퀘스트 물품 얻으면 text 업데이트 필요(얻을때니까 Player? 상의해봐야할듯)
+            // TODO: 전송기에 놨을 때 퀘스트 아이템인지 확인하고 맞으면 수량 update하고 등등
             i++;
         }
     }
