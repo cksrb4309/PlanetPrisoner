@@ -356,6 +356,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7275914860035794814}
+  - component: {fileID: 1282123815697843039}
   m_Layer: 9
   m_Name: EyeballBone
   m_TagString: Untagged
@@ -379,6 +380,29 @@ Transform:
   - {fileID: 5421414148007224831}
   m_Father: {fileID: 1099613473968540638}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1282123815697843039
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1510323795788106432}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.44
+  m_Height: 1.45
+  m_Direction: 1
+  m_Center: {x: 0.28, y: -0.8, z: 0}
 --- !u!1 &1556557323543581832
 GameObject:
   m_ObjectHideFlags: 0
@@ -1269,7 +1293,7 @@ GameObject:
   - component: {fileID: 3382658766146313019}
   - component: {fileID: 3058178707305331163}
   - component: {fileID: 8555349621892723208}
-  - component: {fileID: 740448443092434781}
+  - component: {fileID: 730577058261428003}
   m_Layer: 9
   m_Name: M_PatrolEye
   m_TagString: Monster
@@ -1997,7 +2021,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &740448443092434781
+--- !u!114 &730577058261428003
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2006,22 +2030,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5763444536179213801}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbe5375cd7b303b4aaf4eeb6195c4e5a, type: 3}
+  m_Script: {fileID: 11500000, guid: c7dbf4cb62902a44cbf86e828323d5fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DetectInAttackRangeCollider: {fileID: 0}
-  headSight: {fileID: 972331828742296783}
-  stat:
-    name: 
-    hp: 0
-    speed: 0
-    attackPower: 0
-    attackRange: 0
-    sightAngle: 0
-    maxSightRange: 0
-    minSightRange: 0
-    patrolRange: 0
-    canHearingRange: 0
+  hitRangeColliders:
+  - {fileID: 1282123815697843039}
+  headSight: {fileID: 1510323795788106432}
 --- !u!1 &6156419261471638348
 GameObject:
   m_ObjectHideFlags: 0
