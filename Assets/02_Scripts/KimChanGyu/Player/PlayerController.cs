@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Codice.Client.BaseCommands;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -45,6 +46,8 @@ public class PlayerController : MonoBehaviour
     float velocityY = 0f; // Y축 Velocity
     float velocityZ = 0f; // Z축 Velocity
 
+    float shoesSpeed = 1f; // 신발 속도 (강화된 신발 shoesSpeed = 1.15f)
+
     Vector3 velocity = Vector3.zero; // 이동에 적용하는 velocity
 
     float currCameraAngle = 0f; // 카메라 x축 회전 값
@@ -65,7 +68,9 @@ public class PlayerController : MonoBehaviour
     float standPivotHeight = -0.024f; // 서있을 때의 높이
 
     Vector3 pivotLocalPosition = Vector3.zero; // 플레이어 로컬 피벗 Y축 적용 Vector3
-    
+
+    PlayerOxygen playerOxygen;
+
     private void OnEnable()
     {
         // InputActionReference 활성화
@@ -89,6 +94,7 @@ public class PlayerController : MonoBehaviour
         // GetComponent로 필요 컴포넌트 가져오기
         characterController = GetComponent<CharacterController>();
         playerAnimator = GetComponent<PlayerAnimator>();
+        playerOxygen = GetComponent<PlayerOxygen>();
 
         // 플레이어 Transform 초기화
         playerTransform = transform;
@@ -240,13 +246,12 @@ public class PlayerController : MonoBehaviour
         float currMagnitude = prevMagnitude > moveSpeedLimit ? moveSpeedLimit : prevMagnitude;
 
         // 만약 벡터 크기의 값이 이동속도보다 크다면 벡터 크기 값을 이동속도 값으로 초기화 한다
-        if (prevMagnitude > moveSpeedLimit) prevMagnitude = moveSpeedLimit; // TODO 확인
+        // if (prevMagnitude > moveSpeedLimit) prevMagnitude = moveSpeedLimit; // TODO 확인
 
-        // X와 Z는 prevMagnitude로 나눈 다음에 제한을 둔 currMagnitude를 곱해준다
         velocity.Set(
-            prevMagnitude > float.Epsilon ? (velocityX / prevMagnitude) * currMagnitude : 0f,
+            prevMagnitude > float.Epsilon ? (velocityX / prevMagnitude) * currMagnitude * shoesSpeed : 0f,
             velocityY,
-            prevMagnitude > float.Epsilon ? (velocityZ / prevMagnitude) * currMagnitude : 0f);
+            prevMagnitude > float.Epsilon ? (velocityZ / prevMagnitude) * currMagnitude * shoesSpeed : 0f);
 
         #endregion
         #region 카메라 회전
@@ -308,7 +313,7 @@ public class PlayerController : MonoBehaviour
 
         // Animator 이동속도 값 제공
         animMoveSpeedSetAction?.Invoke(currMagnitude);
-        
+
         // 서있을 때의 이동 적용
         if (!isCrouch)
         {
@@ -417,6 +422,10 @@ public class PlayerController : MonoBehaviour
         }
         // 정확히 맞춰놓은 값으로 카메라의 로컬 좌표에 적용하기
         cameraTransform.localPosition = cameraLocalPosition;
+    }
+    public void EquipEnhancedShoes()
+    {
+        shoesSpeed = 1.15f;
     }
     #region 플레이어 이동속도 설정 Action 바인드
     public void BindToPlayerAnimator(Action<float> action)

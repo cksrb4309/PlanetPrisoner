@@ -2,8 +2,13 @@ using UnityEngine;
 
 public class PlayerSpaceSuit : MonoBehaviour, IDamagable
 {
-    [SerializeField] float minOxygenDecreaseValue = 0.05f;
-    [SerializeField] float maxOxygenDecreaseValue = 1f;
+    // 일반 우주복의 산소 소모량
+    [SerializeField] float minOxygenDrain = 0.05f;
+    [SerializeField] float maxOxygenDrain = 3f;
+
+    // 강화 우주복의 산소 소모량
+    [SerializeField] float minExSuitOxygenDrain = 0.025f;
+    [SerializeField] float maxExSuitOxygenDrain = 2f;
 
     [SerializeField] float maxHp = 3f;
 
@@ -32,7 +37,7 @@ public class PlayerSpaceSuit : MonoBehaviour, IDamagable
 
         playerOxygen = GetComponent<PlayerOxygen>();
 
-        playerOxygen.SetOxygenDecreaseValue(minOxygenDecreaseValue);
+        playerOxygen.SetOxygenDecreaseValue(minOxygenDrain);
     }
     public void Hit(float damage)
     {
@@ -43,8 +48,19 @@ public class PlayerSpaceSuit : MonoBehaviour, IDamagable
 
         playerOxygen.SetOxygenDecreaseValue(
             Mathf.Lerp(
-                maxOxygenDecreaseValue,
-                minOxygenDecreaseValue,
+                minOxygenDrain,
+                maxOxygenDrain,
+                currHp / maxHp));
+    }
+    public void EquipEnhancedSuit()
+    {
+        minOxygenDrain = minExSuitOxygenDrain;
+        maxOxygenDrain = maxExSuitOxygenDrain;
+
+        playerOxygen.SetOxygenDecreaseValue(
+            Mathf.Lerp(
+                minOxygenDrain,
+                maxOxygenDrain,
                 currHp / maxHp));
     }
 }
