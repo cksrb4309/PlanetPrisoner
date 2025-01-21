@@ -1,5 +1,4 @@
-﻿using PlasticGui.WorkspaceWindow.QueryViews;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -35,7 +34,7 @@ public class RequiredQuest : MonoBehaviour
             if (i == randomIndex)
             {
                 currentQuest = quest.Key;
-                questText.text = $"[필수퀘스트] {quest.Key} {currentProgress}/{quest.Value}";
+                questText.text = $"<color=#009006>[필수퀘스트]</color> {quest.Key} {currentProgress}/{quest.Value}";
             }
             // TODO: 전송기에 놨을 때 퀘스트 아이템인지 확인하고 맞으면 수량 update하고 등등
             i++;
