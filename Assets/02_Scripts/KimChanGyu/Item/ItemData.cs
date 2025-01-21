@@ -23,7 +23,7 @@ public class ItemData : ScriptableObject // Item 클래스가 갖고 있을 정보
     public string equipTriggerName = string.Empty; // 장착 애니메이션 트리거 이름
     public string useTriggerName = string.Empty; // 사용 애니메이션 트리거 이름
 
-    public UnityEvent<bool> itemUseAction = null; // 아이템 사용 Action
+    public UnityEvent<PlayerInfo> itemUseAction = null; // 아이템 사용 Action
 }
 
 public enum ItemType

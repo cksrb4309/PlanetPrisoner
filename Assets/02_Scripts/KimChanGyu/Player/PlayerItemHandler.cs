@@ -22,6 +22,8 @@ public class PlayerItemHandler : MonoBehaviour
     [SerializeField] InputActionReference itemSelectHotkey4; // 아이템 선택 단축키 4
     [SerializeField] InputActionReference itemSelectHotkey5; // 아이템 선택 단축키 5
 
+    PlayerInfo playerInfo;
+
     PlayerAnimator playerAnimator = null; // 플레이어 애니메이터
 
     Item selectedItem = null; // 선택 중인 아이템
@@ -42,6 +44,10 @@ public class PlayerItemHandler : MonoBehaviour
         playerAnimator = GetComponent<PlayerAnimator>();
 
         InventoryUI.Instance.ItemSlotEquipSetting(0);
+
+        playerInfo = new PlayerInfo(
+            GetComponent<PlayerSpaceSuit>(),
+            GetComponent<PlayerController>());
     }
     private void OnEnable()
     {
@@ -191,7 +197,7 @@ public class PlayerItemHandler : MonoBehaviour
         isItemUsing = false;
 
         // 선택한 아이템의 사용 시 기능을 호출한다
-        selectedItem.itemData.itemUseAction.Invoke(true);
+        selectedItem.itemData.itemUseAction.Invoke(playerInfo);
 
         // 만약 아이템이 사용 아이템일 경우
         if (selectedItem.itemData.itemType == ItemType.Consumable)

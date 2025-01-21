@@ -28,8 +28,6 @@ public class PlayerInteractor : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("A : " + this.interactable);
-
         ray.origin = cameraTransform.position;
         ray.direction = cameraTransform.forward;
         
@@ -50,8 +48,6 @@ public class PlayerInteractor : MonoBehaviour
 
                 interactionGuideTextUI.ShowInteractText(this.interactable.TooltipText);
             }
-
-            Debug.Log("B : " + interactable);
         }
         else
         {
@@ -66,8 +62,6 @@ public class PlayerInteractor : MonoBehaviour
         
         if (interactionInputAction.action.WasPressedThisFrame() && this.interactable != null)
         {
-            Debug.Log("C : " + this.interactable);
-
             interactionGuideTextUI.HideInteractText();
 
             this.interactable.Interact();
