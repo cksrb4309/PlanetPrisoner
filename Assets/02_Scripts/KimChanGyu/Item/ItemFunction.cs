@@ -10,16 +10,22 @@ public class ItemFunction : MonoBehaviour // 아이템 액션 모음 클래스
     #endregion
 
     #region 함정 설치
-    public void DropTrap(PlayerInfo playerInfo)
+    public void ActivateTrap(PlayerInfo playerInfo)
     {
+        BearTrap trap = playerInfo.playerItemHandler.GetCurrentItem() as BearTrap;
 
+        trap?.Activate();
+        trap?.ActivateTrap();
     }
     #endregion
 
     #region 스캐너 동작
+
+    [SerializeField] float scannerScanRange = 40f;
+
     public void ScanArea(PlayerInfo playerInfo)
     {
-
+        playerInfo.playerScanner.Scan(scannerScanRange);
     }
     #endregion
 

@@ -81,11 +81,28 @@ public class Item : MonoBehaviour, IInteractable
     {
         LayerMask layerMask = LayerMask.GetMask("Ground");
 
-        while (!Physics.Raycast(rayStartPosition.position, Vector3.down, 0.01f, layerMask))
-        {
-            transform.position += Time.deltaTime * itemData.itemDropSpeed * Vector3.down;
+        Ray ray = new Ray(rayStartPosition.position, Vector3.down);
 
-            yield return null;
+        float positionY = transform.position.y;
+        Vector3 position = new Vector3(transform.position.x, positionY, transform.position.z);
+
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, float.PositiveInfinity, layerMask))
+        {
+            float goal = hitInfo.point.y + (rayStartPosition.position.y - transform.position.y);
+
+            while (positionY > goal)
+            {
+                yield return null;
+
+                positionY -= Time.deltaTime * itemData.itemDropSpeed;
+
+                position.y = positionY;
+
+                transform.position = position;
+            }
+            position.y = goal;
+
+            transform.position = position;
         }
     }
 }

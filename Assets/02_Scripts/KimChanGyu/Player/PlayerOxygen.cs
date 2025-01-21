@@ -21,6 +21,10 @@ public class PlayerOxygen : MonoBehaviour
         {
             currOxygen = value;
 
+            if (currOxygen >= maxOxygen)
+                currOxygen = maxOxygen;
+                currOxygen = maxOxygen;
+
             if (currOxygen <= 0f)
             {
                 currOxygen = 0;
@@ -56,7 +60,9 @@ public class PlayerOxygen : MonoBehaviour
     void Die()
     {
         StopCoroutine(decreaseCoroutine);
-
-
+    }
+    public void RefillOxygen(float oxygen)
+    {
+        Oxygen += oxygen;
     }
 }

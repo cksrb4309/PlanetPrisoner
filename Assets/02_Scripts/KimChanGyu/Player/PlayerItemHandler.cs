@@ -47,7 +47,9 @@ public class PlayerItemHandler : MonoBehaviour
 
         playerInfo = new PlayerInfo(
             GetComponent<PlayerSpaceSuit>(),
-            GetComponent<PlayerController>());
+            GetComponent<PlayerController>(),
+            GetComponent<PlayerScanner>(),
+            this);
     }
     private void OnEnable()
     {
@@ -81,8 +83,6 @@ public class PlayerItemHandler : MonoBehaviour
         if (itemDropInputAction.action.WasPressedThisFrame() &&
             selectedItem != null)
         {
-            // TODO 들고 있다가 놓은 아이템에 대한 처리 (찬규)
-
             // 인벤토리에서 제거
             PlayerInventory.Instance.RemoveItem(currentSelectedIndex);
 
@@ -110,6 +110,9 @@ public class PlayerItemHandler : MonoBehaviour
 
             // 아이템에 따른 사용 애니메이션 트리거 재생
             playerAnimator.SetItemUseTrigger(selectedItem == null ? unEquipTriggerName : selectedItem.itemData.equipTriggerName);
+
+            // TODO : 변경요함 (찬규)
+            OnItemUseComplete(); // 애니메이션이 없음으로 여기서 아이템 사용 테스트를 우선적으로 진행한다
         }
 
         #endregion
@@ -170,6 +173,8 @@ public class PlayerItemHandler : MonoBehaviour
 
         #endregion
     }
+    public Transform GetHandTransform() => rightHand;
+    public Item GetCurrentItem() => selectedItem;
     public void EquipItem() // 아이템 장착
     {
         // 현재 Index의 아이템을 가져온다
