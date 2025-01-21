@@ -30,21 +30,11 @@ public class M_Golem : Monster, IMonsterSight
 
         foreach (Collider hitCollider in hitCollidersInMaxSight)
         {
+            // 장애물을 고려하지 않고 오버랩 스피어 안에 플레이어가 있음
             if (hitCollider.CompareTag("Player"))
             {
-                // 벽 따위의 장애물을 고려해서 레이로 다시 체크해준다.
-                // TODO 턱살에 걸려서 타게팅 못하는 중. 헤드 사이즈를 재조정해야할 듯. 빈 오브젝트 하나 만들던지
                 Vector3 directionToTarget = hitCollider.transform.position - headSight.transform.position; // 몬스터와 플레이어의 방향 벡터
                 float distanceToTarget = Vector3.Distance(headSight.transform.position, hitCollider.transform.position); // 거리 계산
-
-                // 레이 쏴서 플레이어 아니면 Continue
-                if (Physics.Raycast(headSight.transform.position, directionToTarget.normalized, out RaycastHit hitInfo, distanceToTarget))
-                {                    
-                    if (!hitInfo.collider.CompareTag("Player"))
-                    {
-                        continue;  
-                    }
-                }
 
                 // 이미 타겟팅이 됐을 때는 최대 탐지 범위 내에서 찾아 준다.
                 if (target != null && distanceToTarget < stat.maxSightRange)
@@ -59,10 +49,18 @@ public class M_Golem : Monster, IMonsterSight
                 }
 
                 // 최대 탐지 거리 안이고 시야각 내에서 플레이어를 찾을 때
-                float angleToPlayer = Vector3.Angle(transform.forward, directionToTarget); // 몬스터와 플레이어의 각도
-                if (angleToPlayer <= stat.sightAngle / 2) // 좌, 우 때문에 1/2씩 나눔
-                {
-                    return hitCollider.gameObject;
+                // 벽 따위의 장애물을 고려해서 레이로 다시 체크해준다.
+                // 레이 쏴서 플레이어 아니면 Continue
+                if (Physics.Raycast(headSight.transform.position, directionToTarget.normalized, out RaycastHit hitInfo, distanceToTarget))
+                {                    
+                    if (hitInfo.collider.CompareTag("Player"))
+                    {
+                        float angleToPlayer = Vector3.Angle(transform.forward, directionToTarget); // 몬스터와 플레이어의 각도
+                        if (angleToPlayer <= stat.sightAngle / 2) // 좌, 우 때문에 1/2씩 나눔
+                        {
+                            return hitCollider.gameObject;
+                        }
+                    }
                 }
             }
         }

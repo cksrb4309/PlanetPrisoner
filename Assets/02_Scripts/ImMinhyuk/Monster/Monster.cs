@@ -148,7 +148,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
                     // 네브매쉬랑 같이 사용하고 있어서 부자연스러울지도?? 지금은 괜찮음
                     Vector3 direction = hitCollider.transform.position - transform.position;
                     Quaternion targetRotation = Quaternion.LookRotation(direction);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 90);
 
                     State = EState.Attack;
                     return;
