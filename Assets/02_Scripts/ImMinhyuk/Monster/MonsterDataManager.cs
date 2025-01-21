@@ -27,7 +27,7 @@ public class MonsterStat : MonoBehaviour
 }
 
 [Serializable]
-public struct M_Stat
+public class M_Stat
 {
     public string name;
     public int hp;

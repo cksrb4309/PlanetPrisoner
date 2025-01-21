@@ -1516,19 +1516,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ecc9515a4697cf4f912bb4b8f90d1f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DetectInAttackRangeCollider: {fileID: 0}
+  hitRangeColliders: []
   headSight: {fileID: 0}
-  stat:
-    name: 
-    hp: 0
-    speed: 0
-    attackPower: 0
-    attackRange: 0
-    sightAngle: 0
-    maxSightRange: 0
-    minSightRange: 0
-    patrolRange: 0
-    canHearingRange: 0
 --- !u!1 &4998455786466101935
 GameObject:
   m_ObjectHideFlags: 0

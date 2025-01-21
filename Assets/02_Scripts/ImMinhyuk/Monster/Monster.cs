@@ -19,9 +19,9 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     protected Animator animator;
     protected NavMeshAgent agent;
 
-
     [SerializeField] // 스텟 확인용으로 달아줬음
-    protected M_Stat stat; // json으로부터 데이터를 받아온다.
+    //protected M_Stat stat; // json으로부터 데이터를 받아온다.
+    public M_Stat stat { get; private set; }
 
     #region FSM
     public enum EState
@@ -234,7 +234,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         // TODO : 태그와 컴포넌트 이름 맞추기
         if (other.tag == "Player" && State != EState.Death)
         {
-            TEMPlayer tmptrap = other.GetComponent<TEMPlayer>();
+            TMPlayer tmptrap = other.GetComponent<TMPlayer>();
             tmptrap.Damaged(stat.attackPower);
         }
     }

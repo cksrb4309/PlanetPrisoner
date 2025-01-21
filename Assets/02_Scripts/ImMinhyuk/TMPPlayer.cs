@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class TEMPlayer : MonoBehaviour
+public class TMPlayer : MonoBehaviour
 {
     private Rigidbody rb;  // 리지드 바디
     private float moveSpeed = 15f;  // 이동 속도
