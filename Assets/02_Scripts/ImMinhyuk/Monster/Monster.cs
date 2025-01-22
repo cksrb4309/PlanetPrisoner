@@ -20,8 +20,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     protected NavMeshAgent agent;
 
     [SerializeField] // 스텟 확인용으로 달아줬음
-    //protected M_Stat stat; // json으로부터 데이터를 받아온다.
-    public M_Stat stat { get; private set; }
+    public M_Stat stat { get; private set; } // json으로부터 데이터를 받아온다.
 
     #region FSM
     public enum EState

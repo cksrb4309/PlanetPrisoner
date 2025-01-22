@@ -81,7 +81,7 @@ public class MonsterHearing : MonoBehaviour
         {
             // 거리와 비례한 소리 크기 추출 0 ~ 1
             float volumeLevel = Mathf.Clamp01(closetAudioCandidate.GetComponent<AudioSource>().volume / distanceToPlayer);
-            Debug.Log($"소리 레밸 {volumeLevel}");
+            //Debug.Log($"소리 레밸 {volumeLevel}");
 
             // 소리를 죽이면 아무 행동도 하지 않는다.
             // TODO? 삭제?
