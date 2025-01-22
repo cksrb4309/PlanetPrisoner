@@ -2702,14 +2702,14 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 2
-  m_Radius: 0.21
-  m_Height: 0.76
+  m_Radius: 0.4
+  m_Height: 1.2
   m_Direction: 2
-  m_Center: {x: 0.67, y: 0.82, z: 0.57}
+  m_Center: {x: 0.46, y: 0.82, z: 0.58}
 --- !u!1 &4114800305355998863
 GameObject:
   m_ObjectHideFlags: 0
@@ -5278,7 +5278,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 247ee412a8e92014496962b73a9f6bdd, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -7931,7 +7931,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &7015762154859135377
 CapsuleCollider:

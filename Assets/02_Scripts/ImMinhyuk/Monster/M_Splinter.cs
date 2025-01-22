@@ -35,14 +35,12 @@ public class M_Splinter : Monster
     protected override M_Stat SetStat()
     {
         M_Stat _stat;
+
         if (MonsterStat.Instance.StatDict.TryGetValue("Splinter", out _stat))
-        {
-            Debug.Log(_stat.hp);
-        }
-        else
         {
             Debug.LogWarning($"Splinter not found in stat Dictionary");
         }
+
         return _stat;
     }
 }

@@ -23,16 +23,8 @@ public class M_Eye : Monster
 
     protected override M_Stat SetStat()
     {
-        M_Stat _stat;
-        // 세부 Eye 나누기전에 PatrolEye로 일단 넣어놓자.
-        if (MonsterStat.Instance.StatDict.TryGetValue("PatrolEye", out _stat))
-        {
-            Debug.Log(_stat.hp);
-        }
-        else
-        {
-            Debug.LogWarning($"Golem not found in stat Dictionary");
-        }
-        return _stat;
+        // 하위 클래스에서 정의한다.
+        // 통과 시켜주기 위해 null 반환.
+        return null;
     }
 }

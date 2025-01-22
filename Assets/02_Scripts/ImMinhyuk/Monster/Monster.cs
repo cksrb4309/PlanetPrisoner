@@ -56,7 +56,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
                     break;
                 case EState.Attack:
                     agent.isStopped = true;
-                    animator.CrossFade("Attack02", 0.1f, -1, 0);
+                    animator.CrossFade("Attack02", 0.1f);
                     break;
                 case EState.Stun:
                     agent.isStopped = true;
@@ -262,14 +262,15 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     // 공격 애니메이션이 끝나고 다음 행동을 결정하는 애니메이션 프레임
     void OnAnimAttackEndEvent()
     {
-        if (target != null)
-        {
-            State = EState.Moving;
-        }
-        else
-        {
-            State = EState.Idle;
-        }
+        State = EState.Idle;
+        //if (target != null)
+        //{
+        //    State = EState.Moving;
+        //}
+        //else
+        //{
+        //    State = EState.Idle;
+        //}
     }
 
     // 스턴 애니메이션이 끝나고 다음 행동을 결정하는 애니메이션 프레임
@@ -286,6 +287,9 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     #region 기즈모
     private void OnDrawGizmos()
     {
+        if (!Application.isPlaying)
+            return;
+
         // 최대 시야 거리 원
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, stat.maxSightRange);

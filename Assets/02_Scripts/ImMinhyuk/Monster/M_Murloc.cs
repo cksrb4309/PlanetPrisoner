@@ -45,14 +45,12 @@ public class M_Murloc : Monster
     protected override M_Stat SetStat()
     {
         M_Stat _stat;
-        if (MonsterStat.Instance.StatDict.TryGetValue("Murloc", out _stat))
-        {
-            Debug.Log(_stat.hp);
-        }
-        else
+
+        if (!MonsterStat.Instance.StatDict.TryGetValue("Murloc", out _stat))
         {
             Debug.LogWarning($"Murloc not found in stat Dictionary");
         }
+
         return _stat;
     }
 }
