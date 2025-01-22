@@ -157,12 +157,8 @@ public class PlayerItemHandler : MonoBehaviour
         // 이전 선택 중인 인덱스와 달라졌을 때
         if (beforeSelectedIndex != currentSelectedIndex)
         {
-            // 이전 아이템 Null이 아닐 때손에서 가리기
-            selectedItem?.DisableInHand();
-
             InventoryUI.Instance.ItemSlotUnEquipSetting(beforeSelectedIndex);
 
-            // 갱신
             beforeSelectedIndex = currentSelectedIndex;
 
             InventoryUI.Instance.ItemSlotEquipSetting(currentSelectedIndex);
@@ -180,21 +176,20 @@ public class PlayerItemHandler : MonoBehaviour
         // 현재 Index의 아이템을 가져온다
         Item targetItem = PlayerInventory.Instance.GetItemFromInventory(currentSelectedIndex);
 
-        // 선택 중인 아이템을 비활성화
-        selectedItem?.DisableInHand();
-
-        // 만약 전에 선택한 아이템과 다를 경우
-        if (selectedItem != targetItem)
+        // 같은 아이템 선택이 아닐 경우
+        if (selectedItem == null ||
+            targetItem == null ||
+            selectedItem.GetInstanceID() != targetItem.GetInstanceID())
         {
             // 아이템에 따른 손 애니메이션 트리거 재생
-            playerAnimator.SetItemChangeTrigger(selectedItem == null ? unEquipTriggerName : selectedItem.itemData.equipTriggerName);
+            playerAnimator.SetItemChangeTrigger(targetItem == null ? unEquipTriggerName : targetItem.itemData.equipTriggerName);
+
+            selectedItem?.DisableInHand();
 
             selectedItem = targetItem;
 
             selectedItem?.EnableInHand(rightHand);
         }
-        // 만약 전에 선택한 아이템과 같을 경우에는 슬롯을 여러 개 사용하는
-        // 아이템이라서 같기 때문에 변경 시의 조작을 해줄 필요가 없다
     }
     void OnItemUseComplete() // 아이템 사용 완료 함수
     {

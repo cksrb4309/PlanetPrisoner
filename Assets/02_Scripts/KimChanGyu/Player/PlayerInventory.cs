@@ -121,11 +121,12 @@ public class PlayerInventory : MonoBehaviour
         // 해당 인덱스와 연결된 슬롯만큼 반복
         for (int i = 0; i < linkedItemSlots[index].Count; i++)
         {
-            items[index] = null; // 연결된 슬롯의 아이템 제거
-            InventoryUI.Instance.RemoveItem(index); // 슬롯 비우기
+            items[linkedItemSlots[index][i]] = null; // 연결된 슬롯의 아이템 제거
+            InventoryUI.Instance.RemoveItem(linkedItemSlots[index][i]); // 슬롯 비우기
 
             itemCount--;
         }
+        linkedItemSlots[index].Clear();
     }
     int CanAddItem(int itemSize)
     {

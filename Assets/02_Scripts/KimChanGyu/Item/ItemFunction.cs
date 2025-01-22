@@ -14,7 +14,6 @@ public class ItemFunction : MonoBehaviour // 아이템 액션 모음 클래스
     {
         BearTrap trap = playerInfo.playerItemHandler.GetCurrentItem() as BearTrap;
 
-        trap?.Activate();
         trap?.ActivateTrap();
     }
     #endregion
