@@ -18,7 +18,6 @@ public class ScanResultDisplay : MonoBehaviour
     [SerializeField] Image explainPanelImage;
     [SerializeField] TMP_Text explainText;
 
-
     [SerializeField] AnimationCurve curve;
 
     [SerializeField] float duration = 2f;
@@ -28,6 +27,8 @@ public class ScanResultDisplay : MonoBehaviour
     [SerializeField] bool isExplain = false;
 
     Coroutine displayCoroutine = null;
+
+    bool isDisplay = true;
 
     private void Awake()
     {
@@ -64,6 +65,12 @@ public class ScanResultDisplay : MonoBehaviour
         if (explainText != null)
             explainText.color = new Color(mainColor.r, mainColor.g, mainColor.b, explainText.color.a);
     }
+    private void OnEnable()
+    {
+        isDisplay = true;
+    }
+    public void EnableDisplay() => isDisplay = true;
+    public void DisableDisplay() => isDisplay = false;
     public void OnDisplay()
     {
         if (displayCoroutine != null)
@@ -71,7 +78,8 @@ public class ScanResultDisplay : MonoBehaviour
             StopCoroutine(displayCoroutine);
         }
 
-        displayCoroutine = StartCoroutine(DisplayCoroutine());
+        if (gameObject.activeSelf)
+            displayCoroutine = StartCoroutine(DisplayCoroutine());
     }
 
     IEnumerator DisplayCoroutine()

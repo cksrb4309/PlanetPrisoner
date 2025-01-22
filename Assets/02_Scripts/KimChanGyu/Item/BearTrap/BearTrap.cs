@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BearTrap : Item
 {
-    public override string TooltipText => !isSet ? "Get(E)" : isBeingSet ? "install(E)" : "Danger";
+    public override string TooltipText => isUsed ? string.Empty : !isSet ? "Get(E)" : isBeingSet ? "install(E)" : "Danger";
 
     public MeshRenderer meshRenderer;
 
@@ -39,18 +39,26 @@ public class BearTrap : Item
         // 충돌체 활성화
         collider.enabled = true;
 
+        scanResultDisplay.EnableDisplay();
+
         if (!isUsed)
         {
             isSet = true;
 
             isBeingSet = true;
 
-            material.SetFloat("_TrapOpenAmount", 1f);
+            material.SetFloat("_TrapOpenAmount", 0f);
         }
+    }
+    public override void ConsumeItem()
+    {
+
     }
     public void CompleteAttack()
     {
         isUsed = true;
+
+        scanResultDisplay.DisableDisplay();
 
         material.SetFloat("_TrapOpenAmount", 0f);
     }
@@ -67,7 +75,7 @@ public class BearTrap : Item
         {
             currInstallCount++;
 
-            material.SetFloat("_TrapOpenAmount", 1f - (needInstallCount / currInstallCount));
+            material.SetFloat("_TrapOpenAmount", ((float)currInstallCount / (float)needInstallCount));
 
             if (currInstallCount == needInstallCount)
             {
@@ -81,7 +89,7 @@ public class BearTrap : Item
     {
         material.SetFloat("_TrapOpenAmount", 0.5f);
 
-        helper.DeactivateHelper();
+        helper.InitHelper();
 
         currInstallCount = 0;
 

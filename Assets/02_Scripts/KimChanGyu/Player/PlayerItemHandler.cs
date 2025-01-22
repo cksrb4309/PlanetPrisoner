@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerItemHandler : MonoBehaviour
@@ -197,13 +198,24 @@ public class PlayerItemHandler : MonoBehaviour
         isItemUsing = false;
 
         // 선택한 아이템의 사용 시 기능을 호출한다
-        selectedItem.itemData.itemUseAction.Invoke(playerInfo);
+        UnityEvent<PlayerInfo> itemAction = selectedItem.itemData.itemUseAction;
 
         // 만약 아이템이 사용 아이템일 경우
         if (selectedItem.itemData.itemType == ItemType.Consumable)
         {
             // 현재 인덱스의 아이템 제거
             PlayerInventory.Instance.RemoveItem(currentSelectedIndex);
+
+            itemAction.Invoke(playerInfo);
+
+            selectedItem.ConsumeItem();
+
+            selectedItem = null;
         }
+        else
+        {
+            itemAction.Invoke(playerInfo);
+        }
+
     }
 }

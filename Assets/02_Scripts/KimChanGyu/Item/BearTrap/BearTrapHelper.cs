@@ -6,9 +6,11 @@ public class BearTrapHelper : MonoBehaviour
     List<IDamagable> targets = new List<IDamagable>();
 
     bool isSet = false;
-    public void DeactivateHelper()
+    bool isAttacked = false;
+    public void InitHelper()
     {
         isSet = false;
+        isAttacked = false;
 
         targets.Clear();
     }
@@ -25,10 +27,14 @@ public class BearTrapHelper : MonoBehaviour
     }
     void Attack()
     {
+        if (isAttacked) return;
+
         foreach (IDamagable damagable in targets)
         {
             damagable.Hit(1f);
         }
+
+        isAttacked = true;
 
         GetComponentInParent<BearTrap>().CompleteAttack();
 
@@ -44,6 +50,8 @@ public class BearTrapHelper : MonoBehaviour
             {
                 Attack();
             }
+
+            Debug.Log("ADD Count : " + targets.Count);
         }
     }
     public void OnTriggerExit(Collider other)
@@ -51,6 +59,8 @@ public class BearTrapHelper : MonoBehaviour
         if (other.TryGetComponent(out IDamagable damagable))
         {
             targets.Remove(damagable);
+
+            Debug.Log("REMOVE Count : " + targets.Count);
         }
     }
 }

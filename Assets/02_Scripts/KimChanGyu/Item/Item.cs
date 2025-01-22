@@ -12,11 +12,15 @@ public class Item : MonoBehaviour, IInteractable
     protected new MeshRenderer renderer = null; // 렌더러
     protected new Collider collider = null; // 콜라이더
 
+    protected ScanResultDisplay scanResultDisplay = null;
+
     private void Start()
     {
         // GetComponent로 필요한 클래스 참조 가져오기
         collider = GetComponentInChildren<Collider>();
         renderer = GetComponentInChildren<MeshRenderer>();
+
+        scanResultDisplay = GetComponentInChildren<ScanResultDisplay>();
     }
     public virtual void Interact() // 상호작용
     {
@@ -34,6 +38,8 @@ public class Item : MonoBehaviour, IInteractable
 
         // 충돌체 비활성화
         collider.enabled = false;
+
+        scanResultDisplay.DisableDisplay();
     }
     public void EnableInHand(Transform parent) // 아이템 손에 들고 있는 상태로 활성화
     {
@@ -49,8 +55,20 @@ public class Item : MonoBehaviour, IInteractable
 
         // 충돌체 비활성화
         collider.enabled = false;
+
+        scanResultDisplay.EnableDisplay();
     }
-    public void Activate() // 활성화
+    public virtual void ConsumeItem()
+    {
+        renderer.enabled = false;
+        collider.enabled = false;
+        transform.parent = null;
+
+        scanResultDisplay.DisableDisplay();
+
+        //Destroy(gameObject);
+    }
+    public virtual void Activate() // 활성화
     {
         // 부모 해제
         transform.parent = null;
@@ -65,6 +83,8 @@ public class Item : MonoBehaviour, IInteractable
 
         // 충돌체 활성화
         collider.enabled = true;
+
+        scanResultDisplay.EnableDisplay();
     }
     protected IEnumerator DropItemCoroutine()
     {
