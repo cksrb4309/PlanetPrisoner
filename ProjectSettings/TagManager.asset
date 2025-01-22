@@ -26,9 +26,9 @@ TagManager:
   - WorldCanvas
   - Monster
   - Interact
-  - 
-  - 
-  - 
+  - PlayerAttack
+  - MonsterAttack
+  - GlobalAttack
   - 
   - 
   - 
