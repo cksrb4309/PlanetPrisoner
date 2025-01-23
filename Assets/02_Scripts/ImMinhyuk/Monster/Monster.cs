@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public abstract class Monster : MonoBehaviour, IMonsterDamagable
 {
     protected GameObject target; // 플레이어
+    protected GameObject preFrameTarget; // 이전 프레임의 타겟
     protected Vector3 destination; // 이동할 목표 지점 
     protected bool isArrivedDestination = false; // 목표지점에 도착했는지 토글용
 
@@ -27,6 +28,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     {
         Idle,
         Moving,
+        Alert,
         Attack,
         Stun,
         Death
@@ -52,6 +54,10 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
                 case EState.Moving:
                     agent.isStopped = false;
                     animator.CrossFade("Walk", 0.1f);
+                    break;
+                case EState.Alert: // Eye 확장용 테스트로 추가
+                    agent.isStopped = true;
+                    animator.CrossFade("Alert", 0.1f);
                     break;
                 case EState.Attack:
                     agent.isStopped = true;
@@ -91,6 +97,9 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
                 break;
             case EState.Moving:
                 UpdateMoving();
+                break;
+            case EState.Alert:
+                UpdateAlert();
                 break;
             case EState.Attack:
                 UpdateAttack();
@@ -159,6 +168,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
             if (distance > stat.maxSightRange)
             {
                 target = null;
+                preFrameTarget = null;
                 State = EState.Idle;
                 return;
             }
@@ -170,10 +180,13 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         // destination은 타겟이 있다면 타겟의 위치가, 그렇지 않다면 패트롤 위치가 들어 있음
         agent.SetDestination(destination);
 
+
         // 도착하면 Idle로 바꿔준다. 타겟이 있다면 알아서 공격상태로 전환될 것이다. (Moving -> Idle -> Moving -> Attack)
-        // TODO 이슈 : 내브매쉬 목적지와 Y축 차이가 있으면 도착하지 못하고 해당 지점에서 회전함
-        // 좀 더 지켜보고 Y축을 제외하고 보정하던지 해서 개선해야할 듯
-        if (Vector3.Distance(transform.position, destination) < 0.1f)
+        // y축 오차는 고려하지 않기 위해 한번 컨버팅 
+        Vector3 flatPosition = new Vector3(transform.position.x, 0, transform.position.z);
+        Vector3 flatDestination = new Vector3(destination.x, 0, destination.z);
+
+        if (Vector3.Distance(flatPosition, flatDestination) < 0.1f)
         {
             isArrivedDestination = true;
             State = EState.Idle;
@@ -182,6 +195,11 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         {
             isArrivedDestination = false;
         }
+    }
+
+    protected virtual void UpdateAlert() 
+    {
+        State = EState.Idle;
     }
 
     protected virtual void UpdateAttack() { }
@@ -214,9 +232,9 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     public void Damaged(int damage)
     {
         stat.hp -= damage;
-        if (stat.hp <0)
+        if (stat.hp < 0)
         {
-            State= EState.Death;
+            State = EState.Death;
         }
     }
 
@@ -279,6 +297,11 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         {
             State = EState.Idle;
         }
+    }
+
+    void OnAnimAlertEndEvent()
+    {
+        State = EState.Idle;
     }
 
     #endregion 애니메이션 이벤트 영역

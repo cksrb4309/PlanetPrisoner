@@ -29,7 +29,7 @@
       "hp": "1",
       "speed": "5.0",
       "attackPower": "1",
-      "attackRange": "3",
+      "attackRange": "7",
       "sightAngle": "180.0",
       "maxSightRange": "40.0",
       "minSightRange": "10.0",
@@ -45,7 +45,7 @@
       "sightAngle": "180.0",
       "maxSightRange": "40.0",
       "minSightRange": "10.0",
-      "patrolRange": "50",
+      "patrolRange": "5",
       "canHearingRange": "0"
     },
     {
