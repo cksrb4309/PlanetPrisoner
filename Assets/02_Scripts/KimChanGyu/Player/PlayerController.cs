@@ -1,4 +1,5 @@
 ﻿using Codice.Client.BaseCommands;
+using Codice.CM.Common.Checkin.Partial;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -34,6 +35,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] InputActionReference jumpInputAction; // 점프 입력
     [SerializeField] InputActionReference crouchInputAction; // 앉기 입력
     [SerializeField] InputActionReference runInputAction; // 달리기 입력
+
+    public bool canMove = true; 
 
     PlayerAnimator playerAnimator = null; // PlayerAnimator
     CharacterController characterController = null; // 플레이어 캐릭터 컨트롤러
@@ -108,226 +111,229 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        #region Velocity X,Z 값 설정
-
-        // 키보드 이동 입력 값 moveDelta에 저장
-        moveDelta = keyboardMoveInputAction.action.ReadValue<Vector2>();
-
-        // 이동속도 제한 값을 걷는 속도로 초기화
-        float moveSpeedLimit = walkMoveSpeed;
-
-        // 만약 달리기 입력을 누르고 있다면
-        if (runInputAction.action.IsPressed())
+        if (canMove)
         {
-            // TODO 산소 처리 (찬규)
-            // 머시깽 ~
+            #region Velocity X,Z 값 설정
 
-            // 달리기 속도로 변경
-            moveSpeedLimit = runMoveSpeed;
-        }
+            // 키보드 이동 입력 값 moveDelta에 저장
+            moveDelta = keyboardMoveInputAction.action.ReadValue<Vector2>();
 
-        // X축의 입력이 있을 때
-        if (Mathf.Abs(moveDelta.x) > 0.1f)
-        {
-            // 해당 방향으로 주는 힘을 증가시킨다
-            velocityX += moveDelta.x * Time.deltaTime * acceleration;
+            // 이동속도 제한 값을 걷는 속도로 초기화
+            float moveSpeedLimit = walkMoveSpeed;
 
-            // 이동속도만큼 제한을 둔다
-            if (velocityX > moveSpeedLimit) velocityX = moveSpeedLimit;
-            if (velocityX < -moveSpeedLimit) velocityX = -moveSpeedLimit;
-        }
-
-        // X축의 입력이 없다면 X축의 velocity가 0f가 아니라면
-        else if (velocityX != 0f)
-        {
-            // velocity.x가 음수라면 1, 양수라면 -1을 sign 값에 넣는다
-            float sign = -Mathf.Sign(velocityX);
-
-            // sign 값을 이용해서 양수라면 음수 값으로, 음수라면 양수 값으로 변화시킨다
-            velocityX += Time.deltaTime * deceleration * sign;
-
-            // 만약 velocity.x가 0을 지나 부호가 달라졌다면 velocity.x의 값을 0f로 초기화 한다
-            if (Mathf.Sign(velocityX) == sign) velocityX = 0f;
-        }
-
-        // Y축의 입력이 있을 때
-        if (Mathf.Abs(moveDelta.y) > 0.1f)
-        {
-            // 해당 방향으로 주는 힘을 증가시킨다
-            velocityZ += moveDelta.y * Time.deltaTime * acceleration;
-
-            // 이동속도만큼 제한을 둔다
-            if (velocityZ > moveSpeedLimit) velocityZ = moveSpeedLimit;
-            if (velocityZ < -moveSpeedLimit) velocityZ = -moveSpeedLimit;
-        }
-
-        // Y축의 입력이 없다면
-        else if (velocityZ != 0f)
-        {
-            // velocity.y가 음수라면 1, 양수라면 -1을 sign 값에 넣는다
-            float sign = -Mathf.Sign(velocityZ);
-
-            // sign 값을 이용해서 양수라면 음수 값으로, 음수라면 양수 값으로 변화시킨다
-            velocityZ += Time.deltaTime * deceleration * sign;
-
-            // 만약 velocity.z가 0을 지나 부호가 달라졌다면 velocity.z의 값을 0f로 초기화 한다
-            if (Mathf.Sign(velocityZ) == sign) velocityZ = 0f;
-        }
-
-        #endregion
-        #region Velocity Y 값 설정
-
-        // 플레이어가 땅에 있거나 코요테 타임 값이 남아있거나, 바로 밑에 오브젝트가 있을 때
-        if (characterController.isGrounded || coyoteTimeCounter > 0f || Physics.Raycast(groundCheckRay,0.1f))
-        {
-            // 점프 중이 아닐 때, 점프 키를 눌렀다면
-            if (velocityY <= 0f && jumpInputAction.action.WasPressedThisFrame())
+            // 만약 달리기 입력을 누르고 있다면
+            if (runInputAction.action.IsPressed())
             {
-                // 코요테 타임 초기화
-                coyoteTimeCounter = 0;
+                // TODO 산소 처리 (찬규)
+                // 머시깽 ~
 
-                // 중력을 현재 jumpSpeed로 변경하여 튀어오르게 한다
-                velocityY = jumpSpeed;
-
-                // 점프 애니메이션 트리거 및 플레이어 높이 조절
-                PlayerJumpHeightAnim(playerAnimator.SetJumpTrigger());
-            }
-        }
-
-        // 만약 캐릭터가 지상 위에 있다면
-        if (characterController.isGrounded)
-        {
-            // 캐릭터가 떨어지고 있거나 가만히 있을 때
-            if (velocityY <= 0f)
-            {
-                // velocityY를 0으로 초기화
-                velocityY = 0;
-
-                // 애니메이터에게 땅 위에 있다고 알린다
-                playerAnimator.SetIsGround(true);
-
-                // 땅 위에 있으므로 피벗을 standPivotHeight 위치로 적용한다
-                pivotLocalPosition.y = standPivotHeight;
-                playerPivotTransform.localPosition = pivotLocalPosition;
+                // 달리기 속도로 변경
+                moveSpeedLimit = runMoveSpeed;
             }
 
-            // 코요테 타임 갱신
-            coyoteTimeCounter = coyoteTime;
-        }
-
-        // 만약 캐릭터가 땅 위에 없다면
-        else
-        {
-            // 코요테 타임 감소
-            coyoteTimeCounter -= Time.deltaTime;
-
-            // 지면 확인 Ray 설정
-            groundCheckRay.origin = transform.position;
-            groundCheckRay.direction = Vector3.down;
-
-            // 만약 아래에 맞는 오브젝트가 없다면
-            if (!Physics.Raycast(groundCheckRay, 0.13f))
+            // X축의 입력이 있을 때
+            if (Mathf.Abs(moveDelta.x) > 0.1f)
             {
-                // 중력 적용
-                velocityY += Time.deltaTime * gravity;
+                // 해당 방향으로 주는 힘을 증가시킨다
+                velocityX += moveDelta.x * Time.deltaTime * acceleration;
 
-                // 애니메이터에게 땅 위에 없다고 알림
-                playerAnimator.SetIsGround(false);
+                // 이동속도만큼 제한을 둔다
+                if (velocityX > moveSpeedLimit) velocityX = moveSpeedLimit;
+                if (velocityX < -moveSpeedLimit) velocityX = -moveSpeedLimit;
             }
-        }
 
-        #endregion
-        #region velocity 값 갱신
+            // X축의 입력이 없다면 X축의 velocity가 0f가 아니라면
+            else if (velocityX != 0f)
+            {
+                // velocity.x가 음수라면 1, 양수라면 -1을 sign 값에 넣는다
+                float sign = -Mathf.Sign(velocityX);
 
-        // velocity의 x와 z의 벡터 크기 값을 구한다
-        // moveSpeed로 제한을 두기 전의 값인 prevMagnitude와
-        // 제한을 둔 후인 currMagnitude 값을 만든다
-        float prevMagnitude = new Vector2(velocityX, velocityZ).magnitude;
-        float currMagnitude = prevMagnitude > moveSpeedLimit ? moveSpeedLimit : prevMagnitude;
+                // sign 값을 이용해서 양수라면 음수 값으로, 음수라면 양수 값으로 변화시킨다
+                velocityX += Time.deltaTime * deceleration * sign;
 
-        // 만약 벡터 크기의 값이 이동속도보다 크다면 벡터 크기 값을 이동속도 값으로 초기화 한다
-        // if (prevMagnitude > moveSpeedLimit) prevMagnitude = moveSpeedLimit; // TODO 확인
+                // 만약 velocity.x가 0을 지나 부호가 달라졌다면 velocity.x의 값을 0f로 초기화 한다
+                if (Mathf.Sign(velocityX) == sign) velocityX = 0f;
+            }
 
-        velocity.Set(
-            prevMagnitude > float.Epsilon ? (velocityX / prevMagnitude) * currMagnitude * shoesSpeed : 0f,
-            velocityY,
-            prevMagnitude > float.Epsilon ? (velocityZ / prevMagnitude) * currMagnitude * shoesSpeed : 0f);
+            // Y축의 입력이 있을 때
+            if (Mathf.Abs(moveDelta.y) > 0.1f)
+            {
+                // 해당 방향으로 주는 힘을 증가시킨다
+                velocityZ += moveDelta.y * Time.deltaTime * acceleration;
 
-        #endregion
-        #region 카메라 회전
+                // 이동속도만큼 제한을 둔다
+                if (velocityZ > moveSpeedLimit) velocityZ = moveSpeedLimit;
+                if (velocityZ < -moveSpeedLimit) velocityZ = -moveSpeedLimit;
+            }
 
-        // 마우스 이동 값 가져오기
-        rotateDelta = mouseMoveInputAction.action.ReadValue<Vector2>(); 
+            // Y축의 입력이 없다면
+            else if (velocityZ != 0f)
+            {
+                // velocity.y가 음수라면 1, 양수라면 -1을 sign 값에 넣는다
+                float sign = -Mathf.Sign(velocityZ);
 
-        // 마우스 이동 값이 있을 때
-        if (rotateDelta != Vector2.zero)
-        { 
-            // 마우스 상하 이동 값은 up:1, down:-1이라 생각하면 되는데
-            // 실제로 카메라의 x축 회전을 적용했을 때는 up:-1, down:1 값을 해야하기 때문에 
-            // mouseMoveValue.y에 -1f을 곱해줌으로써 값을 맞춰준다
-            rotateDelta.y *= -1f;
+                // sign 값을 이용해서 양수라면 음수 값으로, 음수라면 양수 값으로 변화시킨다
+                velocityZ += Time.deltaTime * deceleration * sign;
 
-            // 카메라의 회전은 Clamp를 이용해서 제한을 한다
-            currCameraAngle = Mathf.Clamp(
-                currCameraAngle + (rotateDelta.y * Time.deltaTime * rotateSpeed),
-                pitchClampMin,
-                pitchClampMax);
+                // 만약 velocity.z가 0을 지나 부호가 달라졌다면 velocity.z의 값을 0f로 초기화 한다
+                if (Mathf.Sign(velocityZ) == sign) velocityZ = 0f;
+            }
 
-            // 카메라의 상하 회전은 Transform eulerAngle X에 적용
-            // 좌우 회전은 playerTransform.eulerAngles.y를 가져옴
-            cameraTransform.rotation = Quaternion.Euler(currCameraAngle, playerTransform.eulerAngles.y, 0f);
+            #endregion
+            #region Velocity Y 값 설정
 
-            // 플레이어 트랜스폼에는 x축의 마우스 회전 값만 적용한다
-            playerTransform.Rotate(0, rotateDelta.x * rotateSpeed * Time.deltaTime, 0);
+            // 플레이어가 땅에 있거나 코요테 타임 값이 남아있거나, 바로 밑에 오브젝트가 있을 때
+            if (characterController.isGrounded || coyoteTimeCounter > 0f || Physics.Raycast(groundCheckRay, 0.1f))
+            {
+                // 점프 중이 아닐 때, 점프 키를 눌렀다면
+                if (velocityY <= 0f && jumpInputAction.action.WasPressedThisFrame())
+                {
+                    // 코요테 타임 초기화
+                    coyoteTimeCounter = 0;
 
-            
-        }
+                    // 중력을 현재 jumpSpeed로 변경하여 튀어오르게 한다
+                    velocityY = jumpSpeed;
 
-        #endregion
-        #region 앉기 입력 처리
+                    // 점프 애니메이션 트리거 및 플레이어 높이 조절
+                    PlayerJumpHeightAnim(playerAnimator.SetJumpTrigger());
+                }
+            }
 
-        // 앉기 버튼을 누르고 있다면
-        if (crouchInputAction.action.IsPressed())
-        {
-            // 만약 현재 앉고 있지 않을 때
+            // 만약 캐릭터가 지상 위에 있다면
+            if (characterController.isGrounded)
+            {
+                // 캐릭터가 떨어지고 있거나 가만히 있을 때
+                if (velocityY <= 0f)
+                {
+                    // velocityY를 0으로 초기화
+                    velocityY = 0;
+
+                    // 애니메이터에게 땅 위에 있다고 알린다
+                    playerAnimator.SetIsGround(true);
+
+                    // 땅 위에 있으므로 피벗을 standPivotHeight 위치로 적용한다
+                    pivotLocalPosition.y = standPivotHeight;
+                    playerPivotTransform.localPosition = pivotLocalPosition;
+                }
+
+                // 코요테 타임 갱신
+                coyoteTimeCounter = coyoteTime;
+            }
+
+            // 만약 캐릭터가 땅 위에 없다면
+            else
+            {
+                // 코요테 타임 감소
+                coyoteTimeCounter -= Time.deltaTime;
+
+                // 지면 확인 Ray 설정
+                groundCheckRay.origin = transform.position;
+                groundCheckRay.direction = Vector3.down;
+
+                // 만약 아래에 맞는 오브젝트가 없다면
+                if (!Physics.Raycast(groundCheckRay, 0.13f))
+                {
+                    // 중력 적용
+                    velocityY += Time.deltaTime * gravity;
+
+                    // 애니메이터에게 땅 위에 없다고 알림
+                    playerAnimator.SetIsGround(false);
+                }
+            }
+
+            #endregion
+            #region velocity 값 갱신
+
+            // velocity의 x와 z의 벡터 크기 값을 구한다
+            // moveSpeed로 제한을 두기 전의 값인 prevMagnitude와
+            // 제한을 둔 후인 currMagnitude 값을 만든다
+            float prevMagnitude = new Vector2(velocityX, velocityZ).magnitude;
+            float currMagnitude = prevMagnitude > moveSpeedLimit ? moveSpeedLimit : prevMagnitude;
+
+            // 만약 벡터 크기의 값이 이동속도보다 크다면 벡터 크기 값을 이동속도 값으로 초기화 한다
+            // if (prevMagnitude > moveSpeedLimit) prevMagnitude = moveSpeedLimit; // TODO 확인
+
+            velocity.Set(
+                prevMagnitude > float.Epsilon ? (velocityX / prevMagnitude) * currMagnitude * shoesSpeed : 0f,
+                velocityY,
+                prevMagnitude > float.Epsilon ? (velocityZ / prevMagnitude) * currMagnitude * shoesSpeed : 0f);
+
+            #endregion
+            #region 카메라 회전
+
+            // 마우스 이동 값 가져오기
+            rotateDelta = mouseMoveInputAction.action.ReadValue<Vector2>();
+
+            // 마우스 이동 값이 있을 때
+            if (rotateDelta != Vector2.zero)
+            {
+                // 마우스 상하 이동 값은 up:1, down:-1이라 생각하면 되는데
+                // 실제로 카메라의 x축 회전을 적용했을 때는 up:-1, down:1 값을 해야하기 때문에 
+                // mouseMoveValue.y에 -1f을 곱해줌으로써 값을 맞춰준다
+                rotateDelta.y *= -1f;
+
+                // 카메라의 회전은 Clamp를 이용해서 제한을 한다
+                currCameraAngle = Mathf.Clamp(
+                    currCameraAngle + (rotateDelta.y * Time.deltaTime * rotateSpeed),
+                    pitchClampMin,
+                    pitchClampMax);
+
+                // 카메라의 상하 회전은 Transform eulerAngle X에 적용
+                // 좌우 회전은 playerTransform.eulerAngles.y를 가져옴
+                cameraTransform.rotation = Quaternion.Euler(currCameraAngle, playerTransform.eulerAngles.y, 0f);
+
+                // 플레이어 트랜스폼에는 x축의 마우스 회전 값만 적용한다
+                playerTransform.Rotate(0, rotateDelta.x * rotateSpeed * Time.deltaTime, 0);
+
+
+            }
+
+            #endregion
+            #region 앉기 입력 처리
+
+            // 앉기 버튼을 누르고 있다면
+            if (crouchInputAction.action.IsPressed())
+            {
+                // 만약 현재 앉고 있지 않을 때
+                if (!isCrouch)
+                {
+                    // 앉은 상태 갱신
+                    CrouchStateUpdate(true);
+                }
+            }
+
+            // 앉기 버튼을 누르고 있지 않다면
+            else
+            {
+                // 만약 현재 앉고 있을 때
+                if (isCrouch)
+                {
+                    // 앉은 상태 갱신
+                    CrouchStateUpdate(false);
+                }
+            }
+
+            #endregion
+            #region 이동 값 적용
+
+            // Animator 이동속도 값 제공
+            animMoveSpeedSetAction?.Invoke(currMagnitude);
+
+            // 서있을 때의 이동 적용
             if (!isCrouch)
             {
-                // 앉은 상태 갱신
-                CrouchStateUpdate(true);
+                // 플레이어 이동 적용
+                characterController.Move(transform.rotation * velocity * Time.deltaTime);
             }
-        }
 
-        // 앉기 버튼을 누르고 있지 않다면
-        else
-        {
-            // 만약 현재 앉고 있을 때
-            if (isCrouch)
+            // 앉아 있을 때의 이동 적용 
+            else
             {
-                // 앉은 상태 갱신
-                CrouchStateUpdate(false);
+                // 플레이어 이동 적용
+                characterController.Move(transform.rotation * new Vector3(velocity.x * crouchRatioSpeed, velocity.y, velocity.z * crouchRatioSpeed) * Time.deltaTime);
             }
+            #endregion
         }
-
-        #endregion
-        #region 이동 값 적용
-
-        // Animator 이동속도 값 제공
-        animMoveSpeedSetAction?.Invoke(currMagnitude);
-
-        // 서있을 때의 이동 적용
-        if (!isCrouch)
-        {
-            // 플레이어 이동 적용
-            characterController.Move(transform.rotation * velocity * Time.deltaTime);
-        }
-
-        // 앉아 있을 때의 이동 적용 
-        else
-        {
-            // 플레이어 이동 적용
-            characterController.Move(transform.rotation * new Vector3(velocity.x * crouchRatioSpeed, velocity.y, velocity.z * crouchRatioSpeed) * Time.deltaTime);
-        }
-        #endregion
     }
     void CrouchStateUpdate(bool isCrouch) // 앉은 상태 갱신
     {

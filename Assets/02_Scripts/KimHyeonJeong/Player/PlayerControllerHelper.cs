@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerControllerHelper : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float lookSpeed = 1f;
