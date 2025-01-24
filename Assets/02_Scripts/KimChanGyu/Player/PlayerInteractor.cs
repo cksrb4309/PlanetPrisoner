@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerInteractor : MonoBehaviour
@@ -31,7 +31,7 @@ public class PlayerInteractor : MonoBehaviour
         ray.origin = cameraTransform.position;
         ray.direction = cameraTransform.forward;
         
-        // TODO »óÈ£ÀÛ¿ë ·¹ÀÌ Á¡°Ë (Âù±Ô)
+        // TODO ìƒí˜¸ì‘ìš© ë ˆì´ ì ê²€ (ì°¬ê·œ)
         if (Physics.Raycast(ray, out RaycastHit hit, range, layerMask))
         {
             IInteractable interactable = hit.collider.GetComponent<IInteractable>();

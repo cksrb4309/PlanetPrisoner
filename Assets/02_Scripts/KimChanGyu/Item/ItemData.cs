@@ -1,33 +1,33 @@
-using System;
+ï»¿using System;
 using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "ItemData", menuName = "Item/ItemData")]
-public class ItemData : ScriptableObject // Item Å¬·¡½º°¡ °®°í ÀÖÀ» Á¤º¸
+public class ItemData : ScriptableObject // Item í´ë˜ìŠ¤ê°€ ê°–ê³  ìˆì„ ì •ë³´
 {
-    public string itemName; // ¾ÆÀÌÅÛ ÀÌ¸§
+    public string itemName; // ì•„ì´í…œ ì´ë¦„
 
-    public ItemType itemType = ItemType.Default; // ¾ÆÀÌÅÛ Å¸ÀÔ
+    public ItemType itemType = ItemType.Default; // ì•„ì´í…œ íƒ€ì…
 
-    public int itemSize = 1; // ÀÎº¥Åä¸® Â÷Áö °ø°£
+    public int itemSize = 1; // ì¸ë²¤í† ë¦¬ ì°¨ì§€ ê³µê°„
 
-    public int itemPrice; // ¾ÆÀÌÅÛ °¡°İ
+    public int itemPrice; // ì•„ì´í…œ ê°€ê²©
 
-    public float itemWeight; // ¾ÆÀÌÅÛ ¹«°Ô TODO : ¾ÆÀÌÅÛ ¹«°Ô Àû¿ë (Âù±Ô)
-    public float itemDropSpeed; // ¾ÆÀÌÅÛ ¶³¾îÁö´Â ¼Óµµ
+    public float itemWeight; // ì•„ì´í…œ ë¬´ê²Œ TODO : ì•„ì´í…œ ë¬´ê²Œ ì ìš© (ì°¬ê·œ)
+    public float itemDropSpeed; // ì•„ì´í…œ ë–¨ì–´ì§€ëŠ” ì†ë„
 
-    public Sprite itemIconImage; // ¾ÆÀÌÅÛ ¾ÆÀÌÄÜ ÀÌ¹ÌÁö
+    public Sprite itemIconImage; // ì•„ì´í…œ ì•„ì´ì½˜ ì´ë¯¸ì§€
 
-    public string guideText; // ¼±ÅÃ °¡ÀÌµå ÅØ½ºÆ®
+    public string guideText; // ì„ íƒ ê°€ì´ë“œ í…ìŠ¤íŠ¸
 
-    public AnimationParameter equipTrigger = AnimationParameter.HoldItem; // ÀåÂø ¾Ö´Ï¸ŞÀÌ¼Ç Æ®¸®°Å ÀÌ¸§
-    public AnimationParameter useTrigger = AnimationParameter.UseItem; // »ç¿ë ¾Ö´Ï¸ŞÀÌ¼Ç Æ®¸®°Å ÀÌ¸§
+    public AnimationParameter equipTrigger = AnimationParameter.HoldItem; // ì¥ì°© ì• ë‹ˆë©”ì´ì…˜ íŠ¸ë¦¬ê±° ì´ë¦„
+    public AnimationParameter useTrigger = AnimationParameter.UseItem; // ì‚¬ìš© ì• ë‹ˆë©”ì´ì…˜ íŠ¸ë¦¬ê±° ì´ë¦„
 
-    public UnityEvent<PlayerInfo> itemUseAction = null; // ¾ÆÀÌÅÛ »ç¿ë Action
+    public UnityEvent<PlayerInfo> itemUseAction = null; // ì•„ì´í…œ ì‚¬ìš© Action
 }
 public enum ItemType
 {
-    Default, // ±âº» ¾ÆÀÌÅÛ
-    Consumable, // ¼Ò¸ğ¼º ¾ÆÀÌÅÛ
-    NonConsumable, // ºñ¼Ò¸ğ¼º ¾ÆÀÌÅÛ
+    Default, // ê¸°ë³¸ ì•„ì´í…œ
+    Consumable, // ì†Œëª¨ì„± ì•„ì´í…œ
+    NonConsumable, // ë¹„ì†Œëª¨ì„± ì•„ì´í…œ
 }

@@ -1,8 +1,8 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class NotificationTextUI : MonoBehaviour
 {
-    public void NotificationText(string message) // °æ°í¼º ¸Ş¼¼Áö ¶ç¿ì±â
+    public void NotificationText(string message) // ê²½ê³ ì„± ë©”ì„¸ì§€ ë„ìš°ê¸°
     {
         
     }

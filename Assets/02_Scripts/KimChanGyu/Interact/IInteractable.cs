@@ -1,7 +1,7 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
-public interface IInteractable // »óÈ£ÀÛ¿ë ÀÎÅÍÆäÀÌ½º
+public interface IInteractable // ìƒí˜¸ì‘ìš© ì¸í„°í˜ì´ìŠ¤
 {
-    public void Interact(); // »óÈ£ÀÛ¿ë
-    public string TooltipText { get; } // Ä¿¼­¸¦ °¡Á®´Ù ´òÀ» ¶§ ¶ã UI Text
+    public void Interact(); // ìƒí˜¸ì‘ìš©
+    public string TooltipText { get; } // ì»¤ì„œë¥¼ ê°€ì ¸ë‹¤ ëŒ”ì„ ë•Œ ëœ° UI Text
 }

@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 
 public class BearTrap : Item
@@ -14,7 +14,7 @@ public class BearTrap : Item
     int needInstallCount = 3;
     int currInstallCount = 0;
 
-    bool isSet = false; // ¼³Ä¡µÇ¾ú´ÂÁö¿¡ ´ëÇÑ Æ®¸®°Å º¯¼ö
+    bool isSet = false; // ì„¤ì¹˜ë˜ì—ˆëŠ”ì§€ì— ëŒ€í•œ íŠ¸ë¦¬ê±° ë³€ìˆ˜
     bool isUsed = false;
     bool isBeingSet = false;
 
@@ -28,15 +28,15 @@ public class BearTrap : Item
     }
     public void ActivateTrap()
     {
-        // ºÎ¸ğ ÇØÁ¦
+        // ë¶€ëª¨ í•´ì œ
         transform.parent = null;
 
         StartCoroutine(DropItemCoroutine());
 
-        // ÀåÂø ÇØÁ¦ ½ÃÀÇ È¸Àü°ª ÃÊ±âÈ­
+        // ì¥ì°© í•´ì œ ì‹œì˜ íšŒì „ê°’ ì´ˆê¸°í™”
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
-        // Ãæµ¹Ã¼ È°¼ºÈ­
+        // ì¶©ëŒì²´ í™œì„±í™”
         collider.enabled = true;
 
         scanResultDisplay.EnableDisplay();
@@ -66,7 +66,7 @@ public class BearTrap : Item
     {
         if (IsGetItem())
         {
-            // ÀÎº¥Åä¸®·Î ¾ÆÀÌÅÛ Àü¼Û
+            // ì¸ë²¤í† ë¦¬ë¡œ ì•„ì´í…œ ì „ì†¡
             PlayerInventory.Instance.AddItemToInventory(this);
 
             PlayerItemHandler.Instance.EquipItem();

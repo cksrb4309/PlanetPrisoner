@@ -1,4 +1,4 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 
 public class PlayerAttacker : MonoBehaviour
 {
@@ -18,12 +18,12 @@ public class PlayerAttacker : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hitInfo, range, layerMask))
         {
-            Debug.Log("∞¯∞› ¿˚¡ﬂ : " + hitInfo.collider.gameObject.name);
+            Debug.Log("Í≥µÍ≤© Ï†ÅÏ§ë : " + hitInfo.collider.gameObject.name);
             hitInfo.collider.GetComponent<IDamagable>().Damaged(damage);
         }
         else
         {
-            Debug.Log("∞¯∞› πÃΩ∫");
+            Debug.Log("Í≥µÍ≤© ÎØ∏Ïä§");
         }
     }
 }
