@@ -5813,6 +5813,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6285219831330374497}
+  - component: {fileID: 6493733033827348460}
   m_Layer: 0
   m_Name: M_MurlocGroupHelper
   m_TagString: Untagged
@@ -5838,6 +5839,19 @@ Transform:
   - {fileID: 4322961734609501644}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6493733033827348460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3105258960949483262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 929f43d93a83e3445872d3d8c2654fb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  murlocs: []
 --- !u!1 &3152686201175027962
 GameObject:
   m_ObjectHideFlags: 0
@@ -8886,7 +8900,7 @@ Transform:
   m_GameObject: {fileID: 4373814124258358165}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7767943, z: -0, w: 0.62975436}
-  m_LocalPosition: {x: -0.02, y: 0, z: 3.5009599}
+  m_LocalPosition: {x: -1.89, y: 0, z: 17.29}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11619,9 +11633,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aba73eb2efc2ef4aa38cb1b59cc4c7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destination: {x: 0, y: 0, z: 0}
   hitRangeColliders:
   - {fileID: 1711161799708272009}
   headSight: {fileID: 633121385459799216}
+  id: 0
+  groupMurloc: []
 --- !u!1 &4377096779919201454
 GameObject:
   m_ObjectHideFlags: 0
@@ -11888,7 +11905,7 @@ Transform:
   m_GameObject: {fileID: 4505655496558568709}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7767943, z: -0, w: 0.62975436}
-  m_LocalPosition: {x: 5.78, y: 0, z: 3.5009599}
+  m_LocalPosition: {x: 8.84, y: 0, z: 11.76}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14621,9 +14638,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aba73eb2efc2ef4aa38cb1b59cc4c7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destination: {x: 0, y: 0, z: 0}
   hitRangeColliders:
   - {fileID: 7840207548485586692}
   headSight: {fileID: 5851088069607063302}
+  id: 0
+  groupMurloc: []
 --- !u!1 &4511287923706238768
 GameObject:
   m_ObjectHideFlags: 0
@@ -20121,9 +20141,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aba73eb2efc2ef4aa38cb1b59cc4c7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destination: {x: 0, y: 0, z: 0}
   hitRangeColliders:
   - {fileID: 978284482615113844}
   headSight: {fileID: 9185490816585387728}
+  id: 0
+  groupMurloc: []
 --- !u!1 &6306506997098117457
 GameObject:
   m_ObjectHideFlags: 0

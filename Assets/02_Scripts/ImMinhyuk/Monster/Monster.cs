@@ -7,7 +7,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
 {
     protected GameObject target; // 플레이어
     protected GameObject preFrameTarget; // 이전 프레임의 타겟
-    protected Vector3 destination; // 이동할 목표 지점 
+    [SerializeField] protected Vector3 destination; // 이동할 목표 지점 
     protected bool isArrivedDestination = false; // 목표지점에 도착했는지 토글용
 
     protected const float decisionInterval = 5.0f; // 움직임 여부를 결정하는 시간 간격 (초)
@@ -132,7 +132,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
                 }
                 else
                 {
-                    destination = GetRandomDestination();
+                    SetDestination(GetRandomDestination_InNavMesh());
                     State = EState.Moving;
                 }
                 nextDecisionTime = 0f;
@@ -174,19 +174,18 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
             }
 
             // 타겟으로 접근 위한 목표 지점 설정
-            destination = target.transform.position;
+            SetDestination(SetNearDestination_InNavMesh(target.transform.position));
         }
 
-        // destination은 타겟이 있다면 타겟의 위치가, 그렇지 않다면 패트롤 위치가 들어 있음
+        // destination은 타겟이 있다면 타겟의 위치가, 그렇지 않다면 패트롤 목표 위치가 들어 있음
         agent.SetDestination(destination);
-
 
         // 도착하면 Idle로 바꿔준다. 타겟이 있다면 알아서 공격상태로 전환될 것이다. (Moving -> Idle -> Moving -> Attack)
         // y축 오차는 고려하지 않기 위해 한번 컨버팅 
         Vector3 flatPosition = new Vector3(transform.position.x, 0, transform.position.z);
         Vector3 flatDestination = new Vector3(destination.x, 0, destination.z);
 
-        if (Vector3.Distance(flatPosition, flatDestination) < 0.1f)
+        if (Vector3.Distance(flatPosition, flatDestination) < 0.2f)
         {
             isArrivedDestination = true;
             State = EState.Idle;
@@ -214,7 +213,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     protected abstract M_Stat SetStat();
 
     // 네브매쉬 영역에서 이동할 랜덤 위치를 반환
-    protected Vector3 GetRandomDestination()
+    protected Vector3 GetRandomDestination_InNavMesh()
     {
         Vector3 randomPosition = Random.insideUnitSphere * Stat.patrolRange; // 반경 내 임의의 지점
         randomPosition += transform.position; // 현재 위치 기준으로 계산
@@ -227,6 +226,28 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         }
 
         return transform.position; // 유효한 위치를 찾지 못하면 현재 위치 유지
+    }
+
+    protected Vector3 SetNearDestination_InNavMesh(Vector3 _destination)
+    {
+        NavMeshHit hit;
+        // NavMesh.SamplePosition()은 _destination 기준 가장 가깝고 유효한 NavMesh지점을 찾아줌
+        if (NavMesh.SamplePosition(_destination, out hit, Stat.patrolRange, NavMesh.AllAreas))
+        {
+            return hit.position; // NavMesh 위의 유효한 위치 반환
+        }
+
+        return transform.position; // 유효한 위치를 찾지 못하면 현재 위치 유지
+    }
+
+    protected void SetDestination(Vector3 _destination)
+    {
+        destination = _destination;
+    }
+
+    protected void SetStateChangeNow()
+    {
+        nextDecisionTime = decisionInterval;
     }
 
     public void Damaged(int damage)
@@ -258,7 +279,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
 
     #region 애니메이션 이벤트 영역
 
-    // 공격 애니메이션이 끝나고 다음 행동을 결정하는 애니메이션 프레임
+    // 공격 애니메이션중 히트판정용 콜라이더를 켜주는 프레임
     void OnAnimAttackRangeColliderOn()
     {
         foreach( var hitRangeCollider in hitRangeColliders)
@@ -267,7 +288,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         }
     }
 
-    // 공격 애니메이션이 끝나고 다음 행동을 결정하는 애니메이션 프레임
+    // 공격 애니메이션후 히트판정용 콜라이더를 꺼주는 프레임
     void OnAnimAttackRangeColliderOff()
     {
         foreach (var hitRangeCollider in hitRangeColliders)

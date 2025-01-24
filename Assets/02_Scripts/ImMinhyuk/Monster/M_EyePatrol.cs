@@ -76,7 +76,7 @@ public class M_EyePatrol : M_Eye
     // 컴뱃 Eye 쪽으로 Destination을 찍어준다.
     void GoToCombatEye()
     {
-        destination = parterEye.transform.position;
+        SetDestination(SetNearDestination_InNavMesh(parterEye.transform.position));
         agent.SetDestination(destination);
         State = EState.Moving;
     }

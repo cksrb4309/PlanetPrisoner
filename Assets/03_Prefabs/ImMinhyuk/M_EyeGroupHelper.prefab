@@ -466,7 +466,7 @@ Transform:
   m_GameObject: {fileID: 621481573870611336}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.43, y: 0, z: 173.6}
+  m_LocalPosition: {x: 0.43, y: 0, z: 82.36}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1189,8 +1189,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abc1ba8dfb209c74595692d57d322a67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destination: {x: 0, y: 0, z: 0}
   hitRangeColliders: []
   headSight: {fileID: 6626148787249566525}
+  parterEye: {fileID: 0}
 --- !u!1 &762294552548850295
 GameObject:
   m_ObjectHideFlags: 0
@@ -5623,9 +5625,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7dbf4cb62902a44cbf86e828323d5fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destination: {x: 0, y: 0, z: 0}
   hitRangeColliders:
   - {fileID: 8205112743558120608}
   headSight: {fileID: 7939047885910072016}
+  parterEye: {fileID: 0}
 --- !u!1 &8658543939333863436
 GameObject:
   m_ObjectHideFlags: 0

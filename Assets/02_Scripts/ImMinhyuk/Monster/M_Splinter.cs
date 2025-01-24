@@ -26,12 +26,12 @@ public class M_Splinter : Monster
             GameObject candidateTarget = monsterhearing.FindTarget();
             if(candidateTarget != null)
             {
-                destination = candidateTarget.transform.position;
-            }
-            
+                SetDestination(SetNearDestination_InNavMesh(candidateTarget.transform.position));
+            }            
             yield return new WaitForSeconds(0.1f);  // N초마다 타겟을 탐색
         }
     }
+
     protected override M_Stat SetStat()
     {
         M_Stat _stat;
