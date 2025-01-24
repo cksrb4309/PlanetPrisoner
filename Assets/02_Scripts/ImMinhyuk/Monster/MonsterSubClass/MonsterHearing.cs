@@ -56,7 +56,7 @@ public class MonsterHearing : MonoBehaviour
         for (int i = 0; i < playingAudioSources.Count; i++)
         {
             float distance = Vector3.Distance(playingAudioSources[i].transform.position, transform.position);
-            if (distance <= monster.stat.canHearingRange)
+            if (distance <= monster.Stat.canHearingRange)
             {
                 if (candidate < (playingAudioSources[i].volume / distance))
                 {
@@ -77,7 +77,7 @@ public class MonsterHearing : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, closetAudioCandidate.transform.position);
 
         // 감청 범위 내에서만 유효
-        if (distanceToPlayer <= monster.stat.canHearingRange)
+        if (distanceToPlayer <= monster.Stat.canHearingRange)
         {
             // 거리와 비례한 소리 크기 추출 0 ~ 1
             float volumeLevel = Mathf.Clamp01(closetAudioCandidate.GetComponent<AudioSource>().volume / distanceToPlayer);
@@ -88,7 +88,7 @@ public class MonsterHearing : MonoBehaviour
             if (volumeLevel < 0.01) return null;
 
             // 가까운 거리에서 소리를 들으면 해당 '방향으로' 공격한다.
-            if (distanceToPlayer < monster.stat.attackRange)
+            if (distanceToPlayer < monster.Stat.attackRange)
             {
                 // 중복 상태 세팅 방지
                 if (monster.State != EState.Attack)

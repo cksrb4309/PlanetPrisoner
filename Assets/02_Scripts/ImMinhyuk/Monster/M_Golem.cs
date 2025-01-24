@@ -10,9 +10,13 @@ public class M_Golem : Monster
     protected override void Start()
     {
         base.Start();
+        
+        // 시력 세팅
         monsterSight = gameObject.AddComponent<MonsterSight>();
         monsterSight.Initialize(this, headSight, target);
-        StartCoroutine(CoFindTarget()); // 플레이어 탐지는 항상 한다(while(true))
+
+        // 타게팅(플레이어) 무한 루프 코루틴
+        StartCoroutine(CoFindTarget()); 
     }
 
     IEnumerator CoFindTarget()

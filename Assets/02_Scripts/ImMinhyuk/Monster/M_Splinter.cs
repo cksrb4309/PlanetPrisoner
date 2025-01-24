@@ -5,17 +5,17 @@ using UnityEngine.AI;
 
 public class M_Splinter : Monster
 {
-    // 스플린터의 기본 컨셉은 시야가 없어 Monster 클래스의 target을 지정할 수 없다.
-
-    MonsterHearing monsterhearing;
-    List<AudioSource> playingAudioSources = new List<AudioSource>();
-    GameObject closetAudioCandidate;
+    MonsterHearing monsterhearing; // 청력 클래스
 
     protected override void Start()
     {
         base.Start();
+
+        // 청력 세팅
         monsterhearing = gameObject.AddComponent<MonsterHearing>();
         monsterhearing.Initialize(this);
+
+        // 타게팅(플레이어) 무한루프 코루틴
         StartCoroutine(CoFindTarget());
     }
 

@@ -21,7 +21,7 @@ public class MonsterSight : MonoBehaviour
     /// </summary>
     public GameObject FindTargetInSight()
     {
-        Collider[] hitCollidersInMaxSight = Physics.OverlapSphere(transform.position, monster.stat.maxSightRange); // 최대 범위 내의 hit되는 콜라이더를 모두 탐색한다.
+        Collider[] hitCollidersInMaxSight = Physics.OverlapSphere(transform.position, monster.Stat.maxSightRange); // 최대 범위 내의 hit되는 콜라이더를 모두 탐색한다.
 
         foreach (Collider hitCollider in hitCollidersInMaxSight)
         {
@@ -32,13 +32,13 @@ public class MonsterSight : MonoBehaviour
                 float distanceToTarget = Vector3.Distance(headSight.transform.position, hitCollider.transform.position); // 거리 계산
 
                 // 이미 타겟팅이 됐을 때는 최대 탐지 범위 내에서 찾아 준다.
-                if (target != null && distanceToTarget < monster.stat.maxSightRange)
+                if (target != null && distanceToTarget < monster.Stat.maxSightRange)
                 {
                     return hitCollider.gameObject;
                 }
 
                 // 최소 탐지 범위 내에서는 플레이어를 항상 찾는다.
-                if (distanceToTarget < monster.stat.minSightRange)
+                if (distanceToTarget < monster.Stat.minSightRange)
                 {
                     return hitCollider.gameObject;
                 }
@@ -51,7 +51,7 @@ public class MonsterSight : MonoBehaviour
                     if (hitInfo.collider.CompareTag("Player"))
                     {
                         float angleToPlayer = Vector3.Angle(transform.forward, directionToTarget); // 몬스터와 플레이어의 각도
-                        if (angleToPlayer <= monster.stat.sightAngle / 2) // 좌, 우 때문에 1/2씩 나눔
+                        if (angleToPlayer <= monster.Stat.sightAngle / 2) // 좌, 우 때문에 1/2씩 나눔
                         {
                             return hitCollider.gameObject;
                         }

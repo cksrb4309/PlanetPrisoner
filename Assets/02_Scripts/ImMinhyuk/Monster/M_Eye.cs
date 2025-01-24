@@ -14,12 +14,15 @@ public class M_Eye : Monster
     protected override void Start()
     {
         base.Start();
+
+        // 시력 세팅
         monsterSight = gameObject.AddComponent<MonsterSight>();
         monsterSight.Initialize(this, headSight, target);
-        StartCoroutine(CoFindTarget()); // 플레이어 탐지는 항상 한다(while(true))
+
+        // 타게팅(플레이어) 무한루프 코루틴
+        StartCoroutine(CoFindTarget()); 
     }
 
-    // 파트너의 사망을 설정하는 함수
     protected override void UpdateDeath()
     {
         OnDeath?.Invoke(); // 리스너 패턴으로 M_EyeGroupHelper에서 이 객체를 null로 밀어줘서 사망처리 해준다.
@@ -40,6 +43,7 @@ public class M_Eye : Monster
         parterEye = _partnerEye;
     }
 
+    // 파트너의 사망을 설정하는 함수
     public void SetPartnerDie()
     {
         parterEye = null;
