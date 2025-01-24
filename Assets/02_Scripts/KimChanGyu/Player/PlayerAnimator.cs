@@ -48,6 +48,10 @@ public class PlayerAnimator : MonoBehaviour
         // IsGround 적용
         playerAnimator.SetBool("IsGround", isGround);
     }
+    public void SetWaistValue(float value)
+    {
+        playerAnimator.SetFloat(AnimationParameter.Waist.ToString(), value);
+    }
     #endregion
     #region PlayerItemHandler
     public void SetItemChangeTrigger(AnimationParameter triggerState) // 아이템 변경 시의 트리거 셋팅
@@ -55,14 +59,10 @@ public class PlayerAnimator : MonoBehaviour
         playerAnimator.SetLayerWeight(HAND_LAYER, triggerState == AnimationParameter.NoItem ? 0f : 1f);
 
         playerAnimator.SetTrigger(triggerState.ToString());
-
-        Debug.Log("Equip 트리거명 : " + triggerState.ToString());
     }
     public void SetItemUseTrigger(AnimationParameter triggerState)
     {
         playerAnimator.SetTrigger(triggerState.ToString());
-
-        Debug.Log("Use 트리거명 : " + triggerState.ToString());
     }
     #endregion
     private void OnEnable()

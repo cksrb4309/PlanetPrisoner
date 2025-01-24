@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour
 
     Vector3 pivotLocalPosition = Vector3.zero; // 플레이어 로컬 피벗 Y축 적용 Vector3
 
-    PlayerOxygen playerOxygen;
+    PlayerOxygen playerOxygen = null;
 
     private void OnEnable()
     {
@@ -282,6 +282,8 @@ public class PlayerController : MonoBehaviour
                 currCameraAngle + (rotateDelta.y * Time.deltaTime * rotateSpeed),
                 pitchClampMin,
                 pitchClampMax);
+
+            playerAnimator.SetWaistValue(currCameraAngle);
 
             // 카메라의 상하 회전은 Transform eulerAngle X에 적용
             // 좌우 회전은 playerTransform.eulerAngles.y를 가져옴
