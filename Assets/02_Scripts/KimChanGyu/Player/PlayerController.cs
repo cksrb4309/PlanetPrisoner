@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform cameraTransform; // 카메라의 Transform
     [SerializeField] Transform playerPivotTransform; // 플레이어 피벗 Transform
 
-    [Header("Move Attribute")] // Header 정리
+    [Header("Move Attribute")]                  // Header 정리
     [SerializeField] float walkMoveSpeed = 3.5f; // 걷기 이동속도
     [SerializeField] float runMoveSpeed = 7f; // 뛰기 이동속도
     [SerializeField] float acceleration = 3f; // 이동속도 증가속도
