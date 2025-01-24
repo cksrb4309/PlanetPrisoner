@@ -12,7 +12,6 @@ TagManager:
   - Mineable
   - Generator
   - Wall
-  - Computer
   layers:
   - Default
   - TransparentFX
