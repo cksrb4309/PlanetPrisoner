@@ -13,6 +13,7 @@ TagManager:
   - Generator
   - Wall
   - Trap
+  - Interactable
   layers:
   - Default
   - TransparentFX
