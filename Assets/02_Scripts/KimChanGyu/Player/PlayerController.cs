@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
 
     bool canMove = true;
 
-    Action<float> animMoveSpeedSetAction = null; // 애니메이터 이동속도 설정 Action
+    event Action<float> animMoveSpeedSetAction = null; // 애니메이터 이동속도 설정 Action
 
     Ray groundCheckRay = new Ray(); // 지면 확인 Ray
 

@@ -56,7 +56,7 @@ public class Item : MonoBehaviour, IInteractable
         // 충돌체 비활성화
         collider.enabled = false;
 
-        scanResultDisplay.EnableDisplay();
+        scanResultDisplay.DisableDisplay();
     }
     public virtual void ConsumeItem()
     {
@@ -92,12 +92,13 @@ public class Item : MonoBehaviour, IInteractable
 
         Ray ray = new Ray(rayStartPosition.position, Vector3.down);
 
-        float positionY = transform.position.y;
-        Vector3 position = new Vector3(transform.position.x, positionY, transform.position.z);
-
         if (Physics.Raycast(ray, out RaycastHit hitInfo, 100f, layerMask))
         {
-            float goal = hitInfo.point.y + transform.position.y - rayStartPosition.position.y;
+            float goal = hitInfo.point.y + (ray.origin.y - transform.position.y);
+
+            float positionY = transform.position.y;
+
+            Vector3 position = new Vector3(transform.position.x, positionY, transform.position.z);
 
             while (positionY > goal)
             {

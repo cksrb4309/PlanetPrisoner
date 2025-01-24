@@ -31,7 +31,7 @@ public class BearTrapHelper : MonoBehaviour
 
         foreach (IDamagable damagable in targets)
         {
-            damagable.Hit(1f);
+            damagable.Damaged(1f);
         }
 
         isAttacked = true;

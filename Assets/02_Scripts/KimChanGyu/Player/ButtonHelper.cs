@@ -49,7 +49,7 @@ public class ButtonHelper : Editor
 
         if (GUILayout.Button("Hit"))
         {
-            targetObject.Hit(0.1f);
+            targetObject.Damaged(0.1f);
         }
     }
 }

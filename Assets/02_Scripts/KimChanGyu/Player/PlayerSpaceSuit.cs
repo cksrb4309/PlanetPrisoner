@@ -39,7 +39,7 @@ public class PlayerSpaceSuit : MonoBehaviour, IDamagable
 
         playerOxygen.SetOxygenDecreaseValue(minOxygenDrain);
     }
-    public void Hit(float damage)
+    public void Damaged(float damage)
     {
         if (currHp <= 0) return;
 

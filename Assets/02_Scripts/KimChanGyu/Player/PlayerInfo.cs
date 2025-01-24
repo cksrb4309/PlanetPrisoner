@@ -6,15 +6,18 @@ public class PlayerInfo
     public PlayerController playerController = null;
     public PlayerScanner playerScanner = null;
     public PlayerItemHandler playerItemHandler = null;
+    public PlayerAttacker playerAttacker = null;
     public PlayerInfo(
         PlayerSpaceSuit playerSpaceSuit,
         PlayerController playerController,
         PlayerScanner playerScanner,
-        PlayerItemHandler playerItemHandler)
+        PlayerItemHandler playerItemHandler,
+        PlayerAttacker playerAttacker)
     {
         this.playerSpaceSuit = playerSpaceSuit;
         this.playerController = playerController;
         this.playerScanner = playerScanner;
         this.playerItemHandler = playerItemHandler;
+        this.playerAttacker = playerAttacker;
     }
 }

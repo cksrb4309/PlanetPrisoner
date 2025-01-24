@@ -20,8 +20,8 @@ MonoBehaviour:
   itemDropSpeed: 5
   itemIconImage: {fileID: 21300000, guid: 3269142bb67aaf04589355c57a5c2808, type: 3}
   guideText: Scanner(E)
-  equipTriggerName: None
-  useTriggerName: None
+  equipTriggerName: 5
+  useTriggerName: 4
   itemUseAction:
     m_PersistentCalls:
       m_Calls:

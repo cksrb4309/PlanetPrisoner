@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 1590112970552011711}
   - component: {fileID: 8392707152158456099}
   - component: {fileID: 3931870600512014098}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Scanner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
