@@ -12,6 +12,7 @@ TagManager:
   - Mineable
   - Generator
   - Wall
+  - Computer
   layers:
   - Default
   - TransparentFX
@@ -24,7 +25,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Interactable
   - Ground
   - Item
   - Player

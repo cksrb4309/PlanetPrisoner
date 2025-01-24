@@ -5,7 +5,7 @@ public class ItemShop : MonoBehaviour
 {
     [SerializeField] GameObject shopUI;
     [SerializeField] GameObject inGameUI;
-    [SerializeField] PlayerControllerHelper player;
+    [SerializeField] PlayerController player;
     [SerializeField] OxygenTank oxygenTank;
     [SerializeField] Image oxygenTankForeground;
 

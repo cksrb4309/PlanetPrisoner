@@ -36,13 +36,13 @@ public class PlayerInteractor : MonoBehaviour
         {
             IInteractable interactable = hit.collider.GetComponent<IInteractable>();
 
-            if (this.interactable == null)
+            if (this.interactable == null) // 새로운 것 감지
             {
                 this.interactable = interactable;
 
                 interactionGuideTextUI.OnShowInteractText(this.interactable.TooltipText);
             }
-            else if (this.interactable != null && this.interactable != interactable)
+            else if (this.interactable != null && this.interactable != interactable) // 기존과 다른 것 감지
             {
                 this.interactable = interactable;
 
@@ -69,4 +69,11 @@ public class PlayerInteractor : MonoBehaviour
             this.interactable = null;
         }
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(Camera.main.transform.position, Camera.main.transform.position + Camera.main.transform.forward * 2f);
+    }
+
 }

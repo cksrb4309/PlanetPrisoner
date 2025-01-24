@@ -19,7 +19,7 @@ MonoBehaviour:
   itemWeight: 1
   itemDropSpeed: 3
   itemIconImage: {fileID: 21300000, guid: b2d98f54996544507ade581c727c1c51, type: 3}
-  guideText: CubeItem(E)
+  guideText: "\uD050\uBE0C\uC90D\uAE30 [E]"
   equipTriggerName: Temp
   useTriggerName: Temp
   itemUseAction:
