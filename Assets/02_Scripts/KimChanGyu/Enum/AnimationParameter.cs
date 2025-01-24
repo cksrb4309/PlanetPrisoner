@@ -10,4 +10,5 @@ public enum AnimationParameter
     HoldItem,
     NoItem,
     AttackItem,
+    Waist,
 }
