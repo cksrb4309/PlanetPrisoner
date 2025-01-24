@@ -297,7 +297,7 @@ public class PlayerController : MonoBehaviour
         #region 앉기 입력 처리
 
         // 앉기 버튼을 누르고 있다면
-        if (crouchInputAction.action.IsPressed())
+        if (canMove && crouchInputAction.action.IsPressed())
         {
             // 만약 현재 앉고 있지 않을 때
             if (!isCrouch)
@@ -434,8 +434,12 @@ public class PlayerController : MonoBehaviour
         cameraTransform.localPosition = cameraLocalPosition;
     }
     public void EquipEnhancedShoes() => shoesSpeed = 1.15f;
-    public void DisableMovement() => canMove = false;
-    public void EnableMovement() => canMove = true;
+    public void DisableMovement() // 움직임 비활성화
+    {
+        canMove = false;
+    }
+    public void EnableMovement() => canMove = true; // 움직임 활성화
+
     #region 플레이어 이동속도 설정 Action 바인드
     public void BindToPlayerAnimator(Action<float> action)
     {
