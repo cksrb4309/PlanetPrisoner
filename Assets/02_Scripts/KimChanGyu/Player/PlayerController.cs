@@ -1,5 +1,4 @@
 ﻿using Codice.Client.BaseCommands;
-using Codice.CM.Common.Checkin.Partial;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -187,276 +186,254 @@ public class PlayerController : MonoBehaviour
         #region Velocity Y 값 설정
 
         // 플레이어가 땅에 있거나 코요테 타임 값이 남아있거나, 바로 밑에 오브젝트가 있을 때
-        if (characterController.isGrounded || coyoteTimeCounter > 0f || Physics.Raycast(groundCheckRay, 0.1f))
+        if (characterController.isGrounded || coyoteTimeCounter > 0f || Physics.Raycast(groundCheckRay,0.1f, groundLayerMask))
         {
             // 점프 중이 아닐 때, 점프 키를 눌렀다면
-            if (velocityY <= 0f && jumpInputAction.action.WasPressedThisFrame())
+            if (velocityY <= 0f && jumpInputAction.action.WasPressedThisFrame() && canMove)
             {
                 // 코요테 타임 초기화
                 coyoteTimeCounter = 0;
-                // 플레이어가 땅에 있거나 코요테 타임 값이 남아있거나, 바로 밑에 오브젝트가 있을 때
-                if (characterController.isGrounded || coyoteTimeCounter > 0f || Physics.Raycast(groundCheckRay, 0.1f, groundLayerMask))
-                {
-                    // 점프 중이 아닐 때, 점프 키를 눌렀다면
-                    if (velocityY <= 0f && jumpInputAction.action.WasPressedThisFrame() && canMove)
-                    {
-                        // 코요테 타임 초기화
-                        coyoteTimeCounter = 0;
 
-                        // 중력을 현재 jumpSpeed로 변경하여 튀어오르게 한다
-                        velocityY = jumpSpeed;
+                // 중력을 현재 jumpSpeed로 변경하여 튀어오르게 한다
+                velocityY = jumpSpeed;
 
-                        // 점프 애니메이션 트리거 및 플레이어 높이 조절
-                        PlayerJumpHeightAnim(playerAnimator.SetJumpTrigger());
-                    }
-                }
-
-                // 만약 캐릭터가 지상 위에 있다면
-                if (characterController.isGrounded)
-                {
-                    // 캐릭터가 떨어지고 있거나 가만히 있을 때
-                    if (velocityY <= 0f)
-                    {
-                        // velocityY를 0으로 초기화
-                        velocityY = 0;
-
-                        // 애니메이터에게 땅 위에 있다고 알린다
-                        playerAnimator.SetIsGround(true);
-
-                        // 땅 위에 있으므로 피벗을 standPivotHeight 위치로 적용한다
-                        pivotLocalPosition.y = standPivotHeight;
-                        playerPivotTransform.localPosition = pivotLocalPosition;
-                    }
-
-                    // 코요테 타임 갱신
-                    coyoteTimeCounter = coyoteTime;
-                }
-
-                // 만약 캐릭터가 땅 위에 없다면
-                else
-                {
-                    // 코요테 타임 감소
-                    coyoteTimeCounter -= Time.deltaTime;
-
-                    // 지면 확인 Ray 설정
-                    groundCheckRay.origin = transform.position;
-                    groundCheckRay.direction = Vector3.down;
-
-                    // 만약 아래에 맞는 오브젝트가 없다면
-                    if (!Physics.Raycast(groundCheckRay, 0.13f))
-                    {
-                        // 중력 적용
-                        velocityY += Time.deltaTime * gravity;
-
-                        // 애니메이터에게 땅 위에 없다고 알림
-                        playerAnimator.SetIsGround(false);
-                    }
-                }
-
-                #endregion
-                #region velocity 값 갱신
-
-                // velocity의 x와 z의 벡터 크기 값을 구한다
-                // moveSpeed로 제한을 두기 전의 값인 prevMagnitude와
-                // 제한을 둔 후인 currMagnitude 값을 만든다
-                float prevMagnitude = new Vector2(velocityX, velocityZ).magnitude;
-                float currMagnitude = prevMagnitude > moveSpeedLimit ? moveSpeedLimit : prevMagnitude;
-
-                // 만약 벡터 크기의 값이 이동속도보다 크다면 벡터 크기 값을 이동속도 값으로 초기화 한다
-                // if (prevMagnitude > moveSpeedLimit) prevMagnitude = moveSpeedLimit; // TODO 확인
-
-                velocity.Set(
-                    prevMagnitude > float.Epsilon ? (velocityX / prevMagnitude) * currMagnitude * shoesSpeed : 0f,
-                    velocityY,
-                    prevMagnitude > float.Epsilon ? (velocityZ / prevMagnitude) * currMagnitude * shoesSpeed : 0f);
-
-                #endregion
-                #region 카메라 회전
-
-                // 마우스 이동 값 가져오기
-                rotateDelta = mouseMoveInputAction.action.ReadValue<Vector2>();
-
-                // 마우스 이동 값이 있을 때
-                if (rotateDelta != Vector2.zero)
-                {
-                    // 마우스 상하 이동 값은 up:1, down:-1이라 생각하면 되는데
-                    // 실제로 카메라의 x축 회전을 적용했을 때는 up:-1, down:1 값을 해야하기 때문에 
-                    // mouseMoveValue.y에 -1f을 곱해줌으로써 값을 맞춰준다
-                    rotateDelta.y *= -1f;
-                    if (!canMove) rotateDelta = Vector2.zero;
-
-                    // 마우스 이동 값이 있을 때
-                    if (rotateDelta != Vector2.zero)
-                    {
-                        // 마우스 상하 이동 값은 up:1, down:-1이라 생각하면 되는데
-                        // 실제로 카메라의 x축 회전을 적용했을 때는 up:-1, down:1 값을 해야하기 때문에 
-                        // mouseMoveValue.y에 -1f을 곱해줌으로써 값을 맞춰준다
-                        rotateDelta.y *= -1f;
-
-                        // 카메라의 회전은 Clamp를 이용해서 제한을 한다
-                        currCameraAngle = Mathf.Clamp(
-                            currCameraAngle + (rotateDelta.y * Time.deltaTime * rotateSpeed),
-                            pitchClampMin,
-                            pitchClampMax);
-
-                        // 카메라의 상하 회전은 Transform eulerAngle X에 적용
-                        // 좌우 회전은 playerTransform.eulerAngles.y를 가져옴
-                        cameraTransform.rotation = Quaternion.Euler(currCameraAngle, playerTransform.eulerAngles.y, 0f);
-                        playerAnimator.SetWaistValue(currCameraAngle);
-
-                        // 카메라의 상하 회전은 Transform eulerAngle X에 적용
-                        // 좌우 회전은 playerTransform.eulerAngles.y를 가져옴
-                        cameraTransform.rotation = Quaternion.Euler(currCameraAngle, playerTransform.eulerAngles.y, 0f);
-
-                        // 플레이어 트랜스폼에는 x축의 마우스 회전 값만 적용한다
-                        playerTransform.Rotate(0, rotateDelta.x * rotateSpeed * Time.deltaTime, 0);
-
-
-                    }
-
-                    #endregion
-                    #region 앉기 입력 처리
-
-                    // 앉기 버튼을 누르고 있다면
-                    if (canMove && crouchInputAction.action.IsPressed())
-                    {
-                        // 만약 현재 앉고 있지 않을 때
-                        if (!isCrouch)
-                        {
-                            // 앉은 상태 갱신
-                            CrouchStateUpdate(true);
-                        }
-                    }
-
-                    // 앉기 버튼을 누르고 있지 않다면
-                    else
-                    {
-                        // 만약 현재 앉고 있을 때
-                        if (isCrouch)
-                        {
-                            // 앉은 상태 갱신
-                            CrouchStateUpdate(false);
-                        }
-                    }
-
-                    #endregion
-                    #region 이동 값 적용
-
-                    // Animator 이동속도 값 제공
-                    animMoveSpeedSetAction?.Invoke(currMagnitude);
-
-                    // 서있을 때의 이동 적용
-                    if (!isCrouch)
-                    {
-                        // 플레이어 이동 적용
-                        characterController.Move(transform.rotation * velocity * Time.deltaTime);
-                    }
-
-                    // 앉아 있을 때의 이동 적용 
-                    else
-                    {
-                        // 플레이어 이동 적용
-                        characterController.Move(transform.rotation * new Vector3(velocity.x * crouchRatioSpeed, velocity.y, velocity.z * crouchRatioSpeed) * Time.deltaTime);
-                    }
-                    #endregion
-                }
-            }
-            void CrouchStateUpdate(bool isCrouch) // 앉은 상태 갱신
-            {
-                // 상태 갱신
-                this.isCrouch = isCrouch;
-
-                // 애니메이터에게 알림
-                playerAnimator.SetIsCrouch(isCrouch);
-
-                // 변경 중인 카메라 코루틴 중지
-                if (cameraHeightCoroutine != null)
-                {
-                    StopCoroutine(cameraHeightCoroutine);
-                }
-
-                // 카메라 높이 변경 코루틴 실행
-                cameraHeightCoroutine = StartCoroutine(CameraHeightAnimCoroutine(isCrouch));
-            }
-            void PlayerJumpHeightAnim(bool isJump) // 점프 시의 피벗 애니메이션
-            {
-                // 점프가 트리거 되지 않았다면 실행하지 않는다
-                if (!isJump) return;
-
-                // 점프 시의 위치 조절 Coroutine을 실행
-                StartCoroutine(PlayerJumpHeightAnimCoroutine());
-            }
-            IEnumerator PlayerJumpHeightAnimCoroutine() // 피벗 애니메이션 코루틴
-            {
-                // 시간 값
-                float t = 0;
-
-                // 0초부터 공중에 있는 시간만큼 진행
-                while (t < maxJumpHeightTime)
-                {
-                    // 시간 값 누적
-                    t += Time.deltaTime;
-
-                    // 피벗 로컬 y 포지션을 서있는 상태와 점프한 상태의 기준 높이를 Lerp로 공중에 있는 시간
-                    pivotLocalPosition.y = Mathf.Lerp(standPivotHeight, jumpPivotHeight, Mathf.InverseLerp(0, maxJumpHeightTime, t));
-
-                    // 플레이어 피벗 트랜스폼에 로컬 포지션 적용
-                    playerPivotTransform.localPosition = pivotLocalPosition;
-
-                    // 다음 프레임 대기
-                    yield return null;
-                }
-            }
-            IEnumerator CameraHeightAnimCoroutine(bool isCrouch) // 카메라 높이 변경 코루틴
-            {
-                Vector3 cameraLocalPosition = cameraTransform.localPosition;
-
-                // 앉아있을 경우
-                if (isCrouch)
-                {
-                    for (; currCameraHeight > cameraCrouchHeight; currCameraHeight -= Time.deltaTime * 7f)
-                    {
-                        // 카메라의 로컬 좌표 가져오기
-                        cameraLocalPosition = cameraTransform.localPosition;
-
-                        // 카메라의 로컬 y축 값 변경하기
-                        cameraLocalPosition.y = currCameraHeight;
-
-                        // 카메라의 로컬 좌표에 적용하기
-                        cameraTransform.localPosition = cameraLocalPosition;
-
-                        // 다음 프레임까지 대기
-                        yield return null;
-                    }
-                    // 카메라의 로컬 좌표 cameraCrouchHeight로 정확히 값 맞춰놓기
-                    cameraLocalPosition.y = cameraCrouchHeight;
-                }
-
-                // 서있을 경우
-                else
-                {
-                    for (; currCameraHeight < cameraStandHeight; currCameraHeight += Time.deltaTime * 7f)
-                    {
-                        // 카메라의 로컬 좌표 가져오기
-                        cameraLocalPosition = cameraTransform.localPosition;
-
-                        // 카메라의 로컬 y축 값 변경하기
-                        cameraLocalPosition.y = currCameraHeight;
-
-                        // 카메라의 로컬 좌표에 적용하기
-                        cameraTransform.localPosition = cameraLocalPosition;
-
-                        // 다음 프레임까지 대기
-                        yield return null;
-                    }
-                    // 카메라의 로컬 좌표 cameraStandHeight로 정확히 값 맞춰놓기
-                    cameraLocalPosition.y = cameraStandHeight;
-                }
-                // 정확히 맞춰놓은 값으로 카메라의 로컬 좌표에 적용하기
-                cameraTransform.localPosition = cameraLocalPosition;
+                // 점프 애니메이션 트리거 및 플레이어 높이 조절
+                PlayerJumpHeightAnim(playerAnimator.SetJumpTrigger());
             }
         }
 
+        // 만약 캐릭터가 지상 위에 있다면
+        if (characterController.isGrounded)
+        {
+            // 캐릭터가 떨어지고 있거나 가만히 있을 때
+            if (velocityY <= 0f)
+            {
+                // velocityY를 0으로 초기화
+                velocityY = 0;
+
+                // 애니메이터에게 땅 위에 있다고 알린다
+                playerAnimator.SetIsGround(true);
+
+                // 땅 위에 있으므로 피벗을 standPivotHeight 위치로 적용한다
+                pivotLocalPosition.y = standPivotHeight;
+                playerPivotTransform.localPosition = pivotLocalPosition;
+            }
+
+            // 코요테 타임 갱신
+            coyoteTimeCounter = coyoteTime;
+        }
+
+        // 만약 캐릭터가 땅 위에 없다면
+        else
+        {
+            // 코요테 타임 감소
+            coyoteTimeCounter -= Time.deltaTime;
+
+            // 지면 확인 Ray 설정
+            groundCheckRay.origin = transform.position;
+            groundCheckRay.direction = Vector3.down;
+
+            // 만약 아래에 맞는 오브젝트가 없다면
+            if (!Physics.Raycast(groundCheckRay, 0.13f))
+            {
+                // 중력 적용
+                velocityY += Time.deltaTime * gravity;
+
+                // 애니메이터에게 땅 위에 없다고 알림
+                playerAnimator.SetIsGround(false);
+            }
+        }
+
+        #endregion
+        #region velocity 값 갱신
+
+        // velocity의 x와 z의 벡터 크기 값을 구한다
+        // moveSpeed로 제한을 두기 전의 값인 prevMagnitude와
+        // 제한을 둔 후인 currMagnitude 값을 만든다
+        float prevMagnitude = new Vector2(velocityX, velocityZ).magnitude;
+        float currMagnitude = prevMagnitude > moveSpeedLimit ? moveSpeedLimit : prevMagnitude;
+
+        // 만약 벡터 크기의 값이 이동속도보다 크다면 벡터 크기 값을 이동속도 값으로 초기화 한다
+        // if (prevMagnitude > moveSpeedLimit) prevMagnitude = moveSpeedLimit; // TODO 확인
+
+        velocity.Set(
+            prevMagnitude > float.Epsilon ? (velocityX / prevMagnitude) * currMagnitude * shoesSpeed : 0f,
+            velocityY,
+            prevMagnitude > float.Epsilon ? (velocityZ / prevMagnitude) * currMagnitude * shoesSpeed : 0f);
+
+        #endregion
+        #region 카메라 회전
+
+        // 마우스 이동 값 가져오기
+        rotateDelta = mouseMoveInputAction.action.ReadValue<Vector2>();
+
+        if (!canMove) rotateDelta = Vector2.zero;
+
+        // 마우스 이동 값이 있을 때
+        if (rotateDelta != Vector2.zero)
+        { 
+            // 마우스 상하 이동 값은 up:1, down:-1이라 생각하면 되는데
+            // 실제로 카메라의 x축 회전을 적용했을 때는 up:-1, down:1 값을 해야하기 때문에 
+            // mouseMoveValue.y에 -1f을 곱해줌으로써 값을 맞춰준다
+            rotateDelta.y *= -1f;
+
+            // 카메라의 회전은 Clamp를 이용해서 제한을 한다
+            currCameraAngle = Mathf.Clamp(
+                currCameraAngle + (rotateDelta.y * Time.deltaTime * rotateSpeed),
+                pitchClampMin,
+                pitchClampMax);
+
+            playerAnimator.SetWaistValue(currCameraAngle);
+
+            // 카메라의 상하 회전은 Transform eulerAngle X에 적용
+            // 좌우 회전은 playerTransform.eulerAngles.y를 가져옴
+            cameraTransform.rotation = Quaternion.Euler(currCameraAngle, playerTransform.eulerAngles.y, 0f);
+
+            // 플레이어 트랜스폼에는 x축의 마우스 회전 값만 적용한다
+            playerTransform.Rotate(0, rotateDelta.x * rotateSpeed * Time.deltaTime, 0);
+
+            
+        }
+
+        #endregion
+        #region 앉기 입력 처리
+
+        // 앉기 버튼을 누르고 있다면
+        if (canMove && crouchInputAction.action.IsPressed())
+        {
+            // 만약 현재 앉고 있지 않을 때
+            if (!isCrouch)
+            {
+                // 앉은 상태 갱신
+                CrouchStateUpdate(true);
+            }
+        }
+
+        // 앉기 버튼을 누르고 있지 않다면
+        else
+        {
+            // 만약 현재 앉고 있을 때
+            if (isCrouch)
+            {
+                // 앉은 상태 갱신
+                CrouchStateUpdate(false);
+            }
+        }
+
+        #endregion
+        #region 이동 값 적용
+
+        // Animator 이동속도 값 제공
+        animMoveSpeedSetAction?.Invoke(currMagnitude);
+
+        // 서있을 때의 이동 적용
+        if (!isCrouch)
+        {
+            // 플레이어 이동 적용
+            characterController.Move(transform.rotation * velocity * Time.deltaTime);
+        }
+
+        // 앉아 있을 때의 이동 적용 
+        else
+        {
+            // 플레이어 이동 적용
+            characterController.Move(transform.rotation * new Vector3(velocity.x * crouchRatioSpeed, velocity.y, velocity.z * crouchRatioSpeed) * Time.deltaTime);
+        }
+        #endregion
+    }
+    void CrouchStateUpdate(bool isCrouch) // 앉은 상태 갱신
+    {
+        // 상태 갱신
+        this.isCrouch = isCrouch;
+
+        // 애니메이터에게 알림
+        playerAnimator.SetIsCrouch(isCrouch);
+
+        // 변경 중인 카메라 코루틴 중지
+        if (cameraHeightCoroutine != null)
+        {
+            StopCoroutine(cameraHeightCoroutine);
+        }
+
+        // 카메라 높이 변경 코루틴 실행
+        cameraHeightCoroutine = StartCoroutine(CameraHeightAnimCoroutine(isCrouch));
+    }
+    void PlayerJumpHeightAnim(bool isJump) // 점프 시의 피벗 애니메이션
+    {
+        // 점프가 트리거 되지 않았다면 실행하지 않는다
+        if (!isJump) return;
+
+        // 점프 시의 위치 조절 Coroutine을 실행
+        StartCoroutine(PlayerJumpHeightAnimCoroutine());
+    }
+    IEnumerator PlayerJumpHeightAnimCoroutine() // 피벗 애니메이션 코루틴
+    {
+        // 시간 값
+        float t = 0;
+
+        // 0초부터 공중에 있는 시간만큼 진행
+        while (t < maxJumpHeightTime)
+        {
+            // 시간 값 누적
+            t += Time.deltaTime;
+
+            // 피벗 로컬 y 포지션을 서있는 상태와 점프한 상태의 기준 높이를 Lerp로 공중에 있는 시간
+            pivotLocalPosition.y = Mathf.Lerp(standPivotHeight, jumpPivotHeight, Mathf.InverseLerp(0, maxJumpHeightTime, t));
+
+            // 플레이어 피벗 트랜스폼에 로컬 포지션 적용
+            playerPivotTransform.localPosition = pivotLocalPosition;
+
+            // 다음 프레임 대기
+            yield return null;
+        }
+    }
+    IEnumerator CameraHeightAnimCoroutine(bool isCrouch) // 카메라 높이 변경 코루틴
+    {
+        Vector3 cameraLocalPosition = cameraTransform.localPosition;
+
+        // 앉아있을 경우
+        if (isCrouch)
+        {
+            for (; currCameraHeight > cameraCrouchHeight; currCameraHeight -= Time.deltaTime * 7f)
+            {
+                // 카메라의 로컬 좌표 가져오기
+                cameraLocalPosition = cameraTransform.localPosition;
+
+                // 카메라의 로컬 y축 값 변경하기
+                cameraLocalPosition.y = currCameraHeight;
+
+                // 카메라의 로컬 좌표에 적용하기
+                cameraTransform.localPosition = cameraLocalPosition;
+
+                // 다음 프레임까지 대기
+                yield return null;
+            }
+            // 카메라의 로컬 좌표 cameraCrouchHeight로 정확히 값 맞춰놓기
+            cameraLocalPosition.y = cameraCrouchHeight;
+        }
+
+        // 서있을 경우
+        else
+        {
+            for (; currCameraHeight < cameraStandHeight; currCameraHeight += Time.deltaTime * 7f)
+            {
+                // 카메라의 로컬 좌표 가져오기
+                cameraLocalPosition = cameraTransform.localPosition;
+
+                // 카메라의 로컬 y축 값 변경하기
+                cameraLocalPosition.y = currCameraHeight;
+
+                // 카메라의 로컬 좌표에 적용하기
+                cameraTransform.localPosition = cameraLocalPosition;
+
+                // 다음 프레임까지 대기
+                yield return null;
+            }
+            // 카메라의 로컬 좌표 cameraStandHeight로 정확히 값 맞춰놓기
+            cameraLocalPosition.y = cameraStandHeight;
+        }
+        // 정확히 맞춰놓은 값으로 카메라의 로컬 좌표에 적용하기
+        cameraTransform.localPosition = cameraLocalPosition;
     }
     public void EquipEnhancedShoes() => shoesSpeed = 1.15f;
     public void DisableMovement() // 움직임 비활성화
@@ -474,5 +451,6 @@ public class PlayerController : MonoBehaviour
     {
         animMoveSpeedSetAction -= action;
     }
+
     #endregion
 }

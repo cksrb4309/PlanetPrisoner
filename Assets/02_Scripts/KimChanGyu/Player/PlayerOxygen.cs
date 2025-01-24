@@ -33,7 +33,7 @@ public class PlayerOxygen : MonoBehaviour
                 Die();
             }
 
-            PlayerStateUI.Instance.SetOxygenFillImage(currOxygen > 0 ? currOxygen / maxOxygen : 0);
+            //PlayerStateUI.Instance.SetOxygenFillImage(currOxygen > 0 ? currOxygen / maxOxygen : 0);
         }
     }
 
