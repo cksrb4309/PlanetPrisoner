@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7510497593767002573}
-  m_Layer: 13
+  m_Layer: 8
   m_Name: RayStartPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 97481743729453879}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 618766466868613693}
   - component: {fileID: 2324372782765594617}
   - component: {fileID: 497896813909695700}
-  m_Layer: 13
+  m_Layer: 8
   m_Name: CubeItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,7 +141,7 @@ GameObject:
   - component: {fileID: 2067721327917629097}
   - component: {fileID: 8696553589718974400}
   - component: {fileID: 5857713350677236215}
-  m_Layer: 13
+  m_Layer: 8
   m_Name: MeshRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,9 +224,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7307998681095087883}
     m_Modifications:
+    - target: {fileID: 3166129872549185874, guid: 7b7f8b7810b60404ebf019c8b16499e2, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 6143135697111794028, guid: 7b7f8b7810b60404ebf019c8b16499e2, type: 3}
       propertyPath: m_Name
-      value: ResultDisplayIcon
+      value: ResultDisplay_OnlyIcon
+      objectReference: {fileID: 0}
+    - target: {fileID: 6143135697111794028, guid: 7b7f8b7810b60404ebf019c8b16499e2, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6571321237914412013, guid: 7b7f8b7810b60404ebf019c8b16499e2, type: 3}
       propertyPath: m_Pivot.x

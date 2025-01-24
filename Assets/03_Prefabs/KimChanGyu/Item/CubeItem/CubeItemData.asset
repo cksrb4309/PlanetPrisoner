@@ -18,7 +18,7 @@ MonoBehaviour:
   itemPrice: 1
   itemWeight: 1
   itemDropSpeed: 3
-  itemIconImage: {fileID: 21300000, guid: b2d98f54996544507ade581c727c1c51, type: 3}
+  itemIconImage: {fileID: 21300000, guid: 8ca869dd944d5f54e9ec614b26f10dcb, type: 3}
   guideText: CubeItem(E)
   equipTriggerName: Temp
   useTriggerName: Temp

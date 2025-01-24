@@ -73,9 +73,6 @@ public class ItemSlot : MonoBehaviour
     {
         Color color = slotBackgroundUI.color;
 
-        Debug.Log("currAlpha : " + currAlpha.ToString());
-        Debug.Log("unEquipAlpha : " + unEquipAlpha.ToString());
-
         for (; currAlpha > unEquipAlpha; currAlpha -= Time.deltaTime * alphaSpeed)
         {
             color.a = currAlpha;

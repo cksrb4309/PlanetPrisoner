@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerItemHandler : MonoBehaviour
@@ -34,7 +35,6 @@ public class PlayerItemHandler : MonoBehaviour
     int beforeSelectedIndex = 0; // 이전에 선택하던 아이템
     int maxSelectedIndex = 5; // 선택할 수 있는 아이템 최대 인덱스
 
-    string unEquipTriggerName = "UnEquip"; // 장착해제 TriggerName
     private void Awake()
     {
         instance = this;
@@ -47,7 +47,10 @@ public class PlayerItemHandler : MonoBehaviour
 
         playerInfo = new PlayerInfo(
             GetComponent<PlayerSpaceSuit>(),
-            GetComponent<PlayerController>());
+            GetComponent<PlayerController>(),
+            GetComponent<PlayerScanner>(),
+            this,
+            GetComponent<PlayerAttacker>());
     }
     private void OnEnable()
     {
@@ -77,12 +80,13 @@ public class PlayerItemHandler : MonoBehaviour
     {
         #region 아이템 드랍 입력
 
+        // 아이템 사용 중이라면 사용 중인 아이템을 버리지 못하도록 리턴
+        if (isItemUsing) return;
+
         // 아이템 드랍 입력하고, 들고 있는 아이템이 있을 경우
         if (itemDropInputAction.action.WasPressedThisFrame() &&
             selectedItem != null)
         {
-            // TODO 들고 있다가 놓은 아이템에 대한 처리 (찬규)
-
             // 인벤토리에서 제거
             PlayerInventory.Instance.RemoveItem(currentSelectedIndex);
 
@@ -105,11 +109,16 @@ public class PlayerItemHandler : MonoBehaviour
             selectedItem != null &&
             selectedItem.itemData.itemType != ItemType.Default)
         {
+            Debug.Log("아이템 사용 시도 !");
+
             // 아이템 사용 중 트리거 변수 활성화
             isItemUsing = true;
 
             // 아이템에 따른 사용 애니메이션 트리거 재생
-            playerAnimator.SetItemUseTrigger(selectedItem == null ? unEquipTriggerName : selectedItem.itemData.equipTriggerName);
+            playerAnimator.SetItemUseTrigger(selectedItem.itemData.useTrigger);
+
+            // TODO : 변경 시도 중 (찬규)
+            // OnItemUseComplete(); // 애니메이션이 없음으로 여기서 아이템 사용 테스트를 우선적으로 진행한다
         }
 
         #endregion
@@ -154,12 +163,8 @@ public class PlayerItemHandler : MonoBehaviour
         // 이전 선택 중인 인덱스와 달라졌을 때
         if (beforeSelectedIndex != currentSelectedIndex)
         {
-            // 이전 아이템 Null이 아닐 때손에서 가리기
-            selectedItem?.DisableInHand();
-
             InventoryUI.Instance.ItemSlotUnEquipSetting(beforeSelectedIndex);
 
-            // 갱신
             beforeSelectedIndex = currentSelectedIndex;
 
             InventoryUI.Instance.ItemSlotEquipSetting(currentSelectedIndex);
@@ -170,40 +175,64 @@ public class PlayerItemHandler : MonoBehaviour
 
         #endregion
     }
+    //public Transform GetHandTransform() => rightHand;
+    public Item GetCurrentItem() => selectedItem;
     public void EquipItem() // 아이템 장착
     {
         // 현재 Index의 아이템을 가져온다
         Item targetItem = PlayerInventory.Instance.GetItemFromInventory(currentSelectedIndex);
 
-        // 선택 중인 아이템을 비활성화
-        selectedItem?.DisableInHand();
-
-        // 만약 전에 선택한 아이템과 다를 경우
-        if (selectedItem != targetItem)
+        // 같은 아이템 선택이 아닐 경우
+        if (selectedItem == null ||
+            targetItem == null ||
+            selectedItem.GetInstanceID() != targetItem.GetInstanceID())
         {
             // 아이템에 따른 손 애니메이션 트리거 재생
-            playerAnimator.SetItemChangeTrigger(selectedItem == null ? unEquipTriggerName : selectedItem.itemData.equipTriggerName);
+            playerAnimator.SetItemChangeTrigger(targetItem == null ? AnimationParameter.NoItem : targetItem.itemData.equipTrigger);
+
+            selectedItem?.DisableInHand();
 
             selectedItem = targetItem;
 
             selectedItem?.EnableInHand(rightHand);
         }
-        // 만약 전에 선택한 아이템과 같을 경우에는 슬롯을 여러 개 사용하는
-        // 아이템이라서 같기 때문에 변경 시의 조작을 해줄 필요가 없다
     }
-    void OnItemUseComplete() // 아이템 사용 완료 함수
+    public void OnItemUseComplete() // 아이템 사용 완료 함수
     {
+        Debug.Log("아이템 사용 완료 함수 !");
+
         // 사용 중이지 않은 상태로 전환
         isItemUsing = false;
 
         // 선택한 아이템의 사용 시 기능을 호출한다
-        selectedItem.itemData.itemUseAction.Invoke(playerInfo);
+        UnityEvent<PlayerInfo> itemAction = selectedItem.itemData.itemUseAction;
 
         // 만약 아이템이 사용 아이템일 경우
         if (selectedItem.itemData.itemType == ItemType.Consumable)
         {
             // 현재 인덱스의 아이템 제거
             PlayerInventory.Instance.RemoveItem(currentSelectedIndex);
+
+            itemAction.Invoke(playerInfo);
+
+            selectedItem.ConsumeItem();
+
+            selectedItem = null;
+
+            playerAnimator.SetItemChangeTrigger(AnimationParameter.NoItem);
         }
+        else if (selectedItem.itemData.itemType == ItemType.NonConsumable)
+        {
+            itemAction.Invoke(playerInfo);
+        }
+    }
+    public void OnItemAttack()
+    {
+        selectedItem.itemData.itemUseAction.Invoke(playerInfo);
+    }
+    public void OnAttackComplete()
+    {
+        // 사용 중이지 않은 상태로 전환
+        isItemUsing = false;
     }
 }

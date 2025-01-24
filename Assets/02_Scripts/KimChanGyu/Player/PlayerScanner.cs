@@ -9,9 +9,9 @@ public class PlayerScanner : MonoBehaviour
 
     [SerializeField] float range;
     [SerializeField] float speed;
-    [SerializeField] float cooltime;
 
     [SerializeField] Transform scanEffectTransform;
+    [SerializeField] Transform cameraTransform;
 
     [SerializeField] Material effectMaterial;
 
@@ -19,7 +19,10 @@ public class PlayerScanner : MonoBehaviour
 
     Coroutine cooltimeCoroutine = null;
     Coroutine scanCoroutine = null;
-
+    private void Awake()
+    {
+        scanEffectTransform.parent = null;
+    }
     private void OnEnable()
     {
         scanInputAction.action.Enable();
@@ -32,28 +35,25 @@ public class PlayerScanner : MonoBehaviour
     {
         if (scanInputAction.action.WasPressedThisFrame())
         {
-            if (cooltimeCoroutine == null)
+            if (scanCoroutine == null)
             {
-                cooltimeCoroutine = StartCoroutine(CooltimeCoroutine());
-
                 Scan(range);
             }
         }
     }
-    IEnumerator CooltimeCoroutine()
-    {
-        yield return new WaitForSeconds(cooltime);
-
-        cooltimeCoroutine = null;
-    }
     public void Scan(float range)
     {
-        if (scanCoroutine != null) StopCoroutine(scanCoroutine);
+        if (scanCoroutine != null)
+        {
+            StopCoroutine(scanCoroutine);
+        }
 
         scanCoroutine = StartCoroutine(ScanCoroutine(range));
     }
     IEnumerator ScanCoroutine(float range)
     {
+        scanEffectTransform.position = cameraTransform.position;
+
         Collider[] searchColliders = Physics.OverlapSphere(scanEffectTransform.position, range, layerMask);
 
         List<(float, Collider)> distances = new List<(float, Collider)>();
@@ -75,14 +75,16 @@ public class PlayerScanner : MonoBehaviour
 
                 distances[currIndex].Item2.GetComponentInChildren<ScanResultDisplay>().OnDisplay();
             }
-
             effectMaterial.SetFloat("_Alpha", 1 - (currRange / range));
 
             scanEffectTransform.localScale = currRange * 2f * Vector3.one;
 
             yield return null;
         }
-
         effectMaterial.SetFloat("_Alpha", 0);
+
+        yield return null;
+
+        scanCoroutine = null;
     }
 }

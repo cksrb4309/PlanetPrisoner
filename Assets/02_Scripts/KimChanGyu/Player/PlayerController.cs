@@ -58,9 +58,13 @@ public class PlayerController : MonoBehaviour
 
     bool isCrouch = false; // 앉은 상태 여부
 
-    Action<float> animMoveSpeedSetAction = null; // 애니메이터 이동속도 설정 Action
+    bool canMove = true;
+
+    event Action<float> animMoveSpeedSetAction = null; // 애니메이터 이동속도 설정 Action
 
     Ray groundCheckRay = new Ray(); // 지면 확인 Ray
+
+    LayerMask groundLayerMask;
 
     float coyoteTime = 0.2f;
     float coyoteTimeCounter = 0;
@@ -105,6 +109,8 @@ public class PlayerController : MonoBehaviour
 
         // 현재 카메라 높이 설정
         currCameraHeight = cameraStandHeight;
+
+        groundLayerMask = LayerMask.GetMask("Ground");
     }
     private void Update()
     {
@@ -112,6 +118,8 @@ public class PlayerController : MonoBehaviour
 
         // 키보드 이동 입력 값 moveDelta에 저장
         moveDelta = keyboardMoveInputAction.action.ReadValue<Vector2>();
+
+        if (!canMove) moveDelta = Vector2.zero;
 
         // 이동속도 제한 값을 걷는 속도로 초기화
         float moveSpeedLimit = walkMoveSpeed;
@@ -178,10 +186,10 @@ public class PlayerController : MonoBehaviour
         #region Velocity Y 값 설정
 
         // 플레이어가 땅에 있거나 코요테 타임 값이 남아있거나, 바로 밑에 오브젝트가 있을 때
-        if (characterController.isGrounded || coyoteTimeCounter > 0f || Physics.Raycast(groundCheckRay,0.1f))
+        if (characterController.isGrounded || coyoteTimeCounter > 0f || Physics.Raycast(groundCheckRay,0.1f, groundLayerMask))
         {
             // 점프 중이 아닐 때, 점프 키를 눌렀다면
-            if (velocityY <= 0f && jumpInputAction.action.WasPressedThisFrame())
+            if (velocityY <= 0f && jumpInputAction.action.WasPressedThisFrame() && canMove)
             {
                 // 코요테 타임 초기화
                 coyoteTimeCounter = 0;
@@ -257,7 +265,9 @@ public class PlayerController : MonoBehaviour
         #region 카메라 회전
 
         // 마우스 이동 값 가져오기
-        rotateDelta = mouseMoveInputAction.action.ReadValue<Vector2>(); 
+        rotateDelta = mouseMoveInputAction.action.ReadValue<Vector2>();
+
+        if (!canMove) rotateDelta = Vector2.zero;
 
         // 마우스 이동 값이 있을 때
         if (rotateDelta != Vector2.zero)
@@ -423,10 +433,9 @@ public class PlayerController : MonoBehaviour
         // 정확히 맞춰놓은 값으로 카메라의 로컬 좌표에 적용하기
         cameraTransform.localPosition = cameraLocalPosition;
     }
-    public void EquipEnhancedShoes()
-    {
-        shoesSpeed = 1.15f;
-    }
+    public void EquipEnhancedShoes() => shoesSpeed = 1.15f;
+    public void DisableMovement() => canMove = false;
+    public void EnableMovement() => canMove = true;
     #region 플레이어 이동속도 설정 Action 바인드
     public void BindToPlayerAnimator(Action<float> action)
     {

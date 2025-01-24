@@ -44,3 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aad1be5acc08a4243959b297ae1cf2cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponDamage: 1
+  weaponRange: 1.5
+  scannerScanRange: 40

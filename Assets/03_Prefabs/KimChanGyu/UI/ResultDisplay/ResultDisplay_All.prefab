@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7984838403988968735}
   - component: {fileID: 3487529308956122186}
   - component: {fileID: 2940562060336227645}
-  m_Layer: 15
+  m_Layer: 9
   m_Name: ResultDisplay_All
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!225 &7984838403988968735
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -119,49 +119,7 @@ MonoBehaviour:
   nameText: {fileID: 4185663804799029159}
   explainPanelImage: {fileID: 8976591141893191812}
   explainText: {fileID: 7445245291570916790}
-  curve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 5.6627083
-      outSlope: 5.6627083
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.02366653
-    - serializedVersion: 3
-      time: 0.3
-      value: 1
-      inSlope: 0.25945938
-      outSlope: Infinity
-      tangentMode: 97
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1.661902
-      value: 1
-      inSlope: -0.01799778
-      outSlope: -0.01799778
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.553122
-    - serializedVersion: 3
-      time: 2
-      value: 0
-      inSlope: -3.5011373
-      outSlope: -3.5011373
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.17567834
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  duration: 2
+  duration: 3
   mainColor: {r: 1, g: 0.6084906, b: 0.6084906, a: 1}
   isExplain: 1
 --- !u!135 &2940562060336227645
@@ -193,6 +151,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4059167813729306663}
     m_Modifications:
+    - target: {fileID: 898519513007531170, guid: 781afbbc12b63c64cb9820507bad04e7, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 2274061490475829059, guid: 781afbbc12b63c64cb9820507bad04e7, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -277,6 +239,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: ExplainGroup
       objectReference: {fileID: 0}
+    - target: {fileID: 2573780486924095866, guid: 781afbbc12b63c64cb9820507bad04e7, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3613731842545592433, guid: 781afbbc12b63c64cb9820507bad04e7, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5359964711289958017, guid: 781afbbc12b63c64cb9820507bad04e7, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -347,6 +321,10 @@ PrefabInstance:
     - target: {fileID: 2537381044503560742, guid: bfdaad532c666a34cb2e2821e1b4205e, type: 3}
       propertyPath: m_Name
       value: IconImage
+      objectReference: {fileID: 0}
+    - target: {fileID: 2537381044503560742, guid: bfdaad532c666a34cb2e2821e1b4205e, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4793286192568880458, guid: bfdaad532c666a34cb2e2821e1b4205e, type: 3}
       propertyPath: m_Pivot.x
@@ -427,6 +405,18 @@ PrefabInstance:
     - target: {fileID: 4793286192568880458, guid: bfdaad532c666a34cb2e2821e1b4205e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6153540122243068888, guid: bfdaad532c666a34cb2e2821e1b4205e, type: 3}
+      propertyPath: m_Color.b
+      value: 0.6084906
+      objectReference: {fileID: 0}
+    - target: {fileID: 6153540122243068888, guid: bfdaad532c666a34cb2e2821e1b4205e, type: 3}
+      propertyPath: m_Color.g
+      value: 0.6084906
+      objectReference: {fileID: 0}
+    - target: {fileID: 6153540122243068888, guid: bfdaad532c666a34cb2e2821e1b4205e, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
