@@ -24,7 +24,7 @@ public class ItemShop : MonoBehaviour
     {
         shopUI.SetActive(false);
         inGameUI.SetActive(true);
-        player.canMove = true;
+        //player.canMove = true;
     }
 
     public void OnClickedFlashlight() // 손전등 아이템 클릭

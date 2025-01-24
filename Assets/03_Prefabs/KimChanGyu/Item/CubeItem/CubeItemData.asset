@@ -18,13 +18,8 @@ MonoBehaviour:
   itemPrice: 1
   itemWeight: 1
   itemDropSpeed: 3
-<<<<<<< HEAD:Assets/02_Scripts/KimChanGyu/Item/CubeItemData.asset
-  itemIconImage: {fileID: 21300000, guid: b2d98f54996544507ade581c727c1c51, type: 3}
-  guideText: "\uD050\uBE0C\uC90D\uAE30 [E]"
-=======
   itemIconImage: {fileID: 21300000, guid: 8ca869dd944d5f54e9ec614b26f10dcb, type: 3}
   guideText: CubeItem(E)
->>>>>>> 04a3e413aab66b15545d08e2a4307707961e9fb0:Assets/03_Prefabs/KimChanGyu/Item/CubeItem/CubeItemData.asset
   equipTriggerName: Temp
   useTriggerName: Temp
   itemUseAction:
