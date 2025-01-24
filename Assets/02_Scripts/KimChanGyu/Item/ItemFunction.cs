@@ -1,8 +1,8 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
-public class ItemFunction : MonoBehaviour // ¾ÆÀÌÅÛ ¾×¼Ç ¸ğÀ½ Å¬·¡½º
+public class ItemFunction : MonoBehaviour // ì•„ì´í…œ ì•¡ì…˜ ëª¨ìŒ í´ë˜ìŠ¤
 {
-    #region ¹«±â ÈÖµÎ¸£±â
+    #region ë¬´ê¸° íœ˜ë‘ë¥´ê¸°
     public float weaponDamage, weaponRange;
     public void UseWeapon(PlayerInfo playerInfo)
     {
@@ -10,7 +10,7 @@ public class ItemFunction : MonoBehaviour // ¾ÆÀÌÅÛ ¾×¼Ç ¸ğÀ½ Å¬·¡½º
     }
     #endregion
 
-    #region ÇÔÁ¤ ¼³Ä¡
+    #region í•¨ì • ì„¤ì¹˜
     public void ActivateTrap(PlayerInfo playerInfo)
     {
         BearTrap trap = playerInfo.playerItemHandler.GetCurrentItem() as BearTrap;
@@ -19,7 +19,7 @@ public class ItemFunction : MonoBehaviour // ¾ÆÀÌÅÛ ¾×¼Ç ¸ğÀ½ Å¬·¡½º
     }
     #endregion
 
-    #region ½ºÄ³³Ê µ¿ÀÛ
+    #region ìŠ¤ìºë„ˆ ë™ì‘
 
     [SerializeField] float scannerScanRange = 40f;
 
@@ -29,19 +29,19 @@ public class ItemFunction : MonoBehaviour // ¾ÆÀÌÅÛ ¾×¼Ç ¸ğÀ½ Å¬·¡½º
     }
     #endregion
 
-    #region °­È­ ½Å¹ß ÀåÂø
+    #region ê°•í™” ì‹ ë°œ ì¥ì°©
     public void EquipEnhancedShoes(PlayerInfo playerInfo)
     {
-        Debug.Log("°­È­ ½Å¹ß ÀåÂø");
+        Debug.Log("ê°•í™” ì‹ ë°œ ì¥ì°©");
 
         playerInfo.playerController.EquipEnhancedShoes();
     }
     #endregion
 
-    #region °­È­ ¿ìÁÖº¹ ÀåÂø
+    #region ê°•í™” ìš°ì£¼ë³µ ì¥ì°©
     public void EquipEnhancedSuit(PlayerInfo playerInfo)
     {
-        Debug.Log("°­È­ ¿ìÁÖº¹ ÀåÂø");
+        Debug.Log("ê°•í™” ìš°ì£¼ë³µ ì¥ì°©");
 
         playerInfo.playerSpaceSuit.EquipEnhancedSuit();
     }

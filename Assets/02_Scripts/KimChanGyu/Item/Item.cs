@@ -1,59 +1,59 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 
 public class Item : MonoBehaviour, IInteractable
 {
-    public virtual string TooltipText => itemData.guideText; // »óÈ£ÀÛ¿ë UI ÅØ½ºÆ®
+    public virtual string TooltipText => itemData.guideText; // ìƒí˜¸ì‘ìš© UI í…ìŠ¤íŠ¸
 
-    public ItemData itemData = null; // ¾ÆÀÌÅÛ Á¤º¸
+    public ItemData itemData = null; // ì•„ì´í…œ ì •ë³´
 
     public Transform rayStartPosition;
 
-    protected new MeshRenderer renderer = null; // ·»´õ·¯
-    protected new Collider collider = null; // Äİ¶óÀÌ´õ
+    protected new MeshRenderer renderer = null; // ë Œë”ëŸ¬
+    protected new Collider collider = null; // ì½œë¼ì´ë”
 
     protected ScanResultDisplay scanResultDisplay = null;
 
     private void Start()
     {
-        // GetComponent·Î ÇÊ¿äÇÑ Å¬·¡½º ÂüÁ¶ °¡Á®¿À±â
+        // GetComponentë¡œ í•„ìš”í•œ í´ë˜ìŠ¤ ì°¸ì¡° ê°€ì ¸ì˜¤ê¸°
         collider = GetComponentInChildren<Collider>();
         renderer = GetComponentInChildren<MeshRenderer>();
 
         scanResultDisplay = GetComponentInChildren<ScanResultDisplay>();
     }
-    public virtual void Interact() // »óÈ£ÀÛ¿ë
+    public virtual void Interact() // ìƒí˜¸ì‘ìš©
     {
         if (!IsGetItem()) return;
 
-        // ÀÎº¥Åä¸®·Î ¾ÆÀÌÅÛ Àü¼Û
+        // ì¸ë²¤í† ë¦¬ë¡œ ì•„ì´í…œ ì „ì†¡
         PlayerInventory.Instance.AddItemToInventory(this);
 
         PlayerItemHandler.Instance.EquipItem();
     }
-    public void DisableInHand() // ¾ÆÀÌÅÛ ¼û±â±â
+    public void DisableInHand() // ì•„ì´í…œ ìˆ¨ê¸°ê¸°
     {
-        // ·»´õ ¼û±â±â
+        // ë Œë” ìˆ¨ê¸°ê¸°
         renderer.enabled = false;
 
-        // Ãæµ¹Ã¼ ºñÈ°¼ºÈ­
+        // ì¶©ëŒì²´ ë¹„í™œì„±í™”
         collider.enabled = false;
 
         scanResultDisplay.DisableDisplay();
     }
-    public void EnableInHand(Transform parent) // ¾ÆÀÌÅÛ ¼Õ¿¡ µé°í ÀÖ´Â »óÅÂ·Î È°¼ºÈ­
+    public void EnableInHand(Transform parent) // ì•„ì´í…œ ì†ì— ë“¤ê³  ìˆëŠ” ìƒíƒœë¡œ í™œì„±í™”
     {
-        // ºÎ¸ğ ¼³Á¤
+        // ë¶€ëª¨ ì„¤ì •
         transform.parent = parent;
 
         transform.position = parent.transform.position;
 
         transform.rotation = parent.transform.rotation;
 
-        // ·»´õ º¸ÀÌ±â
+        // ë Œë” ë³´ì´ê¸°
         renderer.enabled = true;
 
-        // Ãæµ¹Ã¼ ºñÈ°¼ºÈ­
+        // ì¶©ëŒì²´ ë¹„í™œì„±í™”
         collider.enabled = false;
 
         scanResultDisplay.DisableDisplay();
@@ -68,20 +68,20 @@ public class Item : MonoBehaviour, IInteractable
 
         //Destroy(gameObject);
     }
-    public virtual void Activate() // È°¼ºÈ­
+    public virtual void Activate() // í™œì„±í™”
     {
-        // ºÎ¸ğ ÇØÁ¦
+        // ë¶€ëª¨ í•´ì œ
         transform.parent = null;
 
         StartCoroutine(DropItemCoroutine());
 
-        // ÀåÂø ÇØÁ¦ ½ÃÀÇ È¸Àü°ª ÃÊ±âÈ­
+        // ì¥ì°© í•´ì œ ì‹œì˜ íšŒì „ê°’ ì´ˆê¸°í™”
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
-        // ·»´õ º¸ÀÌ±â
+        // ë Œë” ë³´ì´ê¸°
         renderer.enabled = true;
 
-        // Ãæµ¹Ã¼ È°¼ºÈ­
+        // ì¶©ëŒì²´ í™œì„±í™”
         collider.enabled = true;
 
         scanResultDisplay.EnableDisplay();
