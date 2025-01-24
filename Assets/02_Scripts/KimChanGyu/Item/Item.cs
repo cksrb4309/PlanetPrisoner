@@ -9,21 +9,38 @@ public class Item : MonoBehaviour, IInteractable
 
     public Transform rayStartPosition;
 
+<<<<<<< HEAD
     new MeshRenderer renderer = null; // 렌더러
     new Collider collider = null; // 콜라이더
     new Rigidbody rigidbody = null; // 강체
+=======
+    protected new MeshRenderer renderer = null; // 렌더러
+    protected new Collider collider = null; // 콜라이더
+
+    protected ScanResultDisplay scanResultDisplay = null;
+>>>>>>> 04a3e413aab66b15545d08e2a4307707961e9fb0
 
     private void Start()
     {
         // GetComponent로 필요한 클래스 참조 가져오기
         collider = GetComponentInChildren<Collider>();
         renderer = GetComponentInChildren<MeshRenderer>();
+<<<<<<< HEAD
         rigidbody = GetComponentInChildren<Rigidbody>();
     }
     public void Interact() // 상호작용
     {
         Debug.Log("D");
 
+=======
+
+        scanResultDisplay = GetComponentInChildren<ScanResultDisplay>();
+    }
+    public virtual void Interact() // 상호작용
+    {
+        if (!IsGetItem()) return;
+
+>>>>>>> 04a3e413aab66b15545d08e2a4307707961e9fb0
         // 인벤토리로 아이템 전송
         PlayerInventory.Instance.AddItemToInventory(this);
 
@@ -37,8 +54,12 @@ public class Item : MonoBehaviour, IInteractable
         // 충돌체 비활성화
         collider.enabled = false;
 
+<<<<<<< HEAD
         // 강체 isKinematic 활성화
         rigidbody.isKinematic = true;
+=======
+        scanResultDisplay.DisableDisplay();
+>>>>>>> 04a3e413aab66b15545d08e2a4307707961e9fb0
     }
     public void EnableInHand(Transform parent) // 아이템 손에 들고 있는 상태로 활성화
     {
@@ -55,11 +76,28 @@ public class Item : MonoBehaviour, IInteractable
         // 충돌체 비활성화
         collider.enabled = false;
 
+<<<<<<< HEAD
         // 강체 isKinematic 활성화
         rigidbody.isKinematic = false;
     }
     public void Activate() // 활성화
     {
+=======
+        scanResultDisplay.DisableDisplay();
+    }
+    public virtual void ConsumeItem()
+    {
+        renderer.enabled = false;
+        collider.enabled = false;
+        transform.parent = null;
+
+        scanResultDisplay.DisableDisplay();
+
+        //Destroy(gameObject);
+    }
+    public virtual void Activate() // 활성화
+    {
+>>>>>>> 04a3e413aab66b15545d08e2a4307707961e9fb0
         // 부모 해제
         transform.parent = null;
 
@@ -74,18 +112,41 @@ public class Item : MonoBehaviour, IInteractable
         // 충돌체 활성화
         collider.enabled = true;
 
+<<<<<<< HEAD
         // 강체 isKinematic 비활성화
         rigidbody.isKinematic = false;
+=======
+        scanResultDisplay.EnableDisplay();
+>>>>>>> 04a3e413aab66b15545d08e2a4307707961e9fb0
     }
-    IEnumerator DropItemCoroutine()
+    protected IEnumerator DropItemCoroutine()
     {
         LayerMask layerMask = LayerMask.GetMask("Ground");
 
-        while (!Physics.Raycast(rayStartPosition.position, Vector3.down, 0.01f, layerMask))
-        {
-            transform.position += Time.deltaTime * itemData.itemDropSpeed * Vector3.down;
+        Ray ray = new Ray(rayStartPosition.position, Vector3.down);
 
-            yield return null;
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 100f, layerMask))
+        {
+            float goal = hitInfo.point.y + (ray.origin.y - transform.position.y);
+
+            float positionY = transform.position.y;
+
+            Vector3 position = new Vector3(transform.position.x, positionY, transform.position.z);
+
+            while (positionY > goal)
+            {
+                yield return null;
+
+                positionY -= Time.deltaTime * itemData.itemDropSpeed;
+
+                position.y = positionY;
+
+                transform.position = position;
+            }
+            position.y = goal;
+
+            transform.position = position;
         }
     }
+    public virtual bool IsGetItem() => true;
 }

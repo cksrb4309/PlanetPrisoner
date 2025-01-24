@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections;
 using UnityEngine;
 
@@ -20,6 +21,10 @@ public class PlayerOxygen : MonoBehaviour
         set
         {
             currOxygen = value;
+
+            if (currOxygen >= maxOxygen)
+                currOxygen = maxOxygen;
+                currOxygen = maxOxygen;
 
             if (currOxygen <= 0f)
             {
@@ -56,7 +61,9 @@ public class PlayerOxygen : MonoBehaviour
     void Die()
     {
         StopCoroutine(decreaseCoroutine);
-
-
+    }
+    public void RefillOxygen(float oxygen)
+    {
+        Oxygen += oxygen;
     }
 }

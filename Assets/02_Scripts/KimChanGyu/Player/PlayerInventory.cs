@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,140 +15,145 @@ public class PlayerInventory : MonoBehaviour
 
     public NotificationTextUI notificationTextUI;
 
-    // °¡Áö°í ÀÖÀ» ¾ÆÀÌÅÛ
+    // ê°€ì§€ê³  ìˆì„ ì•„ì´í…œ
     Item[] items = new Item[5] {
         null, null, null, null, null
     }; 
 
-    // ¾ÆÀÌÅÛ ½½·Ô³¢¸®ÀÇ ¿¬°á ¸®½ºÆ®
+    // ì•„ì´í…œ ìŠ¬ë¡¯ë¼ë¦¬ì˜ ì—°ê²° ë¦¬ìŠ¤íŠ¸
     List<int>[] linkedItemSlots = new List<int>[5]{ 
         new List<int>(), new List<int>(), new List<int>(), new List<int>(), new List<int>()
     }; 
 
-    int itemCount = 0; // ÇöÀç °¡Áö°í ÀÖ´Â ¾ÆÀÌÅÛÀÇ ¼ö
-    int itemMaxCount = 5; // ÃÖ´ë °¡Áú ¼ö ÀÖ´Â ¾ÆÀÌÅÛÀÇ ¼ö
+    int itemCount = 0; // í˜„ì¬ ê°€ì§€ê³  ìˆëŠ” ì•„ì´í…œì˜ ìˆ˜
+    int itemMaxCount = 5; // ìµœëŒ€ ê°€ì§ˆ ìˆ˜ ìˆëŠ” ì•„ì´í…œì˜ ìˆ˜
 
-    public void AddItemToInventory(Item item) // ¾ÆÀÌÅÛ Ãß°¡ ÇÔ¼ö
+    public void AddItemToInventory(Item item) // ì•„ì´í…œ ì¶”ê°€ í•¨ìˆ˜
     {
-        // ¸¸¾à ÀÎº¥Åä¸®¿¡ °ø°£ÀÌ ºÎÁ·ÇÒ ¶§
+        // ë§Œì•½ ì¸ë²¤í† ë¦¬ì— ê³µê°„ì´ ë¶€ì¡±í•  ë•Œ
         if (itemCount > itemMaxCount - item.itemData.itemSize)
         {
-            // UIManager¿¡ ¾ÆÀÌÅÛÀ» ¸ø¸Ô´Â´Ù´Â ½ÅÈ£¸¦ º¸³¿
-            notificationTextUI.NotificationText("ÀÎº¥Åä¸®¿¡ ÀÚ¸®°¡ ¾ø½À´Ï´Ù");
+            // UIManagerì— ì•„ì´í…œì„ ëª»ë¨¹ëŠ”ë‹¤ëŠ” ì‹ í˜¸ë¥¼ ë³´ëƒ„
+            notificationTextUI.NotificationText("ì¸ë²¤í† ë¦¬ì— ìë¦¬ê°€ ì—†ìŠµë‹ˆë‹¤");
 
-            return; // ¹İÈ¯
+            return; // ë°˜í™˜
         }
 
-        // ¾ÆÀÌÅÛÀ» Ãß°¡ÇÒ ¼ö ÀÖ´Â Áö È®ÀÎÇÑ´Ù
+        // ì•„ì´í…œì„ ì¶”ê°€í•  ìˆ˜ ìˆëŠ” ì§€ í™•ì¸í•œë‹¤
         int index = -1;
 
-        // ¾ÆÀÌÅÛÀ» Ãß°¡ÇÒ ¼ö ÀÖÀ» ¶§±îÁö ¹İº¹
-        int tmp = 0; // ¹«ÇÑ ¹İº¹ ¹æÁö
+        // ì•„ì´í…œì„ ì¶”ê°€í•  ìˆ˜ ìˆì„ ë•Œê¹Œì§€ ë°˜ë³µ
+        int tmp = 0; // ë¬´í•œ ë°˜ë³µ ë°©ì§€
         while (tmp++ < 500) 
         {
-            // ¾ÆÀÌÅÛÀ» Ãß°¡ ¸øÇÑ´Ù¸é -1, ÇÒ ¼ö ÀÖ´Ù¸é ÇØ´ç ÀÎµ¦½º
+            // ì•„ì´í…œì„ ì¶”ê°€ ëª»í•œë‹¤ë©´ -1, í•  ìˆ˜ ìˆë‹¤ë©´ í•´ë‹¹ ì¸ë±ìŠ¤
             index = CanAddItem(item.itemData.itemSize);
 
-            // ¾ÆÀÌÅÛÀ» Ãß°¡ÇÒ ¼ö ÀÖ´Ù¸é while ¹İº¹ ÁßÁö
+            // ì•„ì´í…œì„ ì¶”ê°€í•  ìˆ˜ ìˆë‹¤ë©´ while ë°˜ë³µ ì¤‘ì§€
             if (index != -1) break;
 
-            // Ãß°¡ÇÒ ¼ö ¾ø´Ù¸é µÚ·Î ¿Å±æ ¼ö ÀÖ´Â °Í Áß¿¡ Á¦ÀÏ ¾Õ¿¡ ÀÖ´Â ¾ÆÀÌÅÛÀ» ÇÑÄ­ ÀÌµ¿
+            // ì¶”ê°€í•  ìˆ˜ ì—†ë‹¤ë©´ ë’¤ë¡œ ì˜®ê¸¸ ìˆ˜ ìˆëŠ” ê²ƒ ì¤‘ì— ì œì¼ ì•ì— ìˆëŠ” ì•„ì´í…œì„ í•œì¹¸ ì´ë™
             for (int i = 0; i < itemMaxCount - 1; i++)
             {
-                // ÇöÀç º¸°í ÀÖ´Â items[i]°¡ ¾ÆÀÌÅÛÀÌ Á¸ÀçÇÏ°í,
-                // ´ÙÀ½ ¾ÆÀÌÅÛ Ä­ÀÌ ºñ¾îÀÖÀ» ¶§
+                // í˜„ì¬ ë³´ê³  ìˆëŠ” items[i]ê°€ ì•„ì´í…œì´ ì¡´ì¬í•˜ê³ ,
+                // ë‹¤ìŒ ì•„ì´í…œ ì¹¸ì´ ë¹„ì–´ìˆì„ ë•Œ
                 if (items[i] != null && items[i + 1] == null) 
                 {
-                    // ¾ÆÀÌÅÛ À§Ä¡ ÀÌµ¿
+                    // ì•„ì´í…œ ìœ„ì¹˜ ì´ë™
                     items[i + 1] = items[i];
                     items[i] = null;
 
-                    // ¾ÆÀÌÅÛ ½½·Ô ÂüÁ¶ ÀÌµ¿
+                    // ì•„ì´í…œ ìŠ¬ë¡¯ ì°¸ì¡° ì´ë™
                     linkedItemSlots[i + 1] = linkedItemSlots[i];
                     linkedItemSlots[i] = new List<int>();
 
-                    break; // ÇÑÄ­ ÀÌµ¿ ½ÃÄ×´Ù¸é for ¹İº¹¹® Áß´Ü !
+                    break; // í•œì¹¸ ì´ë™ ì‹œì¼°ë‹¤ë©´ for ë°˜ë³µë¬¸ ì¤‘ë‹¨ !
                 }
             }
         }
 
-        #region index °ª ¿À·ù Ã¼Å©¿ëµµ
+        #region index ê°’ ì˜¤ë¥˜ ì²´í¬ìš©ë„
         if (index == -1)
         {
-            Debug.LogWarning("Index°¡ -1? ³Ê ÀÎº¥Åä¸® È®ÀÎÇØ.");
+            Debug.LogWarning("Indexê°€ -1? ë„ˆ ì¸ë²¤í† ë¦¬ í™•ì¸í•´.");
             return;
         }
         #endregion
 
-        // ¾ÆÀÌÅÛ ½½·Ô ¹èÄ¡¸¦ ÇÑ´Ù
+        // ì•„ì´í…œ ìŠ¬ë¡¯ ë°°ì¹˜ë¥¼ í•œë‹¤
         for (int i = index; i < index + item.itemData.itemSize; i++)
         {
-            // ¾ÆÀÌÅÛ ¹è¿­¿¡ ³Ö´Â´Ù
+            // ì•„ì´í…œ ë°°ì—´ì— ë„£ëŠ”ë‹¤
             items[i] = item;
 
-            // ¾ÆÀÌÅÛ ½½·Ô ¿¬°á ¸®½ºÆ® ¼ÂÆÃ
+            // ì•„ì´í…œ ìŠ¬ë¡¯ ì—°ê²° ë¦¬ìŠ¤íŠ¸ ì…‹íŒ…
             for (int j = index; j < index + item.itemData.itemSize; j++)
             {
-                // ÇöÀç ¹èÄ¡ÇÏ´Â ¾ÆÀÌÅÛ°ú ´Ù¸£´Ù¸é
+                // í˜„ì¬ ë°°ì¹˜í•˜ëŠ” ì•„ì´í…œê³¼ ë‹¤ë¥´ë‹¤ë©´
                 if (i != j)
                 {
-                    // ¾ÆÀÌÅÛ ½½·Ô ¿¬°á ¸®½ºÆ®¿¡ Ãß°¡ÇÑ´Ù
+                    // ì•„ì´í…œ ìŠ¬ë¡¯ ì—°ê²° ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€í•œë‹¤
                     linkedItemSlots[i].Add(j);
                 }
             }
         }
 
-        // °®°í ÀÖ´Â ¾ÆÀÌÅÛÀÇ °³¼ö ¾ÆÀÌÅÛÀÇ Å©±â¸¸Å­ ´Ã¸°´Ù
+        // ê°–ê³  ìˆëŠ” ì•„ì´í…œì˜ ê°œìˆ˜ ì•„ì´í…œì˜ í¬ê¸°ë§Œí¼ ëŠ˜ë¦°ë‹¤
         itemCount += item.itemData.itemSize;
 
-        // ¾ÆÀÌÅÛ ½½·ÔÀ» ¾÷µ¥ÀÌÆ® ÇÑ´Ù
+        // ì•„ì´í…œ ìŠ¬ë¡¯ì„ ì—…ë°ì´íŠ¸ í•œë‹¤
         UpdateItemSlots();
 
-        // ¸¶Áö¸·À¸·Î ¾ÆÀÌÅÛÀ» °¨Ãá´Ù
+        // ë§ˆì§€ë§‰ìœ¼ë¡œ ì•„ì´í…œì„ ê°ì¶˜ë‹¤
         item.DisableInHand();
     }
-    public Item GetItemFromInventory(int index) // ¾ÆÀÌÅÛ Àü´Ş ÇÔ¼ö
+    public Item GetItemFromInventory(int index) // ì•„ì´í…œ ì „ë‹¬ í•¨ìˆ˜
     {
         return items[index];
     }
     public void RemoveItem(int index)
     {
-        items[index] = null; // ÇöÀç ÀÎµ¦½º null ÀüÈ¯
-        InventoryUI.Instance.RemoveItem(index); // ¾ÆÀÌÅÛ Á¦°Å
+        items[index] = null; // í˜„ì¬ ì¸ë±ìŠ¤ null ì „í™˜
+        InventoryUI.Instance.RemoveItem(index); // ì•„ì´í…œ ì œê±°
 
         itemCount--;
 
-        // ÇØ´ç ÀÎµ¦½º¿Í ¿¬°áµÈ ½½·Ô¸¸Å­ ¹İº¹
+        // í•´ë‹¹ ì¸ë±ìŠ¤ì™€ ì—°ê²°ëœ ìŠ¬ë¡¯ë§Œí¼ ë°˜ë³µ
         for (int i = 0; i < linkedItemSlots[index].Count; i++)
         {
-            items[index] = null; // ¿¬°áµÈ ½½·ÔÀÇ ¾ÆÀÌÅÛ Á¦°Å
-            InventoryUI.Instance.RemoveItem(index); // ½½·Ô ºñ¿ì±â
+            items[linkedItemSlots[index][i]] = null; // ì—°ê²°ëœ ìŠ¬ë¡¯ì˜ ì•„ì´í…œ ì œê±°
+
+            linkedItemSlots[linkedItemSlots[index][i]].Clear();
+
+            InventoryUI.Instance.RemoveItem(linkedItemSlots[index][i]); // ìŠ¬ë¡¯ ë¹„ìš°ê¸°
 
             itemCount--;
         }
+
+        linkedItemSlots[index].Clear();
     }
     int CanAddItem(int itemSize)
     {
-        // ¾ÆÀÌÅÛÀÌ ÃÖ¼Ò µé¾î°¥ ¼ö ÀÖ´Â À§Ä¡¸¸Å­ ¹İº¹
+        // ì•„ì´í…œì´ ìµœì†Œ ë“¤ì–´ê°ˆ ìˆ˜ ìˆëŠ” ìœ„ì¹˜ë§Œí¼ ë°˜ë³µ
         for (int index = 0; index <= itemMaxCount - itemSize; index++)
         {
             for (int j = 0; j < itemSize; j++)
             {
-                // ¸¸¾à ¾ÆÀÌÅÛÀÌ µé¾îÀÖ´Ù¸é
+                // ë§Œì•½ ì•„ì´í…œì´ ë“¤ì–´ìˆë‹¤ë©´
                 if (items[index + j] != null)
                 {
-                    // ÇöÀç ¹İº¹¹®À» ½ºÅµÇÑ´Ù
+                    // í˜„ì¬ ë°˜ë³µë¬¸ì„ ìŠ¤í‚µí•œë‹¤
                     break;
                 }
-                // ¸¸¾à ¾ÆÀÌÅÛÀÌ µé¾îÀÖÁö ¾Ê°í ¸¶Áö¸· ¹İº¹¹®ÀÌ¶ó¸é
+                // ë§Œì•½ ì•„ì´í…œì´ ë“¤ì–´ìˆì§€ ì•Šê³  ë§ˆì§€ë§‰ ë°˜ë³µë¬¸ì´ë¼ë©´
                 else if (j == itemSize - 1)
                 {
-                    return index; // µé¾î°¥ ¼ö ÀÖ´Â °ø°£ÀÇ Index¸¦ ¹İÈ¯ÇÑ´Ù
+                    return index; // ë“¤ì–´ê°ˆ ìˆ˜ ìˆëŠ” ê³µê°„ì˜ Indexë¥¼ ë°˜í™˜í•œë‹¤
                 }
             }
         }
 
-        // ¸¸¾à ¾ÆÀÌÅÛÀ» ³ÖÀ» ¼ö ÀÖ´Â °ø°£ÀÌ ¾ø´Ù¸é -1À» ¹İÈ¯ÇÑ´Ù
+        // ë§Œì•½ ì•„ì´í…œì„ ë„£ì„ ìˆ˜ ìˆëŠ” ê³µê°„ì´ ì—†ë‹¤ë©´ -1ì„ ë°˜í™˜í•œë‹¤
         return -1;
     }
     void UpdateItemSlots()

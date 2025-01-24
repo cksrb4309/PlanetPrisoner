@@ -6,19 +6,22 @@ public class PlayerAnimator : MonoBehaviour
 
     bool isGround = true; // 현재 isGround 상태
 
+    const int HAND_LAYER = 1;
+
     private void Start()
     {
         // Animator 가져오기
         playerAnimator = GetComponentInChildren<Animator>();
     }
+    #region PlayerController
     void SetMoveSpeed(float value) // 이동속도 값 적용 
     {
         // 이동 값 애니메이터에 적용
-        playerAnimator.SetFloat("Move", value);
+        playerAnimator.SetFloat(AnimationParameter.Move.ToString(), value);
     }
     public void SetIsCrouch(bool isCrouch) // 앉은 상태 여부 적용 
     {
-        playerAnimator.SetBool("IsCrouch", isCrouch);
+        playerAnimator.SetBool(AnimationParameter.IsCrouch.ToString(), isCrouch);
     }
     public bool SetJumpTrigger() // 점프 애님이 불가능하면 False, 가능하면 True 반환 후 애니메이션 적용 
     {
@@ -29,7 +32,7 @@ public class PlayerAnimator : MonoBehaviour
             return false;
         }
         // 만약 서있다면 Jump Trigger 실행
-        playerAnimator.SetTrigger("Jump");
+        playerAnimator.SetTrigger(AnimationParameter.Jump.ToString());
 
         // true를 반환
         return true;
@@ -45,18 +48,23 @@ public class PlayerAnimator : MonoBehaviour
         // IsGround 적용
         playerAnimator.SetBool("IsGround", isGround);
     }
-    public void SetItemChangeTrigger(string triggerName) // 아이템 변경 시의 트리거 셋팅
+    public void SetWaistValue(float value)
     {
-        return;
-
-        playerAnimator.SetTrigger(triggerName);
+        playerAnimator.SetFloat(AnimationParameter.Waist.ToString(), value);
     }
-    public void SetItemUseTrigger(string triggerName)
+    #endregion
+    #region PlayerItemHandler
+    public void SetItemChangeTrigger(AnimationParameter triggerState) // 아이템 변경 시의 트리거 셋팅
     {
-        return;
+        playerAnimator.SetLayerWeight(HAND_LAYER, triggerState == AnimationParameter.NoItem ? 0f : 1f);
 
-        playerAnimator.SetTrigger(triggerName);
+        playerAnimator.SetTrigger(triggerState.ToString());
     }
+    public void SetItemUseTrigger(AnimationParameter triggerState)
+    {
+        playerAnimator.SetTrigger(triggerState.ToString());
+    }
+    #endregion
     private void OnEnable()
     {
         // 함수 구독 시켜놓기

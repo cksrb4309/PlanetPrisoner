@@ -12,6 +12,8 @@ TagManager:
   - Mineable
   - Generator
   - Wall
+  - Trap
+  - Interactable
   layers:
   - Default
   - TransparentFX
@@ -19,16 +21,16 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
   - Ground
   - Item
-  - Player
   - WorldCanvas
+  - Monster
+  - Interact
+  - PlayerAttack
+  - MonsterAttack
+  - GlobalAttack
+  - 
   - 
   - 
   - 

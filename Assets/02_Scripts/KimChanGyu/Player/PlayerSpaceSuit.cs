@@ -1,12 +1,12 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PlayerSpaceSuit : MonoBehaviour, IDamagable
 {
-    // ÀÏ¹İ ¿ìÁÖº¹ÀÇ »ê¼Ò ¼Ò¸ğ·®
+    // ì¼ë°˜ ìš°ì£¼ë³µì˜ ì‚°ì†Œ ì†Œëª¨ëŸ‰
     [SerializeField] float minOxygenDrain = 0.05f;
     [SerializeField] float maxOxygenDrain = 3f;
 
-    // °­È­ ¿ìÁÖº¹ÀÇ »ê¼Ò ¼Ò¸ğ·®
+    // ê°•í™” ìš°ì£¼ë³µì˜ ì‚°ì†Œ ì†Œëª¨ëŸ‰
     [SerializeField] float minExSuitOxygenDrain = 0.025f;
     [SerializeField] float maxExSuitOxygenDrain = 2f;
 
@@ -39,11 +39,11 @@ public class PlayerSpaceSuit : MonoBehaviour, IDamagable
 
         playerOxygen.SetOxygenDecreaseValue(minOxygenDrain);
     }
-    public void Hit(float damage)
+    public void Damaged(float damage)
     {
         if (currHp <= 0) return;
 
-        // Ã¼·Â °¨¼Ò
+        // ì²´ë ¥ ê°ì†Œ
         Hp -= damage;
 
         playerOxygen.SetOxygenDecreaseValue(

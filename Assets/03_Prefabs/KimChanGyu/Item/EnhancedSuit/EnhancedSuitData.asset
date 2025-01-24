@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdf2b0da3dae8484499be870b5058a4a, type: 3}
+  m_Name: EnhancedSuitData
+  m_EditorClassIdentifier: 
+  itemName: EnhancedSuit
+  itemType: 1
+  itemSize: 1
+  itemPrice: 1
+  itemWeight: 1
+  itemDropSpeed: 5
+  itemIconImage: {fileID: 0}
+  guideText: EnhancedSuit(E)
+  equipTriggerName: 5
+  useTriggerName: 4
+  itemUseAction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 721201119972736077, guid: 0385b871e61efae4ca610c96a3cf88d7, type: 3}
+        m_TargetAssemblyTypeName: ItemFunction, KCG
+        m_MethodName: EquipEnhancedSuit
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
