@@ -3,7 +3,7 @@
 public class TMPlayer : MonoBehaviour
 {
     private Rigidbody rb;  // 리지드 바디
-    private float moveSpeed = 15f;  // 이동 속도
+    private float moveSpeed = 55f;  // 이동 속도
     private float rotationSpeed = 1f;  // 회전 속도
 
     private Camera playerCamera;  // 카메라

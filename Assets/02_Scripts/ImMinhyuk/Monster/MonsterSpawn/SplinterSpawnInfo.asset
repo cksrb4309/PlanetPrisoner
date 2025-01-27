@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c46f2a6957494d24b916d1c6158e9728, type: 3}
+  m_Name: SplinterSpawnInfo
+  m_EditorClassIdentifier: 
+  spawnMonster: {fileID: 4839912140187004875, guid: ed4adec830a067444a52a6d332da2a30, type: 3}
+  spawnTimerDataList:
+  - targetTime: 55
+    spawnRate: 50
+    monsterSpawnLimit: 10
+  - targetTime: 555
+    spawnRate: 100
+    monsterSpawnLimit: 10
+  - targetTime: 5555
+    spawnRate: 100
+    monsterSpawnLimit: 10
