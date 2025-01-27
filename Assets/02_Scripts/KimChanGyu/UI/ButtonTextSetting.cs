@@ -3,7 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class TextSetting : MonoBehaviour
+public class ButtonTextSetting : MonoBehaviour, IConfigurable
 {
     [SerializeField] UISettings settings;
 
@@ -17,26 +17,6 @@ public class TextSetting : MonoBehaviour
 
     float speed = 0;
 
-    private void Awake()
-    {
-        text = GetComponent<TMP_Text>();
-
-        GetComponent<TMP_Text>().color = settings.textExitColor;
-        GetComponent<TMP_Text>().fontSize = settings.buttonTextSize;
-
-        fadeDuration = settings.textColorFadeDuration;
-        speed = 1f / fadeDuration;
-    }
-    private void OnEnable()
-    {
-        text = GetComponent<TMP_Text>();
-
-        GetComponent<TMP_Text>().color = settings.textExitColor;
-        GetComponent<TMP_Text>().fontSize = settings.buttonTextSize;
-
-        fadeDuration = settings.textColorFadeDuration;
-        speed = 1f / fadeDuration;
-    }
     public void OnColorChange(int order)
     {
         if (currCoroutine != null) StopCoroutine(currCoroutine);
@@ -67,8 +47,10 @@ public class TextSetting : MonoBehaviour
         }
         currCoroutine = null;
     }
-    private void OnValidate()
+    public void Configure(UISettings settings)
     {
+        this.settings = settings;
+
         GetComponent<TMP_Text>().color = settings.textExitColor;
         GetComponent<TMP_Text>().fontSize = settings.buttonTextSize;
 

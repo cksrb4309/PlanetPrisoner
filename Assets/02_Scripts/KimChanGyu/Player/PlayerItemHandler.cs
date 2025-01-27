@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
@@ -89,6 +88,8 @@ public class PlayerItemHandler : MonoBehaviour
         {
             // 인벤토리에서 제거
             PlayerInventory.Instance.RemoveItem(currentSelectedIndex);
+
+            playerAnimator.SetItemChangeTrigger(AnimationParameter.NoItem);
 
             // 아이템 오브젝트 활성화 !
             selectedItem.Activate();

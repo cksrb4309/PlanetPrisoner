@@ -53,3 +53,25 @@ public class ButtonHelper : Editor
         }
     }
 }
+
+[CustomEditor(typeof(UISettings))]
+public class UISettingButton : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector(); // 기존 인스펙터 UI 유지
+
+        UISettings targetObject = (UISettings)target;
+
+        if (targetObject == null)
+        {
+            EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
+            return;
+        }
+
+        if (GUILayout.Button("Apply"))
+        {
+            targetObject.Execute();
+        }
+    }
+}

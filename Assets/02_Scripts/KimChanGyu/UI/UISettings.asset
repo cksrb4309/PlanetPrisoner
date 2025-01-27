@@ -22,5 +22,6 @@ MonoBehaviour:
   buttonTextSize: 40
   itemNameTextSize: 0.3
   itemExplainTextSize: 0.3
+  fontAsset: {fileID: 11400000, guid: 2e5f44c3eb3f3374cab933c3ed3d8fbd, type: 2}
   textColorFadeDuration: 0.1
   imageColorFadeDuration: 0.1
