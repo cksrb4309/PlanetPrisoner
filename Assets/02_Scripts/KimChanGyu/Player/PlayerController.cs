@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float crouchRatioSpeed = 0.5f; // 앉을 때의 이속 비율
     [SerializeField] float jumpSpeed = 10f;
     [SerializeField] float gravity = -9.81f;
+    [SerializeField] float oxygenBurnRate = 0.5f;
 
     [Header("Rotate Attribute")] // Header 정리
     [SerializeField] float pitchClampMax = 70f; // 카메라 각도 최대값
@@ -36,8 +37,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] InputActionReference runInputAction; // 달리기 입력
 
     PlayerAnimator playerAnimator = null; // PlayerAnimator
+    PlayerOxygen playerOxygen = null;
     CharacterController characterController = null; // 플레이어 캐릭터 컨트롤러
     Transform playerTransform = null; // 플레이어 트랜스폼
+
 
     Vector2 moveDelta = Vector2.zero; // 키보드 이동 입력 값 저장 변수
     Vector2 rotateDelta = Vector2.zero; // 마우스 이동 입력 값 저장 변수
@@ -72,8 +75,6 @@ public class PlayerController : MonoBehaviour
     float standPivotHeight = -0.024f; // 서있을 때의 높이
 
     Vector3 pivotLocalPosition = Vector3.zero; // 플레이어 로컬 피벗 Y축 적용 Vector3
-
-    PlayerOxygen playerOxygen = null;
 
     private void OnEnable()
     {
@@ -127,8 +128,7 @@ public class PlayerController : MonoBehaviour
         // 만약 달리기 입력을 누르고 있다면
         if (runInputAction.action.IsPressed())
         {
-            // TODO 산소 처리 (찬규)
-            // 머시깽 ~
+            playerOxygen.oxygenUsageFactor += Time.deltaTime * oxygenBurnRate;
 
             // 달리기 속도로 변경
             moveSpeedLimit = runMoveSpeed;
@@ -441,6 +441,28 @@ public class PlayerController : MonoBehaviour
         canMove = false;
     }
     public void EnableMovement() => canMove = true; // 움직임 활성화
+
+    public void MovePosition(Transform targetTransform)
+    {
+        StartCoroutine(MovePositionCoroutine(targetTransform));
+    }
+
+    IEnumerator MovePositionCoroutine(Transform targetTransform)
+    {
+        DisableMovement();
+
+        characterController.enabled = false;
+
+        transform.position = targetTransform.position;
+
+        transform.rotation = targetTransform.rotation;
+
+        yield return null;
+
+        EnableMovement();
+
+        characterController.enabled = true;
+    }
 
     #region 플레이어 이동속도 설정 Action 바인드
     public void BindToPlayerAnimator(Action<float> action)

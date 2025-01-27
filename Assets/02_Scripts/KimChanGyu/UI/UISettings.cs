@@ -1,3 +1,6 @@
+using System.Linq;
+using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "UISettings", menuName = "UI/UISettings")]
@@ -20,7 +23,20 @@ public class UISettings : ScriptableObject
     public float itemNameTextSize;
     public float itemExplainTextSize;
 
+    [Header("Text Font")]
+    public TMP_FontAsset fontAsset;
+
     [Header("Fade Duration")]
     public float textColorFadeDuration;
     public float imageColorFadeDuration;
+
+    public void Execute()
+    {
+        IConfigurable[] configurables = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None).OfType<IConfigurable>().ToArray();
+
+        foreach (IConfigurable configurable in configurables)
+        {
+            configurable.Configure(this);
+        }
+    }
 }

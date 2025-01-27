@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
-public class ButtonSetting : MonoBehaviour
+public class ButtonImageSetting : MonoBehaviour, IConfigurable
 {
-    [SerializeField] UISettings settings;
+    UISettings settings;
 
     float fadeDuration = 0.2f;
 
@@ -17,21 +17,6 @@ public class ButtonSetting : MonoBehaviour
 
     float speed;
 
-    private void Awake()
-    {
-        image = GetComponent<Image>();
-        image.color = settings.imageExitColor;
-        fadeDuration = settings.imageColorFadeDuration;
-        speed = 1f / fadeDuration;
-        image.sprite = settings.buttonSprite;
-    }
-    private void OnEnable()
-    {
-        image = GetComponent<Image>();
-        image.color = settings.imageExitColor;
-        fadeDuration = settings.imageColorFadeDuration;
-        speed = 1f / fadeDuration;
-    }
     public void OnColorChange(int order)
     {
         if (currCoroutine != null) StopCoroutine(currCoroutine);
@@ -62,10 +47,12 @@ public class ButtonSetting : MonoBehaviour
         }
         currCoroutine = null;
     }
-    private void OnValidate()
+    public void Configure(UISettings settings)
     {
         GetComponent<Image>().color = settings.imageExitColor;
         fadeDuration = settings.imageColorFadeDuration;
         GetComponent<Image>().sprite = settings.buttonSprite;
+
+        this.settings = settings;
     }
 }

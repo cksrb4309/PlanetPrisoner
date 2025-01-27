@@ -172,14 +172,7 @@ public class PlayerInventory : MonoBehaviour
     }
     public void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        instance = this;
     }
     public void OnDisable()
     {
