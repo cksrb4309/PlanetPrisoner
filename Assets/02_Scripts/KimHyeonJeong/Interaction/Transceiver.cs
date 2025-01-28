@@ -7,7 +7,7 @@ public class Transceiver : MonoBehaviour
     private Material objectMaterials;
 
     // 전송기 collider에 들어온 오브젝트 리스트
-    [SerializeField] private List<GameObject> objectInTransceiver = new List<GameObject>(); 
+    public List<GameObject> objectInTransceiver = new List<GameObject>(); 
 
     //private Color OriginalEmissionColor;
 
