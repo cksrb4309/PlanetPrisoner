@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ComputerInteract : MonoBehaviour, IInteractable
+public class ShopComputer : MonoBehaviour, IInteractable
 {
     [SerializeField] GameObject shopUI; // 상점 UI
     [SerializeField] GameObject inGameUI; // 인게임 UI 
