@@ -1604,6 +1604,8 @@ GameObject:
   - component: {fileID: 7936983831926684758}
   - component: {fileID: 1281764968658751551}
   - component: {fileID: 156654109454381944}
+  - component: {fileID: -5308428653528831488}
+  - component: {fileID: 5713418372078194984}
   m_Layer: 9
   m_Name: M_Golem
   m_TagString: Monster
@@ -6511,6 +6513,16 @@ MonoBehaviour:
   hitRangeColliders:
   - {fileID: 8106163344306425087}
   headSight: {fileID: 9098436114805482671}
+  basicSounds:
+  - {fileID: 8300000, guid: 4b5bfa7c91f6908419a7eae57a34e849, type: 3}
+  - {fileID: 8300000, guid: ab1fa94dc0ddfa242bcd9b89b217e25e, type: 3}
+  attackSounds:
+  - {fileID: 8300000, guid: 3b5e12b4fe84e484789b5413cfb14bc9, type: 3}
+  - {fileID: 8300000, guid: d1bba777468dc534e84681ba70057dbc, type: 3}
+  dieSounds:
+  - {fileID: 8300000, guid: 9b47d8d15e81a5c4e80ad450c7200320, type: 3}
+  - {fileID: 8300000, guid: 27415756c51762c40871daa6dc4c318d, type: 3}
+  monsterAnimEvent: {fileID: 0}
 --- !u!195 &104361778716058710
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -6606,6 +6618,116 @@ CapsuleCollider:
   m_Height: 1.93
   m_Direction: 2
   m_Center: {x: 0, y: 0.84, z: -0.13}
+--- !u!82 &-5308428653528831488
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6835976750419113153}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &5713418372078194984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6835976750419113153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73f50177a88e0f340b3ad242b5017d3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitRangeColliders: []
 --- !u!1 &6861364066958545990
 GameObject:
   m_ObjectHideFlags: 0

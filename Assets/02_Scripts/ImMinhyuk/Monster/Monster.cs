@@ -16,9 +16,15 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     [SerializeField] protected CapsuleCollider[] hitRangeColliders; // 공격 Hit 판정용
     [SerializeField] protected GameObject headSight; //헤드 To 플레이어 시력 탐지 레이용
 
+    [SerializeField] AudioClip[] basicSounds;              // Idle, Move 소리들
+    [SerializeField] AudioClip[] attackSounds;             // 공격 소리들
+    [SerializeField] AudioClip[] dieSounds;                // 사망 소리들
+
     // 하위 컴포넌트
     protected Animator animator;
     protected NavMeshAgent agent;
+    protected AudioSource audio;
+    public MonsterAnimEvent monsterAnimEvent;
 
     [SerializeField] // 스텟 확인용으로 달아줬음
     public M_Stat Stat { get; private set; } // json으로부터 데이터를 받아온다.
@@ -75,6 +81,11 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         }
     }
     #endregion FSM
+
+    private void Awake()
+    {
+        audio = GetComponent<AudioSource>();
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected virtual void Start()
@@ -277,47 +288,32 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         }
     }
 
-    #region 애니메이션 이벤트 영역
-
-    // 공격 애니메이션중 히트판정용 콜라이더를 켜주는 프레임
-    void OnAnimAttackRangeColliderOn()
+    #region MonsterAnimEvent 초기화 함수
+    public CapsuleCollider[] GetHitRangeColliders()
     {
-        foreach( var hitRangeCollider in hitRangeColliders)
-        {
-            hitRangeCollider.enabled = true;
-        }
+        return hitRangeColliders;
     }
 
-    // 공격 애니메이션후 히트판정용 콜라이더를 꺼주는 프레임
-    void OnAnimAttackRangeColliderOff()
+    public AudioSource GetAudioSoruce()
     {
-        foreach (var hitRangeCollider in hitRangeColliders)
-        {
-            hitRangeCollider.enabled = false;
-        }
+        return audio;
     }
 
-    // 공격 애니메이션이 끝나고 다음 행동을 결정하는 애니메이션 프레임
-    void OnAnimAttackEndEvent()
+    public AudioClip[] GetoBasicAudioClip()
     {
-        State = EState.Idle;
+        return basicSounds;
     }
 
-    // 스턴 애니메이션이 끝나고 다음 행동을 결정하는 애니메이션 프레임
-    void OnAnimStunEndEvent()
+    public AudioClip[] GetAttackAudioClip()
     {
-        if (State != EState.Death)
-        {
-            State = EState.Idle;
-        }
+        return attackSounds;
     }
 
-    void OnAnimAlertEndEvent()
+    public AudioClip[] GetDieAudioClip()
     {
-        State = EState.Idle;
+        return dieSounds;
     }
-
-    #endregion 애니메이션 이벤트 영역
+    #endregion MonsterAnimEvent 초기화 함수
 
     #region 기즈모
     private void OnDrawGizmos()
