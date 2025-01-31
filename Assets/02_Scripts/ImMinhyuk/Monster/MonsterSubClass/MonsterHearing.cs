@@ -55,6 +55,8 @@ public class MonsterHearing : MonoBehaviour
         // playingAudioSources의 모든 오디오 소스에 대해 거리 계산
         for (int i = 0; i < playingAudioSources.Count; i++)
         {
+            if (playingAudioSources[i].gameObject.tag == "Monster") continue; // 몬스터 테그를 제외하지 않으면 자기 자신도 포함해서 일단 패스
+
             float distance = Vector3.Distance(playingAudioSources[i].transform.position, transform.position);
             if (distance <= monster.Stat.canHearingRange)
             {
@@ -73,7 +75,7 @@ public class MonsterHearing : MonoBehaviour
         // 죽었다면 아무것도 하지 않는다.
         if (monster.State == EState.Death) return null;
 
-        // 플레이어와 몬스터 간의 거리 계산
+        // 몬스터와 소리나는 대상의 거리 계산
         float distanceToPlayer = Vector3.Distance(transform.position, closetAudioCandidate.transform.position);
 
         // 감청 범위 내에서만 유효
@@ -90,14 +92,15 @@ public class MonsterHearing : MonoBehaviour
             // 가까운 거리에서 소리를 들으면 해당 '방향으로' 공격한다.
             if (distanceToPlayer < monster.Stat.attackRange)
             {
-                // 중복 상태 세팅 방지
-                if (monster.State != EState.Attack)
+                // 로직상 Moving 중일 때만 공격 가능
+                // 유연하지 못해 좋은 로직은 아님..
+                if (monster.State == EState.Moving)
                 {
                     // 소리난 방향으로 회전
                     // 네브매쉬랑 같이 사용하고 있어서 부자연스러울지도?? 지금은 괜찮음
                     Vector3 direction = closetAudioCandidate.transform.position - transform.position;
                     Quaternion targetRotation = Quaternion.LookRotation(direction);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 90);
 
                     // 공격
                     monster.State = EState.Attack;
