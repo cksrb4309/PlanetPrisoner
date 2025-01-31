@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEditor;
 using System.Linq;
 
@@ -9,7 +9,7 @@ using System.Linq;
 //{
 //    public override void OnInspectorGUI()
 //    {
-//        DrawDefaultInspector(); // ±âÁ¸ ÀÎ½ºÆåÅÍ UI À¯Áö
+//        DrawDefaultInspector(); // ê¸°ì¡´ ì¸ìŠ¤í™í„° UI ìœ ì§€
 
 //        PlayerSpaceSuit[] targetsArray = targets.Cast<PlayerSpaceSuit>().ToArray();
 
@@ -37,7 +37,7 @@ public class ButtonHelper : Editor
 {
     public override void OnInspectorGUI()
     {
-        DrawDefaultInspector(); // ±âÁ¸ ÀÎ½ºÆåÅÍ UI À¯Áö
+        DrawDefaultInspector(); // ê¸°ì¡´ ì¸ìŠ¤í™í„° UI ìœ ì§€
 
         PlayerSpaceSuit targetObject = (PlayerSpaceSuit)target;
 
@@ -49,7 +49,29 @@ public class ButtonHelper : Editor
 
         if (GUILayout.Button("Hit"))
         {
-            targetObject.Hit(0.1f);
+            targetObject.Damaged(0.1f);
+        }
+    }
+}
+
+[CustomEditor(typeof(UISettings))]
+public class UISettingButton : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector(); // ê¸°ì¡´ ì¸ìŠ¤í™í„° UI ìœ ì§€
+
+        UISettings targetObject = (UISettings)target;
+
+        if (targetObject == null)
+        {
+            EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
+            return;
+        }
+
+        if (GUILayout.Button("Apply"))
+        {
+            targetObject.Execute();
         }
     }
 }

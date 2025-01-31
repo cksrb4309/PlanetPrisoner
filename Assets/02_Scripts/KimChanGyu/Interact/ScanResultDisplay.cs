@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,16 +18,20 @@ public class ScanResultDisplay : MonoBehaviour
     [SerializeField] Image explainPanelImage;
     [SerializeField] TMP_Text explainText;
 
+    [SerializeField] float duration = 3f;
 
-    [SerializeField] AnimationCurve curve;
-
-    [SerializeField] float duration = 2f;
+    [SerializeField] float testAlpha = 0f;
 
     [SerializeField] Color mainColor = Color.red;
 
     [SerializeField] bool isExplain = false;
 
     Coroutine displayCoroutine = null;
+
+    bool isDisplay = true;
+
+    float t = 0;
+    float alpha = 0;
 
     private void Awake()
     {
@@ -39,6 +43,8 @@ public class ScanResultDisplay : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("확 인 " + Random.value.ToString());
+
         if (other.CompareTag("Player") && isExplain)
             explainGroup.alpha = 1f;
     }
@@ -49,6 +55,9 @@ public class ScanResultDisplay : MonoBehaviour
     }
     private void OnValidate()
     {
+        if (mainGroup != null) mainGroup.alpha = testAlpha;
+        if (explainGroup != null) explainGroup.alpha = testAlpha;
+
         if (iconImage != null)
             iconImage.color = new Color(mainColor.r, mainColor.g, mainColor.b, iconImage.color.a);
 
@@ -64,30 +73,48 @@ public class ScanResultDisplay : MonoBehaviour
         if (explainText != null)
             explainText.color = new Color(mainColor.r, mainColor.g, mainColor.b, explainText.color.a);
     }
+    private void OnEnable()
+    {
+        isDisplay = true;
+    }
+    public void EnableDisplay() => isDisplay = true;
+    public void DisableDisplay() => isDisplay = false;
     public void OnDisplay()
     {
-        if (displayCoroutine != null)
-        {
-            StopCoroutine(displayCoroutine);
-        }
+        if (!isDisplay) return;
 
-        displayCoroutine = StartCoroutine(DisplayCoroutine());
+        t = 0;
+
+        if (displayCoroutine == null)
+        {
+            displayCoroutine = StartCoroutine(DisplayCoroutine());
+        }
     }
 
     IEnumerator DisplayCoroutine()
     {
-        float t = 0;
+        alpha = 0;
 
         for (; t < duration; t += Time.deltaTime)
         {
-            //transform.forward = (transform.position - cameraTransform.position);
-
             transform.rotation = Quaternion.LookRotation(cameraTransform.forward, cameraTransform.up);
 
-            mainGroup.alpha = curve.Evaluate(t);
+            alpha = Mathf.Clamp(alpha + Time.deltaTime * 3f, 0.0f, 1.0f);
+
+            mainGroup.alpha = alpha;
 
             yield return null;
+
+            if (!isDisplay)
+            {
+                mainGroup.alpha = 0f;
+
+                yield break;
+            }
         }
+
         mainGroup.alpha = 0;
+
+        displayCoroutine = null;
     }
 }

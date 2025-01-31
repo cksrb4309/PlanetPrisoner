@@ -1,5 +1,5 @@
-using System.Runtime.CompilerServices;
-using UnityEngine;
+ï»¿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerItemHandler : MonoBehaviour
@@ -12,29 +12,28 @@ public class PlayerItemHandler : MonoBehaviour
 
     [SerializeField] Transform rightHand;
 
-    [SerializeField] InputActionReference scrollWheelInputAction; // ½ºÅ©·Ñ ÀÔ·Â
-    [SerializeField] InputActionReference itemUseInputAction; // ¾ÆÀÌÅÛ »ç¿ë ÀÔ·Â
-    [SerializeField] InputActionReference itemDropInputAction; // ¾ÆÀÌÅÛ µå¶ø ÀÔ·Â
+    [SerializeField] InputActionReference scrollWheelInputAction; // ìŠ¤í¬ë¡¤ ì…ë ¥
+    [SerializeField] InputActionReference itemUseInputAction; // ì•„ì´í…œ ì‚¬ìš© ì…ë ¥
+    [SerializeField] InputActionReference itemDropInputAction; // ì•„ì´í…œ ë“œë ì…ë ¥
 
-    [SerializeField] InputActionReference itemSelectHotkey1; // ¾ÆÀÌÅÛ ¼±ÅÃ ´ÜÃàÅ° 1
-    [SerializeField] InputActionReference itemSelectHotkey2; // ¾ÆÀÌÅÛ ¼±ÅÃ ´ÜÃàÅ° 2
-    [SerializeField] InputActionReference itemSelectHotkey3; // ¾ÆÀÌÅÛ ¼±ÅÃ ´ÜÃàÅ° 3
-    [SerializeField] InputActionReference itemSelectHotkey4; // ¾ÆÀÌÅÛ ¼±ÅÃ ´ÜÃàÅ° 4
-    [SerializeField] InputActionReference itemSelectHotkey5; // ¾ÆÀÌÅÛ ¼±ÅÃ ´ÜÃàÅ° 5
+    [SerializeField] InputActionReference itemSelectHotkey1; // ì•„ì´í…œ ì„ íƒ ë‹¨ì¶•í‚¤ 1
+    [SerializeField] InputActionReference itemSelectHotkey2; // ì•„ì´í…œ ì„ íƒ ë‹¨ì¶•í‚¤ 2
+    [SerializeField] InputActionReference itemSelectHotkey3; // ì•„ì´í…œ ì„ íƒ ë‹¨ì¶•í‚¤ 3
+    [SerializeField] InputActionReference itemSelectHotkey4; // ì•„ì´í…œ ì„ íƒ ë‹¨ì¶•í‚¤ 4
+    [SerializeField] InputActionReference itemSelectHotkey5; // ì•„ì´í…œ ì„ íƒ ë‹¨ì¶•í‚¤ 5
 
     PlayerInfo playerInfo;
 
-    PlayerAnimator playerAnimator = null; // ÇÃ·¹ÀÌ¾î ¾Ö´Ï¸ŞÀÌÅÍ
+    PlayerAnimator playerAnimator = null; // í”Œë ˆì´ì–´ ì• ë‹ˆë©”ì´í„°
 
-    Item selectedItem = null; // ¼±ÅÃ ÁßÀÎ ¾ÆÀÌÅÛ
+    Item selectedItem = null; // ì„ íƒ ì¤‘ì¸ ì•„ì´í…œ
 
-    bool isItemUsing = false; // ¾ÆÀÌÅÛ »ç¿ë Áß Æ®¸®°Å º¯¼ö
+    bool isItemUsing = false; // ì•„ì´í…œ ì‚¬ìš© ì¤‘ íŠ¸ë¦¬ê±° ë³€ìˆ˜
 
-    int currentSelectedIndex = 0; // ÇöÀç ¼±ÅÃ ÁßÀÎ ¾ÆÀÌÅÛ
-    int beforeSelectedIndex = 0; // ÀÌÀü¿¡ ¼±ÅÃÇÏ´ø ¾ÆÀÌÅÛ
-    int maxSelectedIndex = 5; // ¼±ÅÃÇÒ ¼ö ÀÖ´Â ¾ÆÀÌÅÛ ÃÖ´ë ÀÎµ¦½º
+    int currentSelectedIndex = 0; // í˜„ì¬ ì„ íƒ ì¤‘ì¸ ì•„ì´í…œ
+    int beforeSelectedIndex = 0; // ì´ì „ì— ì„ íƒí•˜ë˜ ì•„ì´í…œ
+    int maxSelectedIndex = 5; // ì„ íƒí•  ìˆ˜ ìˆëŠ” ì•„ì´í…œ ìµœëŒ€ ì¸ë±ìŠ¤
 
-    string unEquipTriggerName = "UnEquip"; // ÀåÂøÇØÁ¦ TriggerName
     private void Awake()
     {
         instance = this;
@@ -47,7 +46,10 @@ public class PlayerItemHandler : MonoBehaviour
 
         playerInfo = new PlayerInfo(
             GetComponent<PlayerSpaceSuit>(),
-            GetComponent<PlayerController>());
+            GetComponent<PlayerController>(),
+            GetComponent<PlayerScanner>(),
+            this,
+            GetComponent<PlayerAttacker>());
     }
     private void OnEnable()
     {
@@ -75,135 +77,163 @@ public class PlayerItemHandler : MonoBehaviour
     }
     public void Update()
     {
-        #region ¾ÆÀÌÅÛ µå¶ø ÀÔ·Â
+        #region ì•„ì´í…œ ë“œë ì…ë ¥
 
-        // ¾ÆÀÌÅÛ µå¶ø ÀÔ·ÂÇÏ°í, µé°í ÀÖ´Â ¾ÆÀÌÅÛÀÌ ÀÖÀ» °æ¿ì
+        // ì•„ì´í…œ ì‚¬ìš© ì¤‘ì´ë¼ë©´ ì‚¬ìš© ì¤‘ì¸ ì•„ì´í…œì„ ë²„ë¦¬ì§€ ëª»í•˜ë„ë¡ ë¦¬í„´
+        if (isItemUsing) return;
+
+        // ì•„ì´í…œ ë“œë ì…ë ¥í•˜ê³ , ë“¤ê³  ìˆëŠ” ì•„ì´í…œì´ ìˆì„ ê²½ìš°
         if (itemDropInputAction.action.WasPressedThisFrame() &&
             selectedItem != null)
         {
-            // TODO µé°í ÀÖ´Ù°¡ ³õÀº ¾ÆÀÌÅÛ¿¡ ´ëÇÑ Ã³¸® (Âù±Ô)
-
-            // ÀÎº¥Åä¸®¿¡¼­ Á¦°Å
+            // ì¸ë²¤í† ë¦¬ì—ì„œ ì œê±°
             PlayerInventory.Instance.RemoveItem(currentSelectedIndex);
 
-            // ¾ÆÀÌÅÛ ¿ÀºêÁ§Æ® È°¼ºÈ­ !
+            playerAnimator.SetItemChangeTrigger(AnimationParameter.NoItem);
+
+            // ì•„ì´í…œ ì˜¤ë¸Œì íŠ¸ í™œì„±í™” !
             selectedItem.Activate();
 
-            // ¾ÆÀÌÅÛ ¿¬°á ²÷±â
+            // ì•„ì´í…œ ì—°ê²° ëŠê¸°
             selectedItem = null;
         }
 
         #endregion
 
-        #region ¾ÆÀÌÅÛ »ç¿ë ÀÔ·Â
+        #region ì•„ì´í…œ ì‚¬ìš© ì…ë ¥
 
-        // ¾ÆÀÌÅÛ »ç¿ë ÁßÀÌ¶ó¸é »ç¿ë ÀÔ·ÂÀÌ ¹İº¹µÇÁö ¾Êµµ·Ï ÇÔ¼ö¸¦ ¹İÈ¯
+        // ì•„ì´í…œ ì‚¬ìš© ì¤‘ì´ë¼ë©´ ì‚¬ìš© ì…ë ¥ì´ ë°˜ë³µë˜ì§€ ì•Šë„ë¡ í•¨ìˆ˜ë¥¼ ë°˜í™˜
         if (isItemUsing) return;
 
-        // ¾ÆÀÌÅÛ »ç¿ë ÀÔ·ÂÇÏ°í, ÇØ´ç ¾ÆÀÌÅÛÀÌ Default Å¸ÀÔÀÌ ¾Æ´Ò °æ¿ì
+        // ì•„ì´í…œ ì‚¬ìš© ì…ë ¥í•˜ê³ , í•´ë‹¹ ì•„ì´í…œì´ Default íƒ€ì…ì´ ì•„ë‹ ê²½ìš°
         if (itemUseInputAction.action.WasPressedThisFrame() &&
             selectedItem != null &&
             selectedItem.itemData.itemType != ItemType.Default)
         {
-            // ¾ÆÀÌÅÛ »ç¿ë Áß Æ®¸®°Å º¯¼ö È°¼ºÈ­
+            Debug.Log("ì•„ì´í…œ ì‚¬ìš© ì‹œë„ !");
+
+            // ì•„ì´í…œ ì‚¬ìš© ì¤‘ íŠ¸ë¦¬ê±° ë³€ìˆ˜ í™œì„±í™”
             isItemUsing = true;
 
-            // ¾ÆÀÌÅÛ¿¡ µû¸¥ »ç¿ë ¾Ö´Ï¸ŞÀÌ¼Ç Æ®¸®°Å Àç»ı
-            playerAnimator.SetItemUseTrigger(selectedItem == null ? unEquipTriggerName : selectedItem.itemData.equipTriggerName);
+            // ì•„ì´í…œì— ë”°ë¥¸ ì‚¬ìš© ì• ë‹ˆë©”ì´ì…˜ íŠ¸ë¦¬ê±° ì¬ìƒ
+            playerAnimator.SetItemUseTrigger(selectedItem.itemData.useTrigger);
+
+            // TODO : ë³€ê²½ ì‹œë„ ì¤‘ (ì°¬ê·œ)
+            // OnItemUseComplete(); // ì• ë‹ˆë©”ì´ì…˜ì´ ì—†ìŒìœ¼ë¡œ ì—¬ê¸°ì„œ ì•„ì´í…œ ì‚¬ìš© í…ŒìŠ¤íŠ¸ë¥¼ ìš°ì„ ì ìœ¼ë¡œ ì§„í–‰í•œë‹¤
         }
 
         #endregion
 
-        #region ¾ÆÀÌÅÛ º¯°æ ÀÔ·Â
+        #region ì•„ì´í…œ ë³€ê²½ ì…ë ¥
 
-        // ¾ÆÀÌÅÛÀ» »ç¿ë ÁßÀÌ¶ó¸é ÇÔ¼ö¸¦ ¹İÈ¯ÇÏ¿©
-        // ¾ÆÀÌÅÛ º¯°æÀ» ¸·¾Æ³õ´Â´Ù
+        // ì•„ì´í…œì„ ì‚¬ìš© ì¤‘ì´ë¼ë©´ í•¨ìˆ˜ë¥¼ ë°˜í™˜í•˜ì—¬
+        // ì•„ì´í…œ ë³€ê²½ì„ ë§‰ì•„ë†“ëŠ”ë‹¤
         if (isItemUsing) return;
 
-        // ¸¶¿ì½º ÈÙ ½ºÅ©·Ñ ÀÔ·Â ¹Ş±â
+        // ë§ˆìš°ìŠ¤ íœ  ìŠ¤í¬ë¡¤ ì…ë ¥ ë°›ê¸°
         Vector2 scrollDelta = scrollWheelInputAction.action.ReadValue<Vector2>();
 
-        // ÀÔ·ÂµÈ °ªÀÌ ÀÖ´Ù¸é
+        // ì…ë ¥ëœ ê°’ì´ ìˆë‹¤ë©´
         if (Mathf.Abs(scrollDelta.y) > float.Epsilon)
         {
-            // °¨¼Ò °ªÀ» ¹Ş¾ÒÀ» ¶§
+            // ê°ì†Œ ê°’ì„ ë°›ì•˜ì„ ë•Œ
             if (scrollDelta.y < 0)
             {
                 currentSelectedIndex = (currentSelectedIndex + 1) >= maxSelectedIndex ? 0 : currentSelectedIndex + 1;
             }
-            // Áõ°¡ °ªÀ» ¹Ş¾ÒÀ» ¶§
+            // ì¦ê°€ ê°’ì„ ë°›ì•˜ì„ ë•Œ
             else
             {
                 currentSelectedIndex = (currentSelectedIndex - 1) < 0 ? maxSelectedIndex - 1 : currentSelectedIndex - 1;
             }
         }
 
-        // ´­¸¥ ´ÜÃàÅ° Index ÀúÀå
+        // ëˆŒë¥¸ ë‹¨ì¶•í‚¤ Index ì €ì¥
         int pressedHotkeyIndex = -1;
 
-        // ¾ÆÀÌÅÛ ¼±ÅÃ ´ÜÃàÅ° ÀÔ·ÂÀ» È®ÀÎÇÑ´Ù
+        // ì•„ì´í…œ ì„ íƒ ë‹¨ì¶•í‚¤ ì…ë ¥ì„ í™•ì¸í•œë‹¤
         if (itemSelectHotkey1.action.WasPressedThisFrame()) pressedHotkeyIndex = 0;
         if (itemSelectHotkey2.action.WasPressedThisFrame()) pressedHotkeyIndex = 1;
         if (itemSelectHotkey3.action.WasPressedThisFrame()) pressedHotkeyIndex = 2;
         if (itemSelectHotkey4.action.WasPressedThisFrame()) pressedHotkeyIndex = 3;
         if (itemSelectHotkey5.action.WasPressedThisFrame()) pressedHotkeyIndex = 4;
 
-        // ´©¸¥ ¹öÆ°ÀÌ ÀÖ´Ù¸é
+        // ëˆ„ë¥¸ ë²„íŠ¼ì´ ìˆë‹¤ë©´
         if (pressedHotkeyIndex != -1) currentSelectedIndex = pressedHotkeyIndex;
 
-        // ÀÌÀü ¼±ÅÃ ÁßÀÎ ÀÎµ¦½º¿Í ´Ş¶óÁ³À» ¶§
+        // ì´ì „ ì„ íƒ ì¤‘ì¸ ì¸ë±ìŠ¤ì™€ ë‹¬ë¼ì¡Œì„ ë•Œ
         if (beforeSelectedIndex != currentSelectedIndex)
         {
-            // ÀÌÀü ¾ÆÀÌÅÛ NullÀÌ ¾Æ´Ò ¶§¼Õ¿¡¼­ °¡¸®±â
-            selectedItem?.DisableInHand();
-
             InventoryUI.Instance.ItemSlotUnEquipSetting(beforeSelectedIndex);
 
-            // °»½Å
             beforeSelectedIndex = currentSelectedIndex;
 
             InventoryUI.Instance.ItemSlotEquipSetting(currentSelectedIndex);
 
-            // ¾ÆÀÌÅÛ ÀåÂø
+            // ì•„ì´í…œ ì¥ì°©
             EquipItem();
         }
 
         #endregion
     }
-    public void EquipItem() // ¾ÆÀÌÅÛ ÀåÂø
+    //public Transform GetHandTransform() => rightHand;
+    public Item GetCurrentItem() => selectedItem;
+    public void EquipItem() // ì•„ì´í…œ ì¥ì°©
     {
-        // ÇöÀç IndexÀÇ ¾ÆÀÌÅÛÀ» °¡Á®¿Â´Ù
+        // í˜„ì¬ Indexì˜ ì•„ì´í…œì„ ê°€ì ¸ì˜¨ë‹¤
         Item targetItem = PlayerInventory.Instance.GetItemFromInventory(currentSelectedIndex);
 
-        // ¼±ÅÃ ÁßÀÎ ¾ÆÀÌÅÛÀ» ºñÈ°¼ºÈ­
-        selectedItem?.DisableInHand();
-
-        // ¸¸¾à Àü¿¡ ¼±ÅÃÇÑ ¾ÆÀÌÅÛ°ú ´Ù¸¦ °æ¿ì
-        if (selectedItem != targetItem)
+        // ê°™ì€ ì•„ì´í…œ ì„ íƒì´ ì•„ë‹ ê²½ìš°
+        if (selectedItem == null ||
+            targetItem == null ||
+            selectedItem.GetInstanceID() != targetItem.GetInstanceID())
         {
-            // ¾ÆÀÌÅÛ¿¡ µû¸¥ ¼Õ ¾Ö´Ï¸ŞÀÌ¼Ç Æ®¸®°Å Àç»ı
-            playerAnimator.SetItemChangeTrigger(selectedItem == null ? unEquipTriggerName : selectedItem.itemData.equipTriggerName);
+            // ì•„ì´í…œì— ë”°ë¥¸ ì† ì• ë‹ˆë©”ì´ì…˜ íŠ¸ë¦¬ê±° ì¬ìƒ
+            playerAnimator.SetItemChangeTrigger(targetItem == null ? AnimationParameter.NoItem : targetItem.itemData.equipTrigger);
+
+            selectedItem?.DisableInHand();
 
             selectedItem = targetItem;
 
             selectedItem?.EnableInHand(rightHand);
         }
-        // ¸¸¾à Àü¿¡ ¼±ÅÃÇÑ ¾ÆÀÌÅÛ°ú °°À» °æ¿ì¿¡´Â ½½·ÔÀ» ¿©·¯ °³ »ç¿ëÇÏ´Â
-        // ¾ÆÀÌÅÛÀÌ¶ó¼­ °°±â ¶§¹®¿¡ º¯°æ ½ÃÀÇ Á¶ÀÛÀ» ÇØÁÙ ÇÊ¿ä°¡ ¾ø´Ù
     }
-    void OnItemUseComplete() // ¾ÆÀÌÅÛ »ç¿ë ¿Ï·á ÇÔ¼ö
+    public void OnItemUseComplete() // ì•„ì´í…œ ì‚¬ìš© ì™„ë£Œ í•¨ìˆ˜
     {
-        // »ç¿ë ÁßÀÌÁö ¾ÊÀº »óÅÂ·Î ÀüÈ¯
+        Debug.Log("ì•„ì´í…œ ì‚¬ìš© ì™„ë£Œ í•¨ìˆ˜ !");
+
+        // ì‚¬ìš© ì¤‘ì´ì§€ ì•Šì€ ìƒíƒœë¡œ ì „í™˜
         isItemUsing = false;
 
-        // ¼±ÅÃÇÑ ¾ÆÀÌÅÛÀÇ »ç¿ë ½Ã ±â´ÉÀ» È£ÃâÇÑ´Ù
-        selectedItem.itemData.itemUseAction.Invoke(playerInfo);
+        // ì„ íƒí•œ ì•„ì´í…œì˜ ì‚¬ìš© ì‹œ ê¸°ëŠ¥ì„ í˜¸ì¶œí•œë‹¤
+        UnityEvent<PlayerInfo> itemAction = selectedItem.itemData.itemUseAction;
 
-        // ¸¸¾à ¾ÆÀÌÅÛÀÌ »ç¿ë ¾ÆÀÌÅÛÀÏ °æ¿ì
+        // ë§Œì•½ ì•„ì´í…œì´ ì‚¬ìš© ì•„ì´í…œì¼ ê²½ìš°
         if (selectedItem.itemData.itemType == ItemType.Consumable)
         {
-            // ÇöÀç ÀÎµ¦½ºÀÇ ¾ÆÀÌÅÛ Á¦°Å
+            // í˜„ì¬ ì¸ë±ìŠ¤ì˜ ì•„ì´í…œ ì œê±°
             PlayerInventory.Instance.RemoveItem(currentSelectedIndex);
+
+            itemAction.Invoke(playerInfo);
+
+            selectedItem.ConsumeItem();
+
+            selectedItem = null;
+
+            playerAnimator.SetItemChangeTrigger(AnimationParameter.NoItem);
         }
+        else if (selectedItem.itemData.itemType == ItemType.NonConsumable)
+        {
+            itemAction.Invoke(playerInfo);
+        }
+    }
+    public void OnItemAttack()
+    {
+        selectedItem.itemData.itemUseAction.Invoke(playerInfo);
+    }
+    public void OnAttackComplete()
+    {
+        // ì‚¬ìš© ì¤‘ì´ì§€ ì•Šì€ ìƒíƒœë¡œ ì „í™˜
+        isItemUsing = false;
     }
 }

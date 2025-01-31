@@ -1,21 +1,32 @@
+ï»¿using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class PlayerSpaceSuit : MonoBehaviour, IDamagable
 {
-    // ÀÏ¹İ ¿ìÁÖº¹ÀÇ »ê¼Ò ¼Ò¸ğ·®
+    // ì¼ë°˜ ìš°ì£¼ë³µì˜ ì‚°ì†Œ ì†Œëª¨ëŸ‰
     [SerializeField] float minOxygenDrain = 0.05f;
     [SerializeField] float maxOxygenDrain = 3f;
 
-    // °­È­ ¿ìÁÖº¹ÀÇ »ê¼Ò ¼Ò¸ğ·®
+    // ê°•í™” ìš°ì£¼ë³µì˜ ì‚°ì†Œ ì†Œëª¨ëŸ‰
     [SerializeField] float minExSuitOxygenDrain = 0.025f;
     [SerializeField] float maxExSuitOxygenDrain = 2f;
 
     [SerializeField] float maxHp = 3f;
 
+    [SerializeField] Volume volume;
+
+    [SerializeField] Image scratchImage;
+
+    private Bloom bloom = null;
+
     PlayerOxygen playerOxygen = null;
 
-    float currHp = 0;
+    Coroutine damagedCoroutine = null;
 
+    float currHp = 0;
     float Hp
     {
         get
@@ -38,29 +49,69 @@ public class PlayerSpaceSuit : MonoBehaviour, IDamagable
         playerOxygen = GetComponent<PlayerOxygen>();
 
         playerOxygen.SetOxygenDecreaseValue(minOxygenDrain);
+
+        if (!volume.profile.TryGet(out bloom))
+        {
+            Debug.LogWarning("Bloom íš¨ê³¼ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
+        }
+
+        bloom.tint.Override(Color.white);
     }
-    public void Hit(float damage)
+    public void Damaged(float damage)
     {
         if (currHp <= 0) return;
 
-        // Ã¼·Â °¨¼Ò
+        // ì²´ë ¥ ê°ì†Œ
         Hp -= damage;
 
-        playerOxygen.SetOxygenDecreaseValue(
-            Mathf.Lerp(
-                minOxygenDrain,
-                maxOxygenDrain,
-                currHp / maxHp));
+        ScreenEffectController.TriggerScreenNoiseEffect(2f, 0.2f, 1f);
+
+        if (damagedCoroutine != null) StopCoroutine(damagedCoroutine);
+
+        damagedCoroutine = StartCoroutine(DamagedCoroutine());
+
+        SetOxygenDecreaseValue();
     }
     public void EquipEnhancedSuit()
     {
         minOxygenDrain = minExSuitOxygenDrain;
         maxOxygenDrain = maxExSuitOxygenDrain;
 
-        playerOxygen.SetOxygenDecreaseValue(
-            Mathf.Lerp(
-                minOxygenDrain,
-                maxOxygenDrain,
-                currHp / maxHp));
+        SetOxygenDecreaseValue();
+    }
+    void SetOxygenDecreaseValue() =>
+        playerOxygen.SetOxygenDecreaseValue(Mathf.Lerp(minOxygenDrain, maxOxygenDrain, Mathf.Pow(1 - (currHp / maxHp), 2f)));
+    IEnumerator DamagedCoroutine()
+    {
+        bloom.tint.Override(Color.red);
+
+        scratchImage.enabled = true;
+
+        yield return new WaitForSeconds(1f);
+
+        float t = 1;
+
+        Color imageColor = Color.white;
+
+        while (t > 0f)
+        {
+            t -= Time.deltaTime;
+
+            bloom.tint.Override(Color.Lerp(Color.white, Color.red, t));
+
+            imageColor.a = t;
+
+            scratchImage.color = imageColor;
+
+            yield return null;
+        }
+
+        bloom.tint.Override(Color.white);
+
+        imageColor.a = 1f;
+
+        scratchImage.enabled = false;
+
+        scratchImage.color = imageColor;
     }
 }

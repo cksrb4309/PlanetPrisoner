@@ -2,30 +2,25 @@
 
 public class GameManager : MonoBehaviour
 {
-    private static GameManager instance;
+    [SerializeField] public int d_days;
 
-    [SerializeField] float oxygen = 2000; // 2L=2000ml
+    public static GameManager Instance{ get; private set; }
 
-    public static GameManager Instance
-    {
-        get
-        {
-            return instance;
-        }
-    }
-
-    public float GetOxygen() // oxygen변수 getter
-    {
-        return oxygen;
-    }
-    public void ChangeOxygen(float amount)
-    {
-        oxygen += amount;
-    }
 
     void Awake()
     {
-        
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+    private void Start()
+    {
+        d_days = 3; // 예시로 3일
     }
 
     void Update()

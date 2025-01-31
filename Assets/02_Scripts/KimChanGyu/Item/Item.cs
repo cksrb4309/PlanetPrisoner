@@ -1,91 +1,119 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 
 public class Item : MonoBehaviour, IInteractable
 {
-    public virtual string TooltipText => itemData.guideText; // »óÈ£ÀÛ¿ë UI ÅØ½ºÆ®
+    public virtual string TooltipText => itemData.GuideText; // ìƒí˜¸ì‘ìš© UI í…ìŠ¤íŠ¸
 
-    public ItemData itemData = null; // ¾ÆÀÌÅÛ Á¤º¸
+    public ItemData itemData = null; // ì•„ì´í…œ ì •ë³´
 
     public Transform rayStartPosition;
 
-    new MeshRenderer renderer = null; // ·»´õ·¯
-    new Collider collider = null; // Äİ¶óÀÌ´õ
-    new Rigidbody rigidbody = null; // °­Ã¼
+    protected new MeshRenderer renderer = null; // ë Œë”ëŸ¬
+    protected new Collider collider = null; // ì½œë¼ì´ë”
+
+    protected ScanResultDisplay scanResultDisplay = null;
 
     private void Start()
     {
-        // GetComponent·Î ÇÊ¿äÇÑ Å¬·¡½º ÂüÁ¶ °¡Á®¿À±â
+        // GetComponentë¡œ í•„ìš”í•œ í´ë˜ìŠ¤ ì°¸ì¡° ê°€ì ¸ì˜¤ê¸°
         collider = GetComponentInChildren<Collider>();
         renderer = GetComponentInChildren<MeshRenderer>();
-        rigidbody = GetComponentInChildren<Rigidbody>();
-    }
-    public void Interact() // »óÈ£ÀÛ¿ë
-    {
-        Debug.Log("D");
 
-        // ÀÎº¥Åä¸®·Î ¾ÆÀÌÅÛ Àü¼Û
+        scanResultDisplay = GetComponentInChildren<ScanResultDisplay>();
+    }
+    public virtual void Interact() // ìƒí˜¸ì‘ìš©
+    {
+        if (!IsGetItem()) return;
+
+        // ì¸ë²¤í† ë¦¬ë¡œ ì•„ì´í…œ ì „ì†¡
         PlayerInventory.Instance.AddItemToInventory(this);
 
         PlayerItemHandler.Instance.EquipItem();
     }
-    public void DisableInHand() // ¾ÆÀÌÅÛ ¼û±â±â
+    public void DisableInHand() // ì•„ì´í…œ ìˆ¨ê¸°ê¸°
     {
-        // ·»´õ ¼û±â±â
+        // ë Œë” ìˆ¨ê¸°ê¸°
         renderer.enabled = false;
 
-        // Ãæµ¹Ã¼ ºñÈ°¼ºÈ­
+        // ì¶©ëŒì²´ ë¹„í™œì„±í™”
         collider.enabled = false;
 
-        // °­Ã¼ isKinematic È°¼ºÈ­
-        rigidbody.isKinematic = true;
+        scanResultDisplay.DisableDisplay();
     }
-    public void EnableInHand(Transform parent) // ¾ÆÀÌÅÛ ¼Õ¿¡ µé°í ÀÖ´Â »óÅÂ·Î È°¼ºÈ­
+    public void EnableInHand(Transform parent) // ì•„ì´í…œ ì†ì— ë“¤ê³  ìˆëŠ” ìƒíƒœë¡œ í™œì„±í™”
     {
-        // ºÎ¸ğ ¼³Á¤
+        // ë¶€ëª¨ ì„¤ì •
         transform.parent = parent;
 
         transform.position = parent.transform.position;
 
         transform.rotation = parent.transform.rotation;
 
-        // ·»´õ º¸ÀÌ±â
+        // ë Œë” ë³´ì´ê¸°
         renderer.enabled = true;
 
-        // Ãæµ¹Ã¼ ºñÈ°¼ºÈ­
+        // ì¶©ëŒì²´ ë¹„í™œì„±í™”
         collider.enabled = false;
 
-        // °­Ã¼ isKinematic È°¼ºÈ­
-        rigidbody.isKinematic = false;
+        scanResultDisplay.DisableDisplay();
     }
-    public void Activate() // È°¼ºÈ­
+    public virtual void ConsumeItem()
     {
-        // ºÎ¸ğ ÇØÁ¦
+        renderer.enabled = false;
+        collider.enabled = false;
+        transform.parent = null;
+
+        scanResultDisplay.DisableDisplay();
+
+        //Destroy(gameObject);
+    }
+    public virtual void Activate() // í™œì„±í™”
+    {
+        // ë¶€ëª¨ í•´ì œ
         transform.parent = null;
 
         StartCoroutine(DropItemCoroutine());
 
-        // ÀåÂø ÇØÁ¦ ½ÃÀÇ È¸Àü°ª ÃÊ±âÈ­
+        // ì¥ì°© í•´ì œ ì‹œì˜ íšŒì „ê°’ ì´ˆê¸°í™”
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
-        // ·»´õ º¸ÀÌ±â
+        // ë Œë” ë³´ì´ê¸°
         renderer.enabled = true;
 
-        // Ãæµ¹Ã¼ È°¼ºÈ­
+        // ì¶©ëŒì²´ í™œì„±í™”
         collider.enabled = true;
 
-        // °­Ã¼ isKinematic ºñÈ°¼ºÈ­
-        rigidbody.isKinematic = false;
+        scanResultDisplay.EnableDisplay();
     }
-    IEnumerator DropItemCoroutine()
+    protected IEnumerator DropItemCoroutine()
     {
         LayerMask layerMask = LayerMask.GetMask("Ground");
 
-        while (!Physics.Raycast(rayStartPosition.position, Vector3.down, 0.01f, layerMask))
-        {
-            transform.position += Time.deltaTime * itemData.itemDropSpeed * Vector3.down;
+        Ray ray = new Ray(rayStartPosition.position, Vector3.down);
 
-            yield return null;
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 100f, layerMask))
+        {
+            float goal = hitInfo.point.y + (ray.origin.y - transform.position.y);
+
+            float positionY = transform.position.y;
+
+            Vector3 position = new Vector3(transform.position.x, positionY, transform.position.z);
+
+            while (positionY > goal)
+            {
+                yield return null;
+
+                positionY -= Time.deltaTime * itemData.itemDropSpeed;
+
+                position.y = positionY;
+
+                transform.position = position;
+            }
+            position.y = goal;
+
+            transform.position = position;
         }
     }
+    public virtual bool IsGetItem() => true;
 }

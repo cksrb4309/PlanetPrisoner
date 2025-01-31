@@ -1,29 +1,33 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ItemSlot : MonoBehaviour
 {
-    [SerializeField] Image iconImageUI; // ¾ÆÀÌÅÛ ¾ÆÀÌÄÜ ÀÌ¹ÌÁö
+    [SerializeField] Image iconImageUI; // ì•„ì´í…œ ì•„ì´ì½˜ ì´ë¯¸ì§€
 
-    Image slotBackgroundUI; // ¾ÆÀÌÅÛ ½½·Ô ¹è°æ ÀÌ¹ÌÁö
+    Image slotBackgroundUI = null; // ì•„ì´í…œ ìŠ¬ë¡¯ ë°°ê²½ ì´ë¯¸ì§€
 
-    float unEquipAlpha; // ºñÀåÂø ¾ËÆÄ °ª
-    float currAlpha; // ÇöÀç Alpha °ª
-    float equipAlpha; // ÀåÂø Alpha °ª
-    float alphaSpeed; // ÀåÂø ¹× ÀåÂø ÇØÁ¦·Î ÀÎÇÑ Alpha Áõ°¨ ¼Óµµ
+    float unEquipAlpha; // ë¹„ì¥ì°© ì•ŒíŒŒ ê°’
+    float currAlpha; // í˜„ì¬ Alpha ê°’
+    float equipAlpha; // ì¥ì°© Alpha ê°’
+    float alphaSpeed; // ì¥ì°© ë° ì¥ì°© í•´ì œë¡œ ì¸í•œ Alpha ì¦ê° ì†ë„
 
-    Coroutine equipCoroutine = null; // ÀåÂø ÄÚ·çÆ¾
-    Coroutine unEquipCoroutine = null; // ÀåÂø ÇØÁ¦ ÄÚ·çÆ¾
+    Coroutine equipCoroutine = null; // ì¥ì°© ì½”ë£¨í‹´
+    Coroutine unEquipCoroutine = null; // ì¥ì°© í•´ì œ ì½”ë£¨í‹´
 
     private void Start()
     {
-        slotBackgroundUI = GetComponent<Image>();
+        if (slotBackgroundUI == null)
+        {
+            slotBackgroundUI = GetComponent<Image>();
 
-        unEquipAlpha = slotBackgroundUI.color.a;
-        currAlpha = unEquipAlpha;
-        equipAlpha = 0.8f;
-        alphaSpeed = 3f;
+            unEquipAlpha = slotBackgroundUI.color.a;
+            currAlpha = unEquipAlpha;
+            equipAlpha = 0.8f;
+            alphaSpeed = 3f;
+        }
+        
     }
     public void SetItem(Item item)
     {
@@ -37,18 +41,28 @@ public class ItemSlot : MonoBehaviour
 
         iconImageUI.sprite = null;
     }
-    public void Equip() // ¾ÆÀÌÅÛ ÀåÂø ½Ã
+    public void Equip() // ì•„ì´í…œ ì¥ì°© ì‹œ
     {
-        // ÀåÂø ÇØÁ¦ ÁßÀÎ ÄÚ·çÆ¾ÀÌ ÀÖ´Ù¸é ÁßÁöÇÑ´Ù
+        if (slotBackgroundUI == null)
+        {
+            slotBackgroundUI = GetComponent<Image>();
+
+            unEquipAlpha = slotBackgroundUI.color.a;
+            currAlpha = unEquipAlpha;
+            equipAlpha = 0.8f;
+            alphaSpeed = 3f;
+        }
+
+        // ì¥ì°© í•´ì œ ì¤‘ì¸ ì½”ë£¨í‹´ì´ ìˆë‹¤ë©´ ì¤‘ì§€í•œë‹¤
         if (unEquipCoroutine != null)
         {
             StopCoroutine(unEquipCoroutine);
         }
         equipCoroutine = StartCoroutine(EquipCoroutine());
     }
-    public void UnEquip() // ¾ÆÀÌÅÛ ÀåÂø ÇØÁ¦ ½Ã
+    public void UnEquip() // ì•„ì´í…œ ì¥ì°© í•´ì œ ì‹œ
     {
-        // ÀåÂø ÁßÀÎ ÄÚ·çÆ¾ÀÌ ÀÖ´Ù¸é ÁßÁöÇÑ´Ù
+        // ì¥ì°© ì¤‘ì¸ ì½”ë£¨í‹´ì´ ìˆë‹¤ë©´ ì¤‘ì§€í•œë‹¤
         if (equipCoroutine != null)
         {
             StopCoroutine(equipCoroutine);
@@ -72,9 +86,6 @@ public class ItemSlot : MonoBehaviour
     IEnumerator UnEquipCoroutine()
     {
         Color color = slotBackgroundUI.color;
-
-        Debug.Log("currAlpha : " + currAlpha.ToString());
-        Debug.Log("unEquipAlpha : " + unEquipAlpha.ToString());
 
         for (; currAlpha > unEquipAlpha; currAlpha -= Time.deltaTime * alphaSpeed)
         {

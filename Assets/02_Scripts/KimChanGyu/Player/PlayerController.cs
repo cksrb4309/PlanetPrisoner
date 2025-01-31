@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform cameraTransform; // 카메라의 Transform
     [SerializeField] Transform playerPivotTransform; // 플레이어 피벗 Transform
 
-    [Header("Move Attribute")] // Header 정리
+    [Header("Move Attribute")]                  // Header 정리
     [SerializeField] float walkMoveSpeed = 3.5f; // 걷기 이동속도
     [SerializeField] float runMoveSpeed = 7f; // 뛰기 이동속도
     [SerializeField] float acceleration = 3f; // 이동속도 증가속도
@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float crouchRatioSpeed = 0.5f; // 앉을 때의 이속 비율
     [SerializeField] float jumpSpeed = 10f;
     [SerializeField] float gravity = -9.81f;
+    [SerializeField] float oxygenBurnRate = 0.5f;
 
     [Header("Rotate Attribute")] // Header 정리
     [SerializeField] float pitchClampMax = 70f; // 카메라 각도 최대값
@@ -36,8 +37,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] InputActionReference runInputAction; // 달리기 입력
 
     PlayerAnimator playerAnimator = null; // PlayerAnimator
+    PlayerOxygen playerOxygen = null;
     CharacterController characterController = null; // 플레이어 캐릭터 컨트롤러
     Transform playerTransform = null; // 플레이어 트랜스폼
+
 
     Vector2 moveDelta = Vector2.zero; // 키보드 이동 입력 값 저장 변수
     Vector2 rotateDelta = Vector2.zero; // 마우스 이동 입력 값 저장 변수
@@ -58,9 +61,13 @@ public class PlayerController : MonoBehaviour
 
     bool isCrouch = false; // 앉은 상태 여부
 
-    Action<float> animMoveSpeedSetAction = null; // 애니메이터 이동속도 설정 Action
+    bool canMove = true;
+    bool characterEnabled = true;
+    event Action<float> animMoveSpeedSetAction = null; // 애니메이터 이동속도 설정 Action
 
     Ray groundCheckRay = new Ray(); // 지면 확인 Ray
+
+    LayerMask groundLayerMask;
 
     float coyoteTime = 0.2f;
     float coyoteTimeCounter = 0;
@@ -68,8 +75,6 @@ public class PlayerController : MonoBehaviour
     float standPivotHeight = -0.024f; // 서있을 때의 높이
 
     Vector3 pivotLocalPosition = Vector3.zero; // 플레이어 로컬 피벗 Y축 적용 Vector3
-
-    PlayerOxygen playerOxygen;
 
     private void OnEnable()
     {
@@ -105,13 +110,19 @@ public class PlayerController : MonoBehaviour
 
         // 현재 카메라 높이 설정
         currCameraHeight = cameraStandHeight;
+
+        groundLayerMask = LayerMask.GetMask("Ground");
     }
     private void Update()
     {
+        if (!characterEnabled) return;
+
         #region Velocity X,Z 값 설정
 
         // 키보드 이동 입력 값 moveDelta에 저장
         moveDelta = keyboardMoveInputAction.action.ReadValue<Vector2>();
+
+        if (!canMove) moveDelta = Vector2.zero;
 
         // 이동속도 제한 값을 걷는 속도로 초기화
         float moveSpeedLimit = walkMoveSpeed;
@@ -119,8 +130,7 @@ public class PlayerController : MonoBehaviour
         // 만약 달리기 입력을 누르고 있다면
         if (runInputAction.action.IsPressed())
         {
-            // TODO 산소 처리 (찬규)
-            // 머시깽 ~
+            playerOxygen.oxygenUsageFactor += Time.deltaTime * oxygenBurnRate;
 
             // 달리기 속도로 변경
             moveSpeedLimit = runMoveSpeed;
@@ -178,10 +188,10 @@ public class PlayerController : MonoBehaviour
         #region Velocity Y 값 설정
 
         // 플레이어가 땅에 있거나 코요테 타임 값이 남아있거나, 바로 밑에 오브젝트가 있을 때
-        if (characterController.isGrounded || coyoteTimeCounter > 0f || Physics.Raycast(groundCheckRay,0.1f))
+        if (characterController.isGrounded || coyoteTimeCounter > 0f || Physics.Raycast(groundCheckRay,0.1f, groundLayerMask))
         {
-            // 점프 중이 아닐 때, 점프 키를 눌렀다면
-            if (velocityY <= 0f && jumpInputAction.action.WasPressedThisFrame())
+            // 점프 중이 아닐 때, 앉고 있지 않을 때, 점프 키를 눌렀다면
+            if (velocityY <= 0f && jumpInputAction.action.WasPressedThisFrame() && canMove && !isCrouch)
             {
                 // 코요테 타임 초기화
                 coyoteTimeCounter = 0;
@@ -257,7 +267,9 @@ public class PlayerController : MonoBehaviour
         #region 카메라 회전
 
         // 마우스 이동 값 가져오기
-        rotateDelta = mouseMoveInputAction.action.ReadValue<Vector2>(); 
+        rotateDelta = mouseMoveInputAction.action.ReadValue<Vector2>();
+
+        if (!canMove) rotateDelta = Vector2.zero;
 
         // 마우스 이동 값이 있을 때
         if (rotateDelta != Vector2.zero)
@@ -273,21 +285,21 @@ public class PlayerController : MonoBehaviour
                 pitchClampMin,
                 pitchClampMax);
 
+            playerAnimator.SetWaistValue(currCameraAngle);
+
             // 카메라의 상하 회전은 Transform eulerAngle X에 적용
             // 좌우 회전은 playerTransform.eulerAngles.y를 가져옴
             cameraTransform.rotation = Quaternion.Euler(currCameraAngle, playerTransform.eulerAngles.y, 0f);
 
             // 플레이어 트랜스폼에는 x축의 마우스 회전 값만 적용한다
             playerTransform.Rotate(0, rotateDelta.x * rotateSpeed * Time.deltaTime, 0);
-
-            
         }
 
         #endregion
         #region 앉기 입력 처리
 
         // 앉기 버튼을 누르고 있다면
-        if (crouchInputAction.action.IsPressed())
+        if (canMove && crouchInputAction.action.IsPressed())
         {
             // 만약 현재 앉고 있지 않을 때
             if (!isCrouch)
@@ -318,14 +330,14 @@ public class PlayerController : MonoBehaviour
         if (!isCrouch)
         {
             // 플레이어 이동 적용
-            characterController.Move(transform.rotation * velocity * Time.deltaTime);
+            characterController.Move(playerTransform.rotation * velocity * Time.deltaTime);
         }
 
         // 앉아 있을 때의 이동 적용 
         else
         {
             // 플레이어 이동 적용
-            characterController.Move(transform.rotation * new Vector3(velocity.x * crouchRatioSpeed, velocity.y, velocity.z * crouchRatioSpeed) * Time.deltaTime);
+            characterController.Move(playerTransform.rotation * new Vector3(velocity.x * crouchRatioSpeed, velocity.y, velocity.z * crouchRatioSpeed) * Time.deltaTime);
         }
         #endregion
     }
@@ -423,9 +435,35 @@ public class PlayerController : MonoBehaviour
         // 정확히 맞춰놓은 값으로 카메라의 로컬 좌표에 적용하기
         cameraTransform.localPosition = cameraLocalPosition;
     }
-    public void EquipEnhancedShoes()
+    public void EquipEnhancedShoes() => shoesSpeed = 1.15f;
+    public void DisableMovement() // 움직임 비활성화
     {
-        shoesSpeed = 1.15f;
+        canMove = false;
+    }
+    public void EnableMovement() => canMove = true; // 움직임 활성화
+    public void MovePosition(Transform targetTransform)
+    {
+        StartCoroutine(MovePositionCoroutine(targetTransform));
+    }
+    IEnumerator MovePositionCoroutine(Transform targetTransform)
+    {
+        DisableMovement();
+
+        characterController.enabled = false;
+
+        transform.position = targetTransform.position;
+
+        transform.rotation = targetTransform.rotation;
+
+        characterEnabled = false;
+
+        yield return null;
+
+        characterEnabled = true;
+
+        EnableMovement();
+
+        characterController.enabled = true;
     }
     #region 플레이어 이동속도 설정 Action 바인드
     public void BindToPlayerAnimator(Action<float> action)
