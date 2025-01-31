@@ -12,16 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdf2b0da3dae8484499be870b5058a4a, type: 3}
   m_Name: EnhancedSuitData
   m_EditorClassIdentifier: 
-  itemName: EnhancedSuit
+  itemName: "\uAC15\uD654 \uC6B0\uC8FC\uBCF5"
   itemType: 1
   itemSize: 1
   itemPrice: 1
   itemWeight: 1
   itemDropSpeed: 5
   itemIconImage: {fileID: 0}
-  guideText: EnhancedSuit(E)
-  equipTriggerName: 5
-  useTriggerName: 4
+  equipTrigger: 5
+  useTrigger: 4
   itemUseAction:
     m_PersistentCalls:
       m_Calls:

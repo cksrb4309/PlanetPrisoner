@@ -6,6 +6,7 @@ public class PlayerOxygen : MonoBehaviour
 {
     [SerializeField] float maxOxygen;
     [SerializeField] float decreaseInterval = 2f;
+
     [HideInInspector] public float oxygenUsageFactor = 1f;
 
     Coroutine oxygenReductionCoroutine = null;
@@ -71,5 +72,5 @@ public class PlayerOxygen : MonoBehaviour
     {
         Oxygen += oxygen;
     }
-
+    public float NeedFillOxygen() => maxOxygen - currOxygen;
 }

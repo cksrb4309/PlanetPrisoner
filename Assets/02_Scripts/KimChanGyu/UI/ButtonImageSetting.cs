@@ -5,7 +5,7 @@ using System.Collections;
 
 public class ButtonImageSetting : MonoBehaviour, IConfigurable
 {
-    UISettings settings;
+    public UISettings settings;
 
     float fadeDuration = 0.2f;
 
@@ -13,20 +13,27 @@ public class ButtonImageSetting : MonoBehaviour, IConfigurable
 
     Coroutine currCoroutine = null;
 
-    Image image;
+    Image image = null;
 
     float speed;
+
+    private void Awake()
+    {
+        image = GetComponent<Image>();
+
+        speed = 1f / fadeDuration;
+    }
 
     public void OnColorChange(int order)
     {
         if (currCoroutine != null) StopCoroutine(currCoroutine);
 
         Color changeColor = Color.white;
-
+        
         if (order == 0) changeColor = settings.imageExitColor;
         else if (order == 1) changeColor = settings.imageEnterColor;
         else if (order == 2) changeColor = settings.imageDownColor;
-
+        
         currCoroutine = StartCoroutine(ColorChangeCoroutine(changeColor));
     }
     IEnumerator ColorChangeCoroutine(Color changeColor)
@@ -54,5 +61,7 @@ public class ButtonImageSetting : MonoBehaviour, IConfigurable
         GetComponent<Image>().sprite = settings.buttonSprite;
 
         this.settings = settings;
+
+        UnityEditor.EditorUtility.SetDirty(this);
     }
 }

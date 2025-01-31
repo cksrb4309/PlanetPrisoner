@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
     bool isCrouch = false; // 앉은 상태 여부
 
     bool canMove = true;
-
+    bool characterEnabled = true;
     event Action<float> animMoveSpeedSetAction = null; // 애니메이터 이동속도 설정 Action
 
     Ray groundCheckRay = new Ray(); // 지면 확인 Ray
@@ -115,6 +115,8 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
+        if (!characterEnabled) return;
+
         #region Velocity X,Z 값 설정
 
         // 키보드 이동 입력 값 moveDelta에 저장
@@ -188,8 +190,8 @@ public class PlayerController : MonoBehaviour
         // 플레이어가 땅에 있거나 코요테 타임 값이 남아있거나, 바로 밑에 오브젝트가 있을 때
         if (characterController.isGrounded || coyoteTimeCounter > 0f || Physics.Raycast(groundCheckRay,0.1f, groundLayerMask))
         {
-            // 점프 중이 아닐 때, 점프 키를 눌렀다면
-            if (velocityY <= 0f && jumpInputAction.action.WasPressedThisFrame() && canMove)
+            // 점프 중이 아닐 때, 앉고 있지 않을 때, 점프 키를 눌렀다면
+            if (velocityY <= 0f && jumpInputAction.action.WasPressedThisFrame() && canMove && !isCrouch)
             {
                 // 코요테 타임 초기화
                 coyoteTimeCounter = 0;
@@ -291,8 +293,6 @@ public class PlayerController : MonoBehaviour
 
             // 플레이어 트랜스폼에는 x축의 마우스 회전 값만 적용한다
             playerTransform.Rotate(0, rotateDelta.x * rotateSpeed * Time.deltaTime, 0);
-
-            
         }
 
         #endregion
@@ -330,14 +330,14 @@ public class PlayerController : MonoBehaviour
         if (!isCrouch)
         {
             // 플레이어 이동 적용
-            characterController.Move(transform.rotation * velocity * Time.deltaTime);
+            characterController.Move(playerTransform.rotation * velocity * Time.deltaTime);
         }
 
         // 앉아 있을 때의 이동 적용 
         else
         {
             // 플레이어 이동 적용
-            characterController.Move(transform.rotation * new Vector3(velocity.x * crouchRatioSpeed, velocity.y, velocity.z * crouchRatioSpeed) * Time.deltaTime);
+            characterController.Move(playerTransform.rotation * new Vector3(velocity.x * crouchRatioSpeed, velocity.y, velocity.z * crouchRatioSpeed) * Time.deltaTime);
         }
         #endregion
     }
@@ -441,12 +441,10 @@ public class PlayerController : MonoBehaviour
         canMove = false;
     }
     public void EnableMovement() => canMove = true; // 움직임 활성화
-
     public void MovePosition(Transform targetTransform)
     {
         StartCoroutine(MovePositionCoroutine(targetTransform));
     }
-
     IEnumerator MovePositionCoroutine(Transform targetTransform)
     {
         DisableMovement();
@@ -457,13 +455,16 @@ public class PlayerController : MonoBehaviour
 
         transform.rotation = targetTransform.rotation;
 
+        characterEnabled = false;
+
         yield return null;
+
+        characterEnabled = true;
 
         EnableMovement();
 
         characterController.enabled = true;
     }
-
     #region 플레이어 이동속도 설정 Action 바인드
     public void BindToPlayerAnimator(Action<float> action)
     {

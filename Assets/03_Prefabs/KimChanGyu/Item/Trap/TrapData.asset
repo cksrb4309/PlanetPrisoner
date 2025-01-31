@@ -12,16 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdf2b0da3dae8484499be870b5058a4a, type: 3}
   m_Name: TrapData
   m_EditorClassIdentifier: 
-  itemName: Trap
+  itemName: "\uD568\uC815"
   itemType: 1
   itemSize: 2
   itemPrice: 1
   itemWeight: 1
   itemDropSpeed: 3
   itemIconImage: {fileID: 21300000, guid: f0c335e31278e634f90f61d1adf0ad90, type: 3}
-  guideText: Get(E)
-  equipTriggerName: 5
-  useTriggerName: 4
+  equipTrigger: 5
+  useTrigger: 4
   itemUseAction:
     m_PersistentCalls:
       m_Calls:

@@ -3,7 +3,26 @@ using UnityEngine;
 
 public class BearTrap : Item
 {
-    public override string TooltipText => isUsed ? string.Empty : !isSet ? "Get(E)" : isBeingSet ? "install(E)" : "Danger";
+    //public override string TooltipText => isUsed ? string.Empty : !isSet ? "줍기 [E]" : isBeingSet ? "설치 [E]" : "Danger";
+
+    public override string TooltipText
+    {
+        get
+        {
+            if (isUsed) return string.Empty;
+
+            if (!isSet) return "줍기 [E]";
+
+            switch (currInstallCount)
+            {
+                case 0: return "설치 (3/0) [E]";
+                case 1: return "설치 (3/1) [E]";
+                case 2: return "설치 (3/2) [E]";
+
+                default: return "위험";
+            }
+        }
+    }
 
     public MeshRenderer meshRenderer;
 

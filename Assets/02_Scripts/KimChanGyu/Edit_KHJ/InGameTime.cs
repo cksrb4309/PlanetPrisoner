@@ -8,7 +8,7 @@ public class InGameTime : MonoBehaviour
     [SerializeField] GameManager gameManager;
 
     [SerializeField] Light directionalLight;
-    [SerializeField] TMP_Text timeText;
+    [SerializeField] TextSet timeText;
 
     [SerializeField] float inGameTime;
     [SerializeField] float timeCounter;
@@ -66,7 +66,8 @@ public class InGameTime : MonoBehaviour
         // InGameUI속 시간 text 설정
         int hours = Mathf.FloorToInt(inGameTime / 3600);
         int minutes = Mathf.FloorToInt((inGameTime % 3600) / 60);
-        timeText.text = string.Format("{0:D2}:{1:D2}", hours, minutes);
+
+        timeText.Set(string.Format("{0:D2}:{1:D2}", hours, minutes));
     }
 
     void UpdateLightPosition()
@@ -145,15 +146,5 @@ public class InGameTime : MonoBehaviour
 
         fadeUI.gameObject.SetActive(false);
     }
-    #endregion
-
-    #region 시간 갱신 시의 필요 함수 작성 (김찬규)
-
-    // 스폰 매니저 이벤트 발생
-    void OnSpawnManagerEvent()
-    {
-        SpawnManager.Instance.OnSpawnCheck(inGameTime);
-    }
-
     #endregion
 }

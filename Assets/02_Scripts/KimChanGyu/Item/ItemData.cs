@@ -18,7 +18,7 @@ public class ItemData : ScriptableObject // Item 클래스가 갖고 있을 정�
 
     public Sprite itemIconImage; // 아이템 아이콘 이미지
 
-    public string guideText; // 선택 가이드 텍스트
+    public string GuideText => "줍기 [E]"; // 선택 가이드 텍스트
 
     public AnimationParameter equipTrigger = AnimationParameter.HoldItem; // 장착 애니메이션 트리거 이름
     public AnimationParameter useTrigger = AnimationParameter.UseItem; // 사용 애니메이션 트리거 이름

@@ -20,6 +20,8 @@ public class ScanResultDisplay : MonoBehaviour
 
     [SerializeField] float duration = 3f;
 
+    [SerializeField] float testAlpha = 0f;
+
     [SerializeField] Color mainColor = Color.red;
 
     [SerializeField] bool isExplain = false;
@@ -41,6 +43,8 @@ public class ScanResultDisplay : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("확 인 " + Random.value.ToString());
+
         if (other.CompareTag("Player") && isExplain)
             explainGroup.alpha = 1f;
     }
@@ -51,6 +55,9 @@ public class ScanResultDisplay : MonoBehaviour
     }
     private void OnValidate()
     {
+        if (mainGroup != null) mainGroup.alpha = testAlpha;
+        if (explainGroup != null) explainGroup.alpha = testAlpha;
+
         if (iconImage != null)
             iconImage.color = new Color(mainColor.r, mainColor.g, mainColor.b, iconImage.color.a);
 

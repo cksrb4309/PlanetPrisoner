@@ -12,16 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdf2b0da3dae8484499be870b5058a4a, type: 3}
   m_Name: EnhancedShoesData
   m_EditorClassIdentifier: 
-  itemName: EnhancedShoes
+  itemName: "\uAC15\uD654 \uC2E0\uBC1C"
   itemType: 1
   itemSize: 1
   itemPrice: 1
   itemWeight: 1
   itemDropSpeed: 1
   itemIconImage: {fileID: 21300000, guid: c33b82aa5373c4e1f8e2d43210c97c45, type: 3}
-  guideText: EnhancedShoes(E)
-  equipTriggerName: 5
-  useTriggerName: 4
+  equipTrigger: 5
+  useTrigger: 4
   itemUseAction:
     m_PersistentCalls:
       m_Calls:
