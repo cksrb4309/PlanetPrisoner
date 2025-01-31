@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 79bdda41ac343894d98f2e3a1413acac
+timeCreated: 1516498583
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 109994
+  packageName: Mineshaft Survival Complete Project
+  packageVersion: 1.2
+  assetPath: Assets/Mineshaft Survival/Objects/Shafts/Split1/Split1.prefab
+  uploadId: 243996
