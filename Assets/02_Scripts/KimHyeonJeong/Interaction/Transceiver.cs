@@ -20,10 +20,6 @@ public class Transceiver : MonoBehaviour
         //OriginalEmissionColor = objectMaterials.GetColor("_EmissionColor");
     }
 
-    void Update()
-    {
-        
-    }
 
     public void TurnOffEmission()
     {

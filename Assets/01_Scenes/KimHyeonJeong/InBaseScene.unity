@@ -4881,38 +4881,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 389863327517646954, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: m_Layer
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 844980906470409959, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: m_Layer
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 1203168412641690174, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: m_Layer
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 2962020095256462704, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
     - target: {fileID: 2972669490403344630, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
       propertyPath: m_Name
       value: BaseMap
       objectReference: {fileID: 0}
-    - target: {fileID: 3632505224218991970, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: transceiver
-      value: 
-      objectReference: {fileID: 75112134}
-    - target: {fileID: 3724046406349473102, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: shopUI
-      value: 
-      objectReference: {fileID: 534869875}
-    - target: {fileID: 3724046406349473102, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: inGameUI
-      value: 
-      objectReference: {fileID: 1622626215}
     - target: {fileID: 4601268039035762524, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
       propertyPath: shopUI
       value: 
@@ -4961,44 +4933,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5401235467637179581, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: m_Layer
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 5793732876169936473, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: m_Layer
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 6459682391920802343, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: m_Name
-      value: CraftingCube
-      objectReference: {fileID: 0}
-    - target: {fileID: 6459682391920802343, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
     - target: {fileID: 6508295750947876490, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 2078124750}
-    - target: {fileID: 6689372813854950026, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 8495315696143935011, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 8495315696143935011, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: m_TagString
-      value: Untagged
-      objectReference: {fileID: 0}
-    - target: {fileID: 8639044894191233515, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 0}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
