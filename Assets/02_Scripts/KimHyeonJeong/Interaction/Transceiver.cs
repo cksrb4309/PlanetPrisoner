@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Transceiver : MonoBehaviour
 {
+    [SerializeField] RequiredQuest requiredQuest;
+    
     private Renderer objectRenderer;
     private Material objectMaterials;
 
@@ -34,13 +36,14 @@ public class Transceiver : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Trigger Entered: " + other.gameObject.name);
+        //Debug.Log("Trigger Entered: " + other.gameObject.name);
         // 자식들 중에 CapsuleCollider만 isTrigger이므로 이 함수는 캡슐에 닿을 때 실행됨
         if (other.gameObject.layer == LayerMask.NameToLayer("Item"))
         {
             if (!objectInTransceiver.Contains(other.gameObject))
             {
                 objectInTransceiver.Add(other.gameObject); // 리스트에 추가
+                requiredQuest.CheckQuestItem(other.gameObject.GetComponent<Item>().itemData, "In");
             }
         }
     }
@@ -51,6 +54,7 @@ public class Transceiver : MonoBehaviour
         if (objectInTransceiver.Contains(other.gameObject))
         {
             objectInTransceiver.Remove(other.gameObject); // 리스트에서 삭제
+            requiredQuest.CheckQuestItem(other.gameObject.GetComponent<Item>().itemData, "Out");
         }
     }
 

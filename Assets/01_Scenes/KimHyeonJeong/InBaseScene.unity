@@ -4881,6 +4881,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2878495947528384343, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
+      propertyPath: transceiver
+      value: 
+      objectReference: {fileID: 75112134}
     - target: {fileID: 2972669490403344630, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
       propertyPath: m_Name
       value: BaseMap
