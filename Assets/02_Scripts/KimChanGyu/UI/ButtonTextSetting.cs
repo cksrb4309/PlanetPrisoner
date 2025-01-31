@@ -11,11 +11,16 @@ public class ButtonTextSetting : MonoBehaviour, IConfigurable
 
     Coroutine currCoroutine = null;
 
-    TMP_Text text;
+    [SerializeField] TMP_Text text = null;
 
     Color color;
 
     float speed = 0;
+
+    private void Awake()
+    {
+        speed = 1f / fadeDuration;
+    }
 
     public void OnColorChange(int order)
     {
@@ -50,11 +55,13 @@ public class ButtonTextSetting : MonoBehaviour, IConfigurable
     public void Configure(UISettings settings)
     {
         this.settings = settings;
-
-        GetComponent<TMP_Text>().color = settings.textExitColor;
-        GetComponent<TMP_Text>().fontSize = settings.buttonTextSize;
+        text = GetComponent<TMP_Text>();
+        text.color = settings.textExitColor;
+        text.fontSize = settings.buttonTextSize;
 
         fadeDuration = settings.textColorFadeDuration;
         speed = 1f / fadeDuration;
+
+        UnityEditor.EditorUtility.SetDirty(this);
     }
 }

@@ -1,15 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
-
+using VInspector;
 public class RequiredQuest : MonoBehaviour
 {
-    Dictionary<string, int> quests = new Dictionary<string, int>
-    {
-        { "큐브", 3},
-        { "스피어", 1},
-        { "캡슐", 1 }
-    };
+    public SerializedDictionary<ItemData, int> questInfo;
+
+    Dictionary<string, int> quests;
+
+    //Dictionary<string, int> quests = new Dictionary<string, int>
+    //{
+    //    { "큐브", 3},
+    //    { "스피어", 1},
+    //    { "캡슐", 1 }
+    //};
 
     [SerializeField] string currentQuest; // 현재 진행중인 퀘스트
     [SerializeField] int currentProgress; // 현재 진행중인 퀘스트 진행도?
@@ -19,10 +24,12 @@ public class RequiredQuest : MonoBehaviour
 
     void Start()
     {
+        quests = new Dictionary<string, int>();
+
+        foreach (var quest in questInfo) quests.Add(quest.Key.itemName, quest.Value);
+
         UpdateQuest();
     }
-
-
     public void UpdateQuest()
     {
         questCompeleted = false; // 퀘스트 성공 여부 초기화
@@ -40,7 +47,6 @@ public class RequiredQuest : MonoBehaviour
             i++;
         }
     }
-
     void QuestCompleted() // 퀘스트 완료 (퀘스트 물품 얻을 때 호출)
     {
         if (quests[currentQuest] == currentProgress) // 현재 퀘스트 수량 도달
