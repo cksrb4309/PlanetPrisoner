@@ -43,6 +43,7 @@ public class InGameTime : MonoBehaviour
             timeCounter = 0;
             UpdateTimeText();
             SpawnManager.Instance.OnSpawnCheck(inGameTime);
+
             if (inGameTime >= 79200)
             {
                 Debug.Log("79200 확인 : " + inGameTime.ToString());

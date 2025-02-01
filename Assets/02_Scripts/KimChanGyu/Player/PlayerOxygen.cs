@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class PlayerOxygen : MonoBehaviour
 {
+    static PlayerOxygen instance = null;
+
     [SerializeField] float maxOxygen;
     [SerializeField] float decreaseInterval = 2f;
 
@@ -11,6 +14,7 @@ public class PlayerOxygen : MonoBehaviour
 
     Coroutine oxygenReductionCoroutine = null;
 
+    float panalty = 1f;
 
     float currOxygen = 0f;
 
@@ -36,11 +40,14 @@ public class PlayerOxygen : MonoBehaviour
 
                 Die();
             }
-
             PlayerStateUI.Instance.SetOxygenFillImage(currOxygen > 0 ? currOxygen / maxOxygen : 0);
+            ScreenEffectController.TriggerScreenGrayscaleEffect((1 - (currOxygen > 0 ? currOxygen / maxOxygen : 0)) * -100f);
         }
     }
-    
+    private void Awake()
+    {
+        instance = this;
+    }
     private void Start()
     {
         currOxygen = maxOxygen;
@@ -59,7 +66,7 @@ public class PlayerOxygen : MonoBehaviour
         {
             yield return delay;
 
-            Oxygen -= oxygenDecreaseValue * oxygenUsageFactor;
+            Oxygen -= oxygenDecreaseValue * oxygenUsageFactor * panalty;
 
             oxygenUsageFactor = 1f;
         }
@@ -73,4 +80,6 @@ public class PlayerOxygen : MonoBehaviour
         Oxygen += oxygen;
     }
     public float NeedFillOxygen() => maxOxygen - currOxygen;
+
+    public static void SetPenalty(float panalty) => instance.panalty = panalty;
 }

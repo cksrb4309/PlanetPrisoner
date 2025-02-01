@@ -46,4 +46,15 @@ public class ItemFunction : MonoBehaviour // 아이템 액션 모음 클래스
         playerInfo.playerSpaceSuit.EquipEnhancedSuit();
     }
     #endregion
+
+    #region 함정 설치
+    public void ActivateFlashlight(PlayerInfo playerInfo)
+    {
+        Flashlight flashlight = playerInfo.playerItemHandler.GetCurrentItem() as Flashlight;
+
+        flashlight?.ToggleFlashlight();
+
+        Debug.Log("ActivateFlashlight");
+    }
+    #endregion
 }
