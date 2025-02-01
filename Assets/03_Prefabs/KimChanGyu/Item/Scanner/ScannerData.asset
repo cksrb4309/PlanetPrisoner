@@ -12,16 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdf2b0da3dae8484499be870b5058a4a, type: 3}
   m_Name: ScannerData
   m_EditorClassIdentifier: 
-  itemName: Scanner
+  itemName: "\uC2A4\uCE90\uB108"
   itemType: 1
   itemSize: 3
   itemPrice: 1
   itemWeight: 1
   itemDropSpeed: 5
   itemIconImage: {fileID: 21300000, guid: 3269142bb67aaf04589355c57a5c2808, type: 3}
-  guideText: Scanner(E)
-  equipTriggerName: 5
-  useTriggerName: 4
+  equipTrigger: 5
+  useTrigger: 4
   itemUseAction:
     m_PersistentCalls:
       m_Calls:

@@ -12,14 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdf2b0da3dae8484499be870b5058a4a, type: 3}
   m_Name: WeaponData
   m_EditorClassIdentifier: 
-  itemName: Weapon
+  itemName: "\uBABD\uB465\uC774"
   itemType: 2
   itemSize: 2
   itemPrice: 1
   itemWeight: 1
   itemDropSpeed: 1
   itemIconImage: {fileID: 21300000, guid: 66bb00887f3170c4a95b989d392049ec, type: 3}
-  guideText: Weapon(E)
   equipTrigger: 5
   useTrigger: 7
   itemUseAction:

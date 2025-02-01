@@ -6,7 +6,7 @@ public class ItemSlot : MonoBehaviour
 {
     [SerializeField] Image iconImageUI; // 아이템 아이콘 이미지
 
-    Image slotBackgroundUI; // 아이템 슬롯 배경 이미지
+    Image slotBackgroundUI = null; // 아이템 슬롯 배경 이미지
 
     float unEquipAlpha; // 비장착 알파 값
     float currAlpha; // 현재 Alpha 값
@@ -18,12 +18,16 @@ public class ItemSlot : MonoBehaviour
 
     private void Start()
     {
-        slotBackgroundUI = GetComponent<Image>();
+        if (slotBackgroundUI == null)
+        {
+            slotBackgroundUI = GetComponent<Image>();
 
-        unEquipAlpha = slotBackgroundUI.color.a;
-        currAlpha = unEquipAlpha;
-        equipAlpha = 0.8f;
-        alphaSpeed = 3f;
+            unEquipAlpha = slotBackgroundUI.color.a;
+            currAlpha = unEquipAlpha;
+            equipAlpha = 0.8f;
+            alphaSpeed = 3f;
+        }
+        
     }
     public void SetItem(Item item)
     {
@@ -39,6 +43,16 @@ public class ItemSlot : MonoBehaviour
     }
     public void Equip() // 아이템 장착 시
     {
+        if (slotBackgroundUI == null)
+        {
+            slotBackgroundUI = GetComponent<Image>();
+
+            unEquipAlpha = slotBackgroundUI.color.a;
+            currAlpha = unEquipAlpha;
+            equipAlpha = 0.8f;
+            alphaSpeed = 3f;
+        }
+
         // 장착 해제 중인 코루틴이 있다면 중지한다
         if (unEquipCoroutine != null)
         {

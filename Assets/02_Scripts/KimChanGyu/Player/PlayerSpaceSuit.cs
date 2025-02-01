@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class PlayerSpaceSuit : MonoBehaviour, IDamagable
 {
@@ -12,10 +16,17 @@ public class PlayerSpaceSuit : MonoBehaviour, IDamagable
 
     [SerializeField] float maxHp = 3f;
 
+    [SerializeField] Volume volume;
+
+    [SerializeField] Image scratchImage;
+
+    private Bloom bloom = null;
+
     PlayerOxygen playerOxygen = null;
 
-    float currHp = 0;
+    Coroutine damagedCoroutine = null;
 
+    float currHp = 0;
     float Hp
     {
         get
@@ -38,6 +49,13 @@ public class PlayerSpaceSuit : MonoBehaviour, IDamagable
         playerOxygen = GetComponent<PlayerOxygen>();
 
         playerOxygen.SetOxygenDecreaseValue(minOxygenDrain);
+
+        if (!volume.profile.TryGet(out bloom))
+        {
+            Debug.LogWarning("Bloom 효과를 찾을 수 없습니다.");
+        }
+
+        bloom.tint.Override(Color.white);
     }
     public void Damaged(float damage)
     {
@@ -46,21 +64,54 @@ public class PlayerSpaceSuit : MonoBehaviour, IDamagable
         // 체력 감소
         Hp -= damage;
 
-        playerOxygen.SetOxygenDecreaseValue(
-            Mathf.Lerp(
-                minOxygenDrain,
-                maxOxygenDrain,
-                currHp / maxHp));
+        ScreenEffectController.TriggerScreenNoiseEffect(2f, 0.2f, 1f);
+
+        if (damagedCoroutine != null) StopCoroutine(damagedCoroutine);
+
+        damagedCoroutine = StartCoroutine(DamagedCoroutine());
+
+        SetOxygenDecreaseValue();
     }
     public void EquipEnhancedSuit()
     {
         minOxygenDrain = minExSuitOxygenDrain;
         maxOxygenDrain = maxExSuitOxygenDrain;
 
-        playerOxygen.SetOxygenDecreaseValue(
-            Mathf.Lerp(
-                minOxygenDrain,
-                maxOxygenDrain,
-                currHp / maxHp));
+        SetOxygenDecreaseValue();
+    }
+    void SetOxygenDecreaseValue() =>
+        playerOxygen.SetOxygenDecreaseValue(Mathf.Lerp(minOxygenDrain, maxOxygenDrain, Mathf.Pow(1 - (currHp / maxHp), 2f)));
+    IEnumerator DamagedCoroutine()
+    {
+        bloom.tint.Override(Color.red);
+
+        scratchImage.enabled = true;
+
+        yield return new WaitForSeconds(1f);
+
+        float t = 1;
+
+        Color imageColor = Color.white;
+
+        while (t > 0f)
+        {
+            t -= Time.deltaTime;
+
+            bloom.tint.Override(Color.Lerp(Color.white, Color.red, t));
+
+            imageColor.a = t;
+
+            scratchImage.color = imageColor;
+
+            yield return null;
+        }
+
+        bloom.tint.Override(Color.white);
+
+        imageColor.a = 1f;
+
+        scratchImage.enabled = false;
+
+        scratchImage.color = imageColor;
     }
 }

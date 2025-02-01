@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Item : MonoBehaviour, IInteractable
 {
-    public virtual string TooltipText => itemData.guideText; // 상호작용 UI 텍스트
+    public virtual string TooltipText => itemData.GuideText; // 상호작용 UI 텍스트
 
     public ItemData itemData = null; // 아이템 정보
 

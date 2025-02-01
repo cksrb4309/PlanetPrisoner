@@ -2416,6 +2416,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3012fbf409bc9d6458ccfaa9bd757cb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  notificationTexts: []
+  colorGradients: []
 --- !u!114 &563062433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6437,6 +6439,7 @@ MonoBehaviour:
   crouchRatioSpeed: 0.5
   jumpSpeed: 8
   gravity: -30
+  oxygenBurnRate: 0.5
   pitchClampMax: 70
   pitchClampMin: -70
   rotateSpeed: 30
@@ -6577,6 +6580,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxOxygen: 10
+  decreaseInterval: 2
+  oxygenUsageFactor: 1
 --- !u!114 &1463605136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7602,7 +7607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48844dc820079244cb354ed2a4d5d529, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipTextUI: {fileID: 1840819851}
+  tooltipTextUIs: []
 --- !u!1001 &1978324107
 PrefabInstance:
   m_ObjectHideFlags: 0
