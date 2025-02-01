@@ -117,9 +117,6 @@ public class PlayerItemHandler : MonoBehaviour
 
             // 아이템에 따른 사용 애니메이션 트리거 재생
             playerAnimator.SetItemUseTrigger(selectedItem.itemData.useTrigger);
-
-            // TODO : 변경 시도 중 (찬규)
-            // OnItemUseComplete(); // 애니메이션이 없음으로 여기서 아이템 사용 테스트를 우선적으로 진행한다
         }
 
         #endregion

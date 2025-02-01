@@ -31,7 +31,6 @@ public class PlayerInteractor : MonoBehaviour
         ray.origin = cameraTransform.position;
         ray.direction = cameraTransform.forward;
         
-        // TODO 상호작용 레이 점검 (찬규)
         if (Physics.Raycast(ray, out RaycastHit hit, range, layerMask))
         {
             IInteractable interactable = hit.collider.GetComponent<IInteractable>();

@@ -18,7 +18,9 @@ public class RequiredQuest : MonoBehaviour
 
     [SerializeField] string currentQuest; // 현재 진행중인 퀘스트
     [SerializeField] int currentProgress; // 현재 진행중인 퀘스트 진행도?
+    [SerializeField] int totalProgress; // 현재 진행중인 퀘스트 요구사항
     [SerializeField] TMP_Text questText;
+    [SerializeField] Transceiver transceiver;
 
     public bool questCompeleted;
 
@@ -41,17 +43,44 @@ public class RequiredQuest : MonoBehaviour
             if (i == randomIndex)
             {
                 currentQuest = quest.Key;
-                questText.text = $"<color=#009006>[필수퀘스트]</color> {quest.Key} {currentProgress}/{quest.Value}";
+                totalProgress = quest.Value;
+                QuestProgressTextUpdate();  // 텍스트 업데이트
             }
-            // TODO: 전송기에 놨을 때 퀘스트 아이템인지 확인하고 맞으면 수량 update하고 등등
             i++;
         }
     }
-    void QuestCompleted() // 퀘스트 완료 (퀘스트 물품 얻을 때 호출)
+    public void QuestCompleted() // 퀘스트 완료 (퀘스트 물품 얻을 때 호출)
     {
         if (quests[currentQuest] == currentProgress) // 현재 퀘스트 수량 도달
         {
             questCompeleted = true;
         }
+    }
+
+    public void CheckQuestItem(ItemData itemData, string checkPoint)
+    {
+        //if (currentQuest == "큐브")
+        //{
+        //    if (itemData.itemName == "CubeItem")
+        //    {
+        //        if (checkPoint == "In") currentProgress++;
+        //        else currentProgress--;
+        //        QuestProgressTextUpdate(); // 텍스트 업데이트
+        //    }
+        //}
+        //else if (currentQuest == "스피어")
+        //{
+
+        //}
+        //else if (currentQuest == "캡슐")
+        //{
+
+        //}
+    }
+
+
+    void QuestProgressTextUpdate()
+    {
+        questText.text = $"<color=#009006>[필수퀘스트]</color> {currentQuest} {currentProgress}/{totalProgress}";
     }
 }

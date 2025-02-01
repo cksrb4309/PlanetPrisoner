@@ -11,4 +11,5 @@ public enum AnimationParameter
     NoItem,
     AttackItem,
     Waist,
+    HoldFlashLight,
 }

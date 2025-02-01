@@ -5,7 +5,6 @@ public class ItemShop : MonoBehaviour
 {
     [SerializeField] GameObject shopUI;
     [SerializeField] GameObject inGameUI;
-    [SerializeField] PlayerController player;
     [SerializeField] OxygenTank oxygenTank;
     [SerializeField] Image oxygenTankForeground;
 
@@ -14,8 +13,7 @@ public class ItemShop : MonoBehaviour
         shopUI.SetActive(false);
         inGameUI.SetActive(true);
 
-        player.EnableMovement();
-
+        PlayerItemHandler.Instance.GetComponent<PlayerController>().EnableMovement();
         CursorController.DisableCursor();
     }
 
