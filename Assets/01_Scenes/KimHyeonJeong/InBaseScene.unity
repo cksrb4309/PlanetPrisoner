@@ -4613,8 +4613,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentQuest: 
+  totalProgress: 0
   currentProgress: 0
   questText: {fileID: 1439108126}
+  transceiver: {fileID: 75112134}
   questCompeleted: 0
 --- !u!1 &2137176907
 GameObject:
@@ -4889,6 +4891,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BaseMap
       objectReference: {fileID: 0}
+    - target: {fileID: 3494112224727594542, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
+      propertyPath: requiredQuest
+      value: 
+      objectReference: {fileID: 2084795790}
     - target: {fileID: 4601268039035762524, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
       propertyPath: shopUI
       value: 
