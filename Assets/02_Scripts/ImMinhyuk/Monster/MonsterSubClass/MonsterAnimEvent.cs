@@ -26,25 +26,29 @@ public class MonsterAnimEvent : MonoBehaviour
     // Idle 애니메이션 시작 프레임
     public void OnAnimIdleStart()
     {
-        if (!audio.isPlaying) audio.PlayOneShot(basicSounds[Random.Range(0, basicSounds.Length)]);
+        if (audio != null && !audio.isPlaying)
+            audio.PlayOneShot(basicSounds[Random.Range(0, basicSounds.Length)]);
     }
 
     // 이동 애니메이션 시작 프레임
     public void OnAnimWalkStart()
     {
-        if (!audio.isPlaying) audio.PlayOneShot(basicSounds[Random.Range(0, basicSounds.Length)]);
+        if (audio != null && !audio.isPlaying)
+            audio.PlayOneShot(basicSounds[Random.Range(0, basicSounds.Length)]);
     }
 
     // 공격 애니메이션 시작 프레임
     public void OnAnimAttackStart()
     {
-        audio.PlayOneShot(attackSounds[Random.Range(0, attackSounds.Length)]);
+        if (audio != null)
+            audio.PlayOneShot(attackSounds[Random.Range(0, attackSounds.Length)]);
     }
 
     // 사망 애니메이션 시작 프레임
     public void OnAnimDieStart()
     {
-        audio.PlayOneShot(dieSounds[Random.Range(0, dieSounds.Length)]);
+        if (audio != null)
+            audio.PlayOneShot(dieSounds[Random.Range(0, dieSounds.Length)]);
     }
 
     // 공격 애니메이션중 히트판정용 콜라이더를 켜주는 프레임
