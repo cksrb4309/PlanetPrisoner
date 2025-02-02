@@ -30,7 +30,7 @@ public class MonsterStat : MonoBehaviour
 public class M_Stat
 {
     public string name;
-    public int hp;
+    public float hp;
     public float speed;
     public int attackPower;
     public int attackRange;
