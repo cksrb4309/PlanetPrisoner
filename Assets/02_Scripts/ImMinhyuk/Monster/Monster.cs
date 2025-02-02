@@ -20,6 +20,8 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
     [SerializeField] AudioClip[] attackSounds;             // 공격 소리들
     [SerializeField] AudioClip[] dieSounds;                // 사망 소리들
 
+    LayerMask playerLayerMask;    // 주변에 플레이어가 있는 지 확인할 레이어마스크
+
     // 하위 컴포넌트
     protected Animator animator;
     protected NavMeshAgent agent;
@@ -94,6 +96,8 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         agent.speed = Stat.speed;
+
+        playerLayerMask = LayerMask.GetMask("Player");
     }
 
     // Update is called once per frame
@@ -157,21 +161,19 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         if (target != null)
         {
             // 공격 범위 안으로 왔음 => 공격
-            Collider[] hitCollidersInMaxSight = Physics.OverlapSphere(transform.position, Stat.attackRange); // 공격 범위 내의 hit되는 콜라이더를 모두 탐색한다.
+            // 공격 범위 내의 hit되는 Player 레이어마스크 콜라이더를 모두 탐색한다.
+            Collider[] hitCollidersInMaxSight = Physics.OverlapSphere(transform.position, Stat.attackRange, playerLayerMask);
 
             foreach (Collider hitCollider in hitCollidersInMaxSight)
             {
-                if (hitCollider.CompareTag("Player"))
-                {
-                    // 타겟 방향으로 회전
-                    // 네브매쉬랑 같이 사용하고 있어서 부자연스러울지도?? 지금은 괜찮음
-                    Vector3 direction = hitCollider.transform.position - transform.position;
-                    Quaternion targetRotation = Quaternion.LookRotation(direction);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 90);
+                // 타겟 방향으로 회전
+                // 네브매쉬랑 같이 사용하고 있어서 부자연스러울지도?? 지금은 괜찮음
+                Vector3 direction = hitCollider.transform.position - transform.position;
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 90);
 
-                    State = EState.Attack;
-                    return;
-                }
+                State = EState.Attack;
+                return;
             }
 
             // 탐지 범위 밖으로 나감 => IDLE 상태로
