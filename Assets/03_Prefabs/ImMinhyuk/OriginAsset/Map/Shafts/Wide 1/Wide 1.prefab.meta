@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 5a67dee3a6f335040bb05d9d284074f9
+timeCreated: 1516379537
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 109994
+  packageName: Mineshaft Survival Complete Project
+  packageVersion: 1.2
+  assetPath: Assets/Mineshaft Survival/Objects/Shafts/Wide 1/Wide 1.prefab
+  uploadId: 243996

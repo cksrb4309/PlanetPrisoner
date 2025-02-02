@@ -1,0 +1,64 @@
+{
+  "Monsters": [
+    {
+      "name": "Golem",
+      "hp": "100",
+      "speed": "5.0",
+      "attackPower": "1",
+      "attackRange": "5",
+      "sightAngle": "60.0",
+      "maxSightRange": "50.0",
+      "minSightRange": "20.0",
+      "patrolRange": "50",
+      "canHearingRange": "0"
+    },
+    {
+      "name": "Splinter",
+      "hp": "3",
+      "speed": "5.0",
+      "attackPower": "1",
+      "attackRange": "5",
+      "sightAngle": "0.0",
+      "maxSightRange": "0.0",
+      "minSightRange": "0.0",
+      "patrolRange": "50",
+      "canHearingRange": "50"
+    },
+    {
+      "name": "PatrolEye",
+      "hp": "1",
+      "speed": "5.0",
+      "attackPower": "1",
+      "attackRange": "7",
+      "sightAngle": "180.0",
+      "maxSightRange": "40.0",
+      "minSightRange": "10.0",
+      "patrolRange": "50",
+      "canHearingRange": "0"
+    },
+    {
+      "name": "CombatEye",
+      "hp": "1",
+      "speed": "5.0",
+      "attackPower": "3",
+      "attackRange": "3",
+      "sightAngle": "180.0",
+      "maxSightRange": "40.0",
+      "minSightRange": "10.0",
+      "patrolRange": "5",
+      "canHearingRange": "0"
+    },
+    {
+      "name": "Murloc",
+      "hp": "1",
+      "speed": "5.0",
+      "attackPower": "1",
+      "attackRange": "2",
+      "sightAngle": "60.0",
+      "maxSightRange": "30.0",
+      "minSightRange": "10.0",
+      "patrolRange": "50",
+      "canHearingRange": "50"
+    }
+  ]
+} 

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: caf0aca46eaf4864aad38983a5209c8f
+timeCreated: 1516210630
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 109994
+  packageName: Mineshaft Survival Complete Project
+  packageVersion: 1.2
+  assetPath: Assets/Mineshaft Survival/Objects/Support/Material/SupportPillars.mat
+  uploadId: 243996

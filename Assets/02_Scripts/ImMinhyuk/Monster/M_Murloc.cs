@@ -1,39 +1,105 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class M_Murloc : Monster, IMonsterSight
+public class M_Murloc : Monster
 {
-    private float moveChanceLow = 0.1f; // 작은 소리를 들을 때 트래킹 확률 (낮은 확률)
-    private float moveChanceHigh = 0.5f; // 큰 소리일 들을 때 트래킹 확률 (높은 확률)
+    [SerializeField] int id; // 멀록 그룹 내에서 사용할 ID
 
-    MonsterHearing monsterhearing;
-    List<AudioSource> playingAudioSources = new List<AudioSource>();
-    GameObject closetAudioCandidate;
+    MonsterSight monsterSight; // 시력 클래스
+    MonsterHearing monsterhearing; // 청력 클래스
+
+    [SerializeField] protected M_Murloc[] groupMurloc; // 동료 멀록
+
+    // 죽었을 때 M_MurlocGroupHelper 알려줘서 해당 멀록 Null로 밀어주는 용도의 delegate
+    public delegate void DeathEventHandler(int no);
+    public event DeathEventHandler OnDeath; // 이벤트 작성 문법 [event] [delegate 타입] [이벤트 이름]
+    // public event Action OnDeath; // 위 두줄 대신 이렇게도 사용 가능
 
     protected override void Start()
     {
         base.Start();
-        monsterhearing = new MonsterHearing(this);
+
+        // 시력 세팅
+        monsterSight = gameObject.AddComponent<MonsterSight>();
+        monsterSight.Initialize(this, headSight, target);
+
+        // 청력 세팅
+        monsterhearing = gameObject.AddComponent<MonsterHearing>();
+        monsterhearing.Initialize(this);
+
+        // 타게팅(플레이어) 무한루프 코루틴
         StartCoroutine(CoFindTarget());
+    }
+
+    protected override void UpdateIdle()
+    {
+        // 타게팅이 되어있을 경우 추적한다. 
+        if (target != null)
+        {
+            State = EState.Moving;
+        }
+        else
+        {
+            // N초에 한번 Idle할지 Move할지 선택
+            if (nextDecisionTime >= decisionInterval)
+            {
+                if (false || Random.Range(0, 2) == 1 && isArrivedDestination == true)
+                {
+                    // Do NOT (IDLE 유지)
+                }
+                else
+                {
+                    SetDestination(GetRandomDestination_InNavMesh());
+
+                    foreach (M_Murloc murloc in groupMurloc)
+                    {
+                        if (murloc != null)
+                        {
+                            // 멀록이 적당히 흩어질 수 있게 랜덤 오프셋 부여
+                            Vector3 nearDestination = destination + new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10));
+                            murloc.SetDestination(SetNearDestination_InNavMesh(nearDestination));
+                        }
+                    }
+                    State = EState.Moving;
+                }
+                nextDecisionTime = 0f;
+            }
+        }
+    }
+
+    protected override void UpdateDeath()
+    {
+        OnDeath?.Invoke(id); // 리스너 패턴으로 M_EyeGroupHelper에서 이 객체를 null로 밀어줘서 사망처리 해준다.
     }
 
     IEnumerator CoFindTarget()
     {
         while (true)
         {
-            target = ((IMonsterSight)this).FindTargetInSight(); // 시력 우선 탐색
-            
-            // 시력에서 못찾았으면 청력으로 넘긴다.
-            if(target==null)
-            {
-                playingAudioSources = monsterhearing.IsPlayingList();
-                Debug.Log($"{playingAudioSources.Count}개 재생중");
+            target = monsterSight.FindTargetInSight(); // 시력 우선 탐색
 
-                closetAudioCandidate = FindClosetAudioSource();
-                if (closetAudioCandidate != null)
+            // 시력에서 못찾았으면 청력으로 넘긴다.
+            if (target == null)
+            {
+                GameObject candidateTarget = monsterhearing.FindTarget();
+                if (candidateTarget != null)
                 {
-                    destination = FindTargetInHearing();
+                    SetDestination(SetNearDestination_InNavMesh(candidateTarget.transform.position));
+                }
+            }
+
+            // 타겟이 있으면 그룹 멀록과 공유하고 추적한다.
+            if (target != null)
+            {
+                foreach (var murloc in groupMurloc)
+                {
+                    if (murloc != null)
+                    {
+                        murloc.SetDestination(target.transform.position);
+                        murloc.SetStateChangeNow();
+                    }
                 }
             }
 
@@ -41,135 +107,36 @@ public class M_Murloc : Monster, IMonsterSight
         }
     }
 
-    /// <summary>
-    /// 1. OverlapSphere로 범위내의 모든 콜라이더를 탐지한다.
-    /// 2. 각 콜라이더방향으로 Ray를 쏴서 Player인지 확인한다.
-    /// </summary>
-    GameObject IMonsterSight.FindTargetInSight()
+    // 동료 그룹이 누구누구 있는지 설정해줌 (자신 포함)
+    public void SetGroupMurloc(M_Murloc[] _groupMurloc, int _id)
     {
-        Collider[] hitCollidersInMaxSight = Physics.OverlapSphere(transform.position, stat.maxSightRange); // 최대 범위 내의 hit되는 콜라이더를 모두 탐색한다.
-
-        foreach (Collider hitCollider in hitCollidersInMaxSight)
-        {
-            // 장애물을 고려하지 않고 오버랩 스피어 안에 플레이어가 있음
-            if (hitCollider.CompareTag("Player"))
-            {
-                Vector3 directionToTarget = hitCollider.transform.position - headSight.transform.position; // 몬스터와 플레이어의 방향 벡터
-                float distanceToTarget = Vector3.Distance(headSight.transform.position, hitCollider.transform.position); // 거리 계산
-
-                // 이미 타겟팅이 됐을 때는 최대 탐지 범위 내에서 찾아 준다.
-                if (target != null && distanceToTarget < stat.maxSightRange)
-                {
-                    return hitCollider.gameObject;
-                }
-
-                // 최소 탐지 범위 내에서는 플레이어를 항상 찾는다.
-                if (distanceToTarget < stat.minSightRange)
-                {
-                    return hitCollider.gameObject;
-                }
-
-                // 최대 탐지 거리 안이고 시야각 내에서 플레이어를 찾을 때
-                // 벽 따위의 장애물을 고려해서 레이로 다시 체크해준다.
-                // 레이 쏴서 플레이어 아니면 Continue
-                if (Physics.Raycast(headSight.transform.position, directionToTarget.normalized, out RaycastHit hitInfo, distanceToTarget))
-                {
-                    if (hitInfo.collider.CompareTag("Player"))
-                    {
-                        float angleToPlayer = Vector3.Angle(transform.forward, directionToTarget); // 몬스터와 플레이어의 각도
-                        if (angleToPlayer <= stat.sightAngle / 2) // 좌, 우 때문에 1/2씩 나눔
-                        {
-                            return hitCollider.gameObject;
-                        }
-                    }
-                }
-            }
-        }
-
-        // 여끼까지 왔으면 플레이어를 못 찾았으므로 타겟을 밀어준다.
-        return null;
+        groupMurloc = _groupMurloc;
+        id = _id;
     }
 
-
-    // 현재 재생되는 오디오 소스만 추출
-    GameObject FindClosetAudioSource()
+    // 그룹원의 사망을 설정하는 함수
+    public void SetMemberDie(int no)
     {
-        float candidate = 0; // (볼륨/거리)가 가장 큰 녀석
-        GameObject ret = null;
-        // playingAudioSources의 모든 오디오 소스에 대해 거리 계산
-        for (int i = 0; i < playingAudioSources.Count; i++)
-        {
-            float distance = Vector3.Distance(playingAudioSources[i].transform.position, transform.position);
-            if (distance <= stat.canHearingRange)
-            {
-                if (candidate < (playingAudioSources[i].volume / distance))
-                {
-                    ret = playingAudioSources[i].gameObject;
-                }
-            }
-        }
-        return ret;
+        groupMurloc[no] = null;
     }
 
-    Vector3 FindTargetInHearing()
+    // TODO : 동료가 죽었을 때 효과
+    void StatUp()
     {
-        // 죽었다면 아무것도 하지 않는다.
-        if (State == EState.Death) return destination;
-
-        // 플레이어와 몬스터 간의 거리 계산
-        float distanceToPlayer = Vector3.Distance(transform.position, closetAudioCandidate.transform.position);
-
-        // 감청 범위 내에서만 유효
-        if (distanceToPlayer <= stat.canHearingRange)
-        {
-            // 거리와 비례한 소리 크기 추출 0 ~ 1
-            float volumeLevel = Mathf.Clamp01(closetAudioCandidate.GetComponent<AudioSource>().volume / distanceToPlayer);
-            Debug.Log($"소리 레밸 {volumeLevel}");
-
-            // 소리를 죽이면 아무 행동도 하지 않는다.
-            // TODO? 삭제?
-            if (volumeLevel < 0.01) return destination;
-
-            // 가까운 거리에서 소리를 들으면 해당 '방향으로' 공격한다.
-            if (distanceToPlayer < stat.attackRange)
-            {
-                // 중복 상태 세팅 방지
-                if (State != EState.Attack)
-                {
-                    // 소리난 방향으로 회전
-                    // 네브매쉬랑 같이 사용하고 있어서 부자연스러울지도?? 지금은 괜찮음
-                    Vector3 direction = closetAudioCandidate.transform.position - transform.position;
-                    Quaternion targetRotation = Quaternion.LookRotation(direction);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5);
-
-                    // 공격
-                    State = EState.Attack;
-                }
-            }
-
-            // 큰 소리 : 높은 확률로 이동, 작은 소리 : 작은 확률로 이동
-            float moveChance = (volumeLevel > 0.1f) ? moveChanceHigh : moveChanceLow;
-            if (Random.value < moveChance)
-            {
-                return closetAudioCandidate.transform.position;
-            }
-        }
-
-        // 플레이어가 낸 소리가 재생 범위 밖이라면 기존 이동 목표 지점 리턴
-        return destination;
+        Stat.attackPower *= 2;
+        Stat.speed *= 2;
     }
 
+    // Json에서 스텟을 가져온다.
     protected override M_Stat SetStat()
     {
         M_Stat _stat;
-        if (MonsterStat.Instance.StatDict.TryGetValue("Murloc", out _stat))
-        {
-            Debug.Log(stat.hp);
-        }
-        else
+
+        if (!MonsterStat.Instance.StatDict.TryGetValue("Murloc", out _stat))
         {
             Debug.LogWarning($"Murloc not found in stat Dictionary");
         }
+
         return _stat;
     }
 }

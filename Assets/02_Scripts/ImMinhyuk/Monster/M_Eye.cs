@@ -1,85 +1,62 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class M_Eye : Monster, IMonsterSight
+public class M_Eye : Monster
 {
+    MonsterSight monsterSight; // 시력 클래스        
+    [SerializeField] protected M_Eye parterEye; // 파트너 Eye
+
+    // 죽었을 때 M_EyeGroupHelper에게 알려줘서 해당 Eye를 Null로 밀어주는 용도의 delegate
+    public delegate void DeathEventHandler();
+    public event DeathEventHandler OnDeath; // 이벤트 작성 문법 [event] [delegate 타입] [이벤트 이름]
+    // public event Action OnDeath; // 위 두줄 대신 이렇게도 사용 가능
+
     protected override void Start()
     {
         base.Start();
-        StartCoroutine(CoFindTarget()); // 플레이어 탐지는 항상 한다(while(true))
+
+        // 시력 세팅
+        monsterSight = gameObject.AddComponent<MonsterSight>();
+        monsterSight.Initialize(this, headSight, target);
+
+        // 타게팅(플레이어) 무한루프 코루틴
+        StartCoroutine(CoFindTarget()); 
+    }
+
+    protected override void UpdateDeath()
+    {
+        OnDeath?.Invoke(); // 리스너 패턴으로 M_EyeGroupHelper에서 이 객체를 null로 밀어줘서 사망처리 해준다.
     }
 
     IEnumerator CoFindTarget()
     {
         while (true)
         {
-            target = ((IMonsterSight)this).FindTargetInSight();
+            target = monsterSight.FindTargetInSight();
             yield return new WaitForSeconds(0.1f);  // N초마다 타겟을 탐색
         }
     }
 
-
-    /// <summary>
-    /// 1. OverlapSphere로 범위내의 모든 콜라이더를 탐지한다.
-    /// 2. 각 콜라이더방향으로 Ray를 쏴서 Player인지 확인한다.
-    /// </summary>
-    GameObject IMonsterSight.FindTargetInSight()
+    // 파트너 Eye가 누구인지 설정해줌
+    public void SetPartnerEye(M_Eye _partnerEye)
     {
-        Collider[] hitCollidersInMaxSight = Physics.OverlapSphere(transform.position, stat.maxSightRange); // 최대 범위 내의 hit되는 콜라이더를 모두 탐색한다.
-
-        foreach (Collider hitCollider in hitCollidersInMaxSight)
-        {
-            // 장애물을 고려하지 않고 오버랩 스피어 안에 플레이어가 있음
-            if (hitCollider.CompareTag("Player"))
-            {
-                Vector3 directionToTarget = hitCollider.transform.position - headSight.transform.position; // 몬스터와 플레이어의 방향 벡터
-                float distanceToTarget = Vector3.Distance(headSight.transform.position, hitCollider.transform.position); // 거리 계산
-
-                // 이미 타겟팅이 됐을 때는 최대 탐지 범위 내에서 찾아 준다.
-                if (target != null && distanceToTarget < stat.maxSightRange)
-                {
-                    return hitCollider.gameObject;
-                }
-
-                // 최소 탐지 범위 내에서는 플레이어를 항상 찾는다.
-                if (distanceToTarget < stat.minSightRange)
-                {
-                    return hitCollider.gameObject;
-                }
-
-                // 최대 탐지 거리 안이고 시야각 내에서 플레이어를 찾을 때
-                // 벽 따위의 장애물을 고려해서 레이로 다시 체크해준다.
-                // 레이 쏴서 플레이어 아니면 Continue
-                if (Physics.Raycast(headSight.transform.position, directionToTarget.normalized, out RaycastHit hitInfo, distanceToTarget))
-                {
-                    if (hitInfo.collider.CompareTag("Player"))
-                    {
-                        float angleToPlayer = Vector3.Angle(transform.forward, directionToTarget); // 몬스터와 플레이어의 각도
-                        if (angleToPlayer <= stat.sightAngle / 2) // 좌, 우 때문에 1/2씩 나눔
-                        {
-                            return hitCollider.gameObject;
-                        }
-                    }
-                }
-            }
-        }
-
-        // 여끼까지 왔으면 플레이어를 못 찾았으므로 타겟을 밀어준다.
-        return null;
+        parterEye = _partnerEye;
     }
 
+    // 파트너의 사망을 설정하는 함수
+    public void SetPartnerDie()
+    {
+        parterEye = null;
+    }
+
+    void Synergy()
+    {
+        // TODO 같이 싸우면 시너지 효과를 주고 싶은데..
+    }
+
+    // Json에서 스텟을 가져온다. 하위 클래스에서 재정의
     protected override M_Stat SetStat()
     {
-        M_Stat _stat;
-        // 세부 Eye 나누기전에 PatrolEye로 일단 넣어놓자.
-        if (MonsterStat.Instance.StatDict.TryGetValue("PatrolEye", out _stat))
-        {
-            Debug.Log(stat.hp);
-        }
-        else
-        {
-            Debug.LogWarning($"Golem not found in stat Dictionary");
-        }
-        return _stat;
+        return null;
     }
 }

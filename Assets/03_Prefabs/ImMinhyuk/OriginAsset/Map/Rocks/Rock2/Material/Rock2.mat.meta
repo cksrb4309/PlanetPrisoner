@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 78ebd80a2461a4c488e805627318ff44
+timeCreated: 1516386572
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 109994
+  packageName: Mineshaft Survival Complete Project
+  packageVersion: 1.2
+  assetPath: Assets/Mineshaft Survival/Objects/Rocks/Rock2/Material/Rock2.mat
+  uploadId: 243996
