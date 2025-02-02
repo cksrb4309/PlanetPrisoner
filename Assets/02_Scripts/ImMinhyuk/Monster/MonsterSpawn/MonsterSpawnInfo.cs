@@ -4,22 +4,22 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "SpawnInfo", menuName = "Scriptable Objects/SpawnInfo")]
 public class MonsterSpawnInfo : ScriptableObject
-{// 스폰시킬 몬스터
+{
+    // 스폰시킬 몬스터
     public GameObject spawnMonster;
 
     [SerializeField] private List<SpawnTimerData> spawnTimerDataList;
 
     // 현재 몬스터 개체 수
     // NonSerialized를 통해 ScriptableObject로 저장되는 것을 방지
-    // 매 플레이마다 0으로 초기화가 되어있기를 원함
-    // YMH : 이 부분은 이해하지 못함.. TODO하고 질문으로
+    // Q. 몬스터가 죽었을 때, 감소시켜야 하는가?
     [NonSerialized] int currentMonsterCount = 0;
+
     public bool IsSpawnable(float currentTime)
     {
         // InGameTime 값은 1초 단위기 때문에 인스펙터에서 몬스터의 스폰 시간을 넣을 때는 편의상 1시간 단위로 넣기 위해
         // currentTime 값을 3600으로 나눈다
-        // 하지만 테스트 일 때는 N초가 지났는지 바로 확인하기 위해 주석처리한다.
-        //currentTime /= 3600;
+        currentTime /= 3600;
 
         // 모든 SpawnTimerData를 확인해서 
         foreach (SpawnTimerData spawnTimerData in spawnTimerDataList)
@@ -33,6 +33,7 @@ public class MonsterSpawnInfo : ScriptableObject
                 // 스폰을 성공했다면
                 if (spawnChance > UnityEngine.Random.Range(0f, 100f))
                 {
+                    currentMonsterCount++; 
                     return true;
                 }
 

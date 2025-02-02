@@ -41,26 +41,26 @@ public class MonsterSpawnManager : MonoBehaviour
 
     private void Start()
     {
-        // 시작과 돵시에 적당히 몬스털르 풀어 놓는다. (일단 1세트씩)
-        foreach(MonsterSpawnInfo monster in spawnInfoList)
-        {
-            Spawn(monster.spawnMonster);
-        }
+        // 시작과 돵시에 적당히 몬스터를 풀어 놓는다. (일단 1세트씩)
+        OnCheckMonsterSpawn((float)1e10);
 
-        StartCoroutine(CoCheckMonsterSpawn());
+        //StartCoroutine(TestMonsterSpawn()); // 임민혁 테스트용
     }
-    
-    IEnumerator CoCheckMonsterSpawn()
+
+    // 임민혁 테스트용, 실제 게임에선 사용되면 안되는 함수.
+    IEnumerator TestMonsterSpawn()
     {
         while(true)
         {
             // 현재 인게임 시간 전달 (초 단위)
             float inGameTime = Time.time;
             OnCheckMonsterSpawn(inGameTime);
-            yield return new WaitForSeconds(1f);
+            // 인게임 타임의 10분주기를 모방한다고 친다.
+            yield return new WaitForSeconds(10f); 
         }
     }
 
+    // InGameTime에서 이 함수를 호출할 수 있도록 유도
     public void OnCheckMonsterSpawn(float inGameTime)
     {
         foreach (MonsterSpawnInfo spawnInfo in spawnInfoList)
@@ -85,14 +85,15 @@ public class MonsterSpawnManager : MonoBehaviour
             spawnPosition = hit.position; 
         }
 
-        // (소환 후보 지점 기준) Player를 찾아서 근처에 플레이어가 있다면 소환하지 않고 리턴
+        // (소환 후보 지점 기준) Player를 찾아서 근처에 플레이어가 있다면 다른 후보지역을 탐색한다.
         Collider[] colliders = Physics.OverlapSphere(spawnPosition, playerDetectionRange, playerLayerMask);
         if (colliders.Length > 0)
         {
+            Spawn(monster);
             return;
         }
 
-        // 몬스터 생성 및 부모 설정
+        // 몬스터 생성 및 부모 오브젝트 설정
         GameObject spawnedMonster = Instantiate(monster, spawnPosition, Quaternion.identity);
         if (monsterObjectRoot != null)
         {
@@ -103,16 +104,16 @@ public class MonsterSpawnManager : MonoBehaviour
             Debug.Log("※ 부모 오브젝트를 설정해 주세요 ");
         }
 
-        // 오디오소스 관리 대상에 추가한다.
+        // 몬스터를 오디오소스 관리 대상에 추가한다.
         AudioSource audioSource = spawnedMonster.GetComponent<AudioSource>();
 
-        // 오디오소스를 못찾았으면 하위 오브젝트에 AudioSource가 달려 있을 수도 있음
+        // 오디오소스를 못찾았으면 하위 오브젝트에 AudioSource가 달려 있음 (Eye 그룹, 멀록 그룹)
         if (audioSource == null)
         {
             audioSource = spawnedMonster.GetComponentInChildren<AudioSource>();
         }
 
-        if( audioSource ==null)
+        if( audioSource == null)
         {
             // 여기까지 못찾았으면 Hearing클래스가 없는 몬스터
         }

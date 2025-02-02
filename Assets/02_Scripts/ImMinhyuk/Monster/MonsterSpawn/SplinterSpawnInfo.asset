@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnMonster: {fileID: 4839912140187004875, guid: ed4adec830a067444a52a6d332da2a30, type: 3}
   spawnTimerDataList:
-  - targetTime: 55
+  - targetTime: 10
+    spawnRate: 100
+    monsterSpawnLimit: 5
+  - targetTime: 15
     spawnRate: 50
-    monsterSpawnLimit: 10
-  - targetTime: 555
-    spawnRate: 100
-    monsterSpawnLimit: 10
-  - targetTime: 5555
-    spawnRate: 100
+    monsterSpawnLimit: 7
+  - targetTime: 20
+    spawnRate: 30
     monsterSpawnLimit: 10
