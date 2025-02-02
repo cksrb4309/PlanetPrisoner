@@ -56,26 +56,16 @@ public class RequiredQuest : MonoBehaviour
             questCompeleted = true;
         }
     }
-
     public void CheckQuestItem(ItemData itemData, string checkPoint)
     {
-        //if (currentQuest == "큐브")
-        //{
-        //    if (itemData.itemName == "CubeItem")
-        //    {
-        //        if (checkPoint == "In") currentProgress++;
-        //        else currentProgress--;
-        //        QuestProgressTextUpdate(); // 텍스트 업데이트
-        //    }
-        //}
-        //else if (currentQuest == "스피어")
-        //{
+        Debug.Log($"아이템 검사 [Quest:{currentQuest}, {itemData.itemName} = {currentQuest.Equals(itemData.itemName)}]");
 
-        //}
-        //else if (currentQuest == "캡슐")
-        //{
-
-        //}
+        if (currentQuest.Equals(itemData.itemName))
+        {
+            if (checkPoint == "In") currentProgress++;
+            else currentProgress--;
+            QuestProgressTextUpdate(); // 텍스트 업데이트
+        }
     }
 
 

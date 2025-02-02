@@ -761,6 +761,30 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 53a5ca7658407ea44b0bb12707e4324a, type: 3}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8162717342304080079, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -929,6 +953,30 @@ PrefabInstance:
     - target: {fileID: 6476421058765079294, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 53a5ca7658407ea44b0bb12707e4324a, type: 3}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8162717342304080079, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
       propertyPath: m_Pivot.x
@@ -1238,6 +1286,30 @@ PrefabInstance:
     - target: {fileID: 6476421058765079294, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 53a5ca7658407ea44b0bb12707e4324a, type: 3}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6509369189755944359, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8162717342304080079, guid: b09cbed6a4309a84a8378710658920ac, type: 3}
       propertyPath: m_Pivot.x
