@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using VInspector;
 
 public class RequiredQuest : MonoBehaviour
 {
-    Dictionary<string, int> quests = new Dictionary<string, int>
+    public SerializedDictionary<ItemData, int> questInfo;
+    Dictionary<string, int> quests;
+
+    /*Dictionary<string, int> quests = new Dictionary<string, int>
     {
         { "큐브", 3},
         { "스피어", 1},
         { "캡슐", 1 }
-    };
+    };*/
 
     [SerializeField] string currentQuest; // 현재 진행중인 퀘스트
     [SerializeField] int totalProgress; // 현재 진행중인 퀘스트 요구사항
@@ -21,6 +25,10 @@ public class RequiredQuest : MonoBehaviour
 
     void Start()
     {
+        quests=new Dictionary<string, int>();
+        foreach(var quest in questInfo) quests.Add(quest.Key.itemName, quest.Value);
+        // 원하는 퀘스트 itemData와 수량을 인스펙터에서 추가하면 퀘스트 리스트에 추가되는 형식
+
         UpdateQuest();
     }
 
@@ -45,22 +53,11 @@ public class RequiredQuest : MonoBehaviour
 
     public void CheckQuestItem(ItemData itemData, string checkPoint)
     {
-        if(currentQuest == "큐브")
+        if(currentQuest == itemData.itemName)
         {
-            if(itemData.itemName == "CubeItem")
-            {
-                if (checkPoint == "In") currentProgress++;
-                else currentProgress--;
-                QuestProgressTextUpdate(); // 텍스트 업데이트
-            }
-        }
-        else if(currentQuest == "스피어")
-        {
-
-        }
-        else if (currentQuest == "캡슐")
-        {
-
+            if (checkPoint == "In") currentProgress++; // 전송기에 들어왔을땐 +1
+            else currentProgress--; // 전송기에서 나갔을 땐 -1
+            QuestProgressTextUpdate(); // 텍스트 업데이트
         }
     }
 
@@ -74,6 +71,7 @@ public class RequiredQuest : MonoBehaviour
 
     void QuestProgressTextUpdate()
     {
+        // 퀘스트 텍스트 업데이트
         questText.text = $"<color=#009006>[필수퀘스트]</color> {currentQuest} {currentProgress}/{totalProgress}";
     }
 }

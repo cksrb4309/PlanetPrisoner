@@ -859,6 +859,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 7308303590631604784, guid: 3123ad7ea98491046a794276f63565f0, type: 3}
+    - {fileID: 8698166966068757783, guid: 3123ad7ea98491046a794276f63565f0, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3123ad7ea98491046a794276f63565f0, type: 3}
@@ -2643,6 +2644,7 @@ MonoBehaviour:
   - {fileID: 749112408}
   - {fileID: 595806381}
   - {fileID: 1042683450}
+  itemSlotCanvasGroup: {fileID: 0}
 --- !u!1 &1219665573
 GameObject:
   m_ObjectHideFlags: 0
@@ -3215,6 +3217,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 7308303590631604784, guid: 3123ad7ea98491046a794276f63565f0, type: 3}
+    - {fileID: 8698166966068757783, guid: 3123ad7ea98491046a794276f63565f0, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3123ad7ea98491046a794276f63565f0, type: 3}
@@ -4363,6 +4366,7 @@ MonoBehaviour:
   crouchRatioSpeed: 0.5
   jumpSpeed: 10
   gravity: -9.81
+  oxygenBurnRate: 0.5
   pitchClampMax: 70
   pitchClampMin: -70
   rotateSpeed: 10
@@ -4527,6 +4531,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxOxygen: 0
+  decreaseInterval: 2
+  oxygenUsageFactor: 1
 --- !u!224 &2082439928 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6276833110512430701, guid: a511c7e53ae78274cbd28858b5125035, type: 3}
@@ -4612,6 +4618,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70421c02da340c4418786ccc29028721, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questInfo:
+    serializedKvps: []
+    dividerPos: 0.33
   currentQuest: 
   totalProgress: 0
   currentProgress: 0
