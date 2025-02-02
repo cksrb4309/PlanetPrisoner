@@ -76,6 +76,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
                     animator.CrossFade("Stun", 0.1f);
                     break;
                 case EState.Death:
+                    MonsterHearing.RemoveAudioSource(audio);
                     agent.isStopped = true;
                     animator.CrossFade("Death", 0.1f);
                     break;
@@ -96,6 +97,8 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         agent.speed = Stat.speed;
+
+        MonsterHearing.AddAudioSource(audio);
 
         playerLayerMask = LayerMask.GetMask("Player");
     }

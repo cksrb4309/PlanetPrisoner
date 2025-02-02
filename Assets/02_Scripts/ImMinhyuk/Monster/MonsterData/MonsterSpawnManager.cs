@@ -44,6 +44,9 @@ public class MonsterSpawnManager : MonoBehaviour
         // 시작과 돵시에 적당히 몬스터를 풀어 놓는다. (일단 1세트씩)
         OnCheckMonsterSpawn((float)1e10);
 
+        // TODO 임시로 여기서 호출하지만 라운드가 시작될 때마다 GameManager 등에서 호출해준다.
+        MonsterHearing.InitializeAudioSources();
+
         //StartCoroutine(TestMonsterSpawn()); // 임민혁 테스트용
     }
 
@@ -102,24 +105,6 @@ public class MonsterSpawnManager : MonoBehaviour
         else
         {
             Debug.Log("※ 부모 오브젝트를 설정해 주세요 ");
-        }
-
-        // 몬스터를 오디오소스 관리 대상에 추가한다.
-        AudioSource audioSource = spawnedMonster.GetComponent<AudioSource>();
-
-        // 오디오소스를 못찾았으면 하위 오브젝트에 AudioSource가 달려 있음 (Eye 그룹, 멀록 그룹)
-        if (audioSource == null)
-        {
-            audioSource = spawnedMonster.GetComponentInChildren<AudioSource>();
-        }
-
-        if( audioSource == null)
-        {
-            // 여기까지 못찾았으면 Hearing클래스가 없는 몬스터
-        }
-        else
-        {
-            MonsterHearing.AddAudioSource(audioSource); // 오디오 관리대상에 추가
         }
     }
 

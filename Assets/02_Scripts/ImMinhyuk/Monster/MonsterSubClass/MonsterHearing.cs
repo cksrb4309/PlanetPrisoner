@@ -14,22 +14,22 @@ public class MonsterHearing : MonoBehaviour
     // (들을 수 있다면) 가장 가까운 오디오 소스를 가지고 있는 오브젝트
     GameObject closetAudioCandidate;
 
+
+    ////////////////////////////////
+    ///디버그용 
+    [SerializeField] private List<AudioSource> debugAudioSources; // Inspector에서 확인용
+    private void Update()
+    {
+        debugAudioSources = new List<AudioSource>(audioSources); // 매 프레임 복사
+    }
+    /// 디버그용
+
     private float moveChanceLow = 0.1f; // 작은 소리를 들을 때 트래킹 확률 (낮은 확률)
     private float moveChanceHigh = 0.5f; // 큰 소리일 들을 때 트래킹 확률 (높은 확률)
-
-    // 최초 오디오 소스 집계는 한번만 한다.
-    private static bool isInitialized = false;
 
     public void Initialize(Monster _monster)
     {
         monster = _monster;       
-
-        // 이 코드는 첫 번째 몬스터가 처음 시작할 때만 실행됨
-        if (!isInitialized)
-        {
-            InitializeAudioSources();
-            isInitialized = true;  // 초기화가 완료되었으므로 이후 몬스터에서는 실행되지 않음
-        }
     }
 
     public GameObject FindTarget()
@@ -120,8 +120,12 @@ public class MonsterHearing : MonoBehaviour
     }
 
     // AudioSource를 관리하는 함수
-    private static void InitializeAudioSources()
+    // TODO : GameManager 등에서 라운드를 시작할 때 마다 호출
+    static public void InitializeAudioSources()
     {
+        // 기존의 리스트를 밀어준다.
+        RemoveAllAudioSource();
+
         // 모든 AudioSource 긁어오기
         AudioSource[] allAudioSources = FindObjectsOfType<AudioSource>();
         foreach (var audioSource in allAudioSources)
