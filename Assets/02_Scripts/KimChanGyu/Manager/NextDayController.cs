@@ -34,6 +34,8 @@ public class NextDayController : MonoBehaviour
     {
         if (instance == null)
         {
+            Debug.Log("Awake PlayerController");
+
             instance = this;
 
             DontDestroyOnLoad(gameObject);
