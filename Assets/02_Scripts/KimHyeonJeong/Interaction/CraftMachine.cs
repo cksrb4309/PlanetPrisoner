@@ -19,7 +19,7 @@ public class CraftMachine : MonoBehaviour, IInteractable
     }
 
     [SerializeField] List<Recipe> recipes; // 레시피 목록
-    [SerializeField] Vector3 itemSpawnPosition;
+    [SerializeField] Transform itemSpawnPosition; // 빈오브젝트로 원하는 위치 지정 후 넣어주기
 
     // 인스펙터에서 설정
     [SerializeField] Recipe weaponRecipe; // 무기 레시피 
@@ -32,13 +32,11 @@ public class CraftMachine : MonoBehaviour, IInteractable
 
     private void Start()
     {
-        itemSpawnPosition = new Vector3(2.1f, 0.8f, -1.3f);  // 실제 씬에서는 변경 필요
-
         // 리스트에 넣어주고
         recipes.Add(weaponRecipe);
         recipes.Add(trapRecipe);
 
-        // 레시피를 수량 기준으로 정렬
+        // 레시피를 수량 기준으로 내림차순 정렬 (수량이 같을 경우는 리스트에 넣은 순서대로)
         recipes.Sort((recipeA, recipeB) =>
         {
             int totalA = 0, totalB = 0;
@@ -81,7 +79,7 @@ public class CraftMachine : MonoBehaviour, IInteractable
                     }
                 }
                 StartCoroutine(CraftingEffect());
-                Instantiate(recipe.prefab, itemSpawnPosition, Quaternion.identity);
+                Instantiate(recipe.prefab, itemSpawnPosition.position, Quaternion.identity);
                 
                 return; // 첫 번째로 제작 가능한 물건만 제작
             }
