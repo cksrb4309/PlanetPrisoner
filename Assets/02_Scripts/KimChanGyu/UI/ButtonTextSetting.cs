@@ -22,15 +22,15 @@ public class ButtonTextSetting : MonoBehaviour, IConfigurable
         speed = 1f / fadeDuration;
     }
 
-    public void OnColorChange(int order)
+    public void OnColorChange(EventType order)
     {
         if (currCoroutine != null) StopCoroutine(currCoroutine);
 
         Color changeColor = Color.white;
 
-        if (order == 0) changeColor = settings.textExitColor;
-        else if (order == 1) changeColor = settings.textEnterColor;
-        else if (order == 2) changeColor = settings.textDownColor;
+        if (order == EventType.Exit) changeColor = settings.textExitColor;
+        else if (order == EventType.Enter) changeColor = settings.textEnterColor;
+        else if (order == EventType.Down) changeColor = settings.textDownColor;
 
         currCoroutine = StartCoroutine(ColorChangeCoroutine(changeColor));
     }

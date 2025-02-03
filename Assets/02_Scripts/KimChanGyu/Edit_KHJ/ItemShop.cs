@@ -21,7 +21,7 @@ public class ItemShop : MonoBehaviour
     {
         // 구매가 가능할 경우 해당 값을 치루고 true를 반환하는 함수를 통해
         // 구매 시의 아이템 전송을 if 안에 구현
-        if (oxygenTank.PurchaseItem(300f))
+        if (oxygenTank.PurchaseItem(300))
         {
             FillOxygenTank(); // 산소 이미지 업데이트
 

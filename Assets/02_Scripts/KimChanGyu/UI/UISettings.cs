@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -7,7 +7,9 @@ using UnityEngine;
 public class UISettings : ScriptableObject
 {
     [Header("Images")]
-    public Sprite buttonSprite;
+    public Sprite normalButtonSprite;
+    public Sprite highlightedButtonSprite;
+    public Sprite pressedButtonSprite;
 
     [Header("Colors")]
     public Color imageExitColor;
