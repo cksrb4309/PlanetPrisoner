@@ -5,13 +5,13 @@ public class ItemReward : MonoBehaviour
     [SerializeField] OxygenTank oxygenTank;
     [SerializeField] Transceiver transceiver;
 
-    void Start()
+    public void GiveReward()
     {
-        
-    }
+        foreach (var obj in transceiver.objectInTransceiver)
+        {
+            Item item = obj.GetComponent<Item>();
 
-    void Update()
-    {
-        
+            if (item != null) oxygenTank.ChangeOxygen(item.itemData.itemPrice);
+        }
     }
 }
