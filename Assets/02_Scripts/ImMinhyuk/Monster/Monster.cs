@@ -344,6 +344,10 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, transform.position + leftBoundary);
         Gizmos.DrawLine(transform.position, transform.position + rightBoundary);
+
+        // 최대 청력 거리 원
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, Stat.canHearingRange);
     }
     #endregion 기즈모
 
