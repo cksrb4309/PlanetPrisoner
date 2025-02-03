@@ -61,12 +61,15 @@ public class NextDayController : MonoBehaviour
     }
     IEnumerator ReadyCoroutine()
     {
+        // 배경 캔버스 활성화
         yield return FadeInOutCoroutine(backgroundCanvasGroup, 1f, FadeType.LinearIncrease);
 
-
+        // 다음날 준비 이벤트 활성화
+        OnEventInvoke(ActionType.NextDayReady);
     }
     IEnumerator CancelCoroutine()
     {
+        // TODO : 취소 코루틴 작성바람
         yield return null;
     }
     IEnumerator NextCoroutine()
@@ -116,7 +119,7 @@ public class NextDayController : MonoBehaviour
     }
     IEnumerator GameOverCoroutine()
     {
-        yield return null;
+
     }
     IEnumerator FadeInOutCoroutine(CanvasGroup target, float fadeSpeed, FadeType fadeType, float startValue = 0f)
     {
