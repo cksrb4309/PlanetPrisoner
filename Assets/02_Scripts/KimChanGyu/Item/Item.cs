@@ -31,7 +31,7 @@ public class Item : MonoBehaviour, IInteractable
 
         PlayerItemHandler.Instance.EquipItem();
     }
-    public void DisableInHand() // 아이템 숨기기
+    public virtual void DisableInHand() // 아이템 숨기기
     {
         // 렌더 숨기기
         renderer.enabled = false;
