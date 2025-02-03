@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.AI;
 using static Codice.Client.Common.EventTracking.TrackFeatureUseEvent.Features.DesktopGUI.Filters;
 
-public abstract class Monster : MonoBehaviour, IMonsterDamagable, ITrapable
+public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
 {
     protected GameObject target; // 플레이어
     protected GameObject preFrameTarget; // 이전 프레임의 타겟
@@ -288,12 +289,9 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable, ITrapable
 
     private void OnTriggerEnter(Collider other)
     {
-        // TODO : 태그와 컴포넌트 이름 맞추기
         if (other.tag == "Player" && State != EState.Death)
         {
-            // TODO : 플레이어에게 접근해서 산소통 데미지 등의 효과 
-            TMPlayer tmptrap = other.GetComponent<TMPlayer>();
-            tmptrap.Damaged(Stat.attackPower);
+            other.GetComponent<IDamagable>().Damaged(Stat.attackPower);
         }
     }
 

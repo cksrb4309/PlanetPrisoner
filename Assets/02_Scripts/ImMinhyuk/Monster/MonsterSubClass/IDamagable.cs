@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface IMonsterDamagable
+public interface IDamagable
 {
     void Damaged(int damage);
 }

@@ -480,6 +480,10 @@ PrefabInstance:
       value: TempPlayer
       objectReference: {fileID: 0}
     - target: {fileID: 16794387997514240, guid: 50a5a982369969e4c93d4480517f1bf3, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 16794387997514240, guid: 50a5a982369969e4c93d4480517f1bf3, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -530,6 +534,10 @@ PrefabInstance:
     - target: {fileID: 2347141822066333716, guid: 50a5a982369969e4c93d4480517f1bf3, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8172643242261427060, guid: 50a5a982369969e4c93d4480517f1bf3, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -922,9 +930,25 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 5500286261947953847, guid: c27d766fca5ba6c46b3ad899b24b3194, type: 3}
+      propertyPath: m_Size.x
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5500286261947953847, guid: c27d766fca5ba6c46b3ad899b24b3194, type: 3}
+      propertyPath: m_Size.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5500286261947953847, guid: c27d766fca5ba6c46b3ad899b24b3194, type: 3}
+      propertyPath: m_Size.z
+      value: 1123
+      objectReference: {fileID: 0}
+    - target: {fileID: 5500286261947953847, guid: c27d766fca5ba6c46b3ad899b24b3194, type: 3}
       propertyPath: m_NavMeshData
       value: 
       objectReference: {fileID: 23800000, guid: 4adccddc4aaa9964188a8015bd3a75ad, type: 2}
+    - target: {fileID: 5500286261947953847, guid: c27d766fca5ba6c46b3ad899b24b3194, type: 3}
+      propertyPath: m_CollectObjects
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6340503901308144157, guid: c27d766fca5ba6c46b3ad899b24b3194, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -935,7 +959,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6340503901308144157, guid: c27d766fca5ba6c46b3ad899b24b3194, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 365
       objectReference: {fileID: 0}
     - target: {fileID: 6340503901308144157, guid: c27d766fca5ba6c46b3ad899b24b3194, type: 3}
       propertyPath: m_LocalRotation.w
