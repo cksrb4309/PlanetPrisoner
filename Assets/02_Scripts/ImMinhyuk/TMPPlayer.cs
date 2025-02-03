@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class TMPlayer : MonoBehaviour
+public class TMPlayer : MonoBehaviour, IDamagable
 {
     private Rigidbody rb;  // 리지드 바디
     private float moveSpeed = 55f;  // 이동 속도
@@ -80,8 +80,8 @@ public class TMPlayer : MonoBehaviour
         transform.rotation = Quaternion.Euler(0f, yaw, 0f);  // 플레이어의 좌우 회전
     }
 
-    public void Damaged(float attacKPower)
+    public void Damaged(int damage)
     {
-        Debug.Log($"플레이어 피격 {attacKPower}");
+        Debug.Log($"플레이어 피격 {damage}");
     }
 }

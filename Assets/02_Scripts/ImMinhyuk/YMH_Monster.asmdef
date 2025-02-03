@@ -2,7 +2,8 @@
     "name": "YMH_Monster",
     "rootNamespace": "",
     "references": [
-        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+        "GUID:3ce0cf2654ad3464aa58eb2e27f77f0d",
+        "GUID:e03ebd0e5d746744b87a9b24d2da713f"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

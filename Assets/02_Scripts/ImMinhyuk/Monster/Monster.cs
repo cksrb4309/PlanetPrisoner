@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Linq;
+using UnityEditor;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.AI;
+using static Codice.Client.Common.EventTracking.TrackFeatureUseEvent.Features.DesktopGUI.Filters;
 
-public abstract class Monster : MonoBehaviour, IMonsterDamagable
+public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
 {
     protected GameObject target; // 플레이어
     protected GameObject preFrameTarget; // 이전 프레임의 타겟
@@ -266,6 +269,7 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         nextDecisionTime = decisionInterval;
     }
 
+    // 공격하는 쪽에서 호출할 수 있도록 public으로 뚫어줌
     public void Damaged(int damage)
     {
         Stat.hp -= damage;
@@ -275,21 +279,19 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         }
     }
 
+    public void TrapTrigger()
+    {
+        // TODO : 트랩 대미지는 N? 1? 0?
+        // 아 이걸 협의해야한다고 했던거구나. 일단 1
+        Damaged(1);
+        State = EState.Stun;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        // TODO : 태그와 컴포넌트 이름 맞추기
-        if (other.tag == "Trap" && State != EState.Death)
-        {
-            TMPTrap tmptrap = other.GetComponent<TMPTrap>();
-            Damaged(tmptrap.damage);
-            State = EState.Stun;
-        }
-
-        // TODO : 태그와 컴포넌트 이름 맞추기
         if (other.tag == "Player" && State != EState.Death)
         {
-            TMPlayer tmptrap = other.GetComponent<TMPlayer>();
-            tmptrap.Damaged(Stat.attackPower);
+            other.GetComponent<IDamagable>().Damaged(Stat.attackPower);
         }
     }
 
@@ -342,6 +344,120 @@ public abstract class Monster : MonoBehaviour, IMonsterDamagable
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, transform.position + leftBoundary);
         Gizmos.DrawLine(transform.position, transform.position + rightBoundary);
+
+        // 최대 청력 거리 원
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, Stat.canHearingRange);
     }
     #endregion 기즈모
+
+    #region 몬스터 피격 헬퍼 버튼
+
+    [CustomEditor(typeof(M_Golem))]
+    public class M_GolemDamagedButton : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            DrawDefaultInspector(); // 기존 인스펙터 UI 유지
+
+            M_Golem targetObject = (M_Golem)target;
+
+            if (targetObject == null)
+            {
+                EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
+                return;
+            }
+
+            if (GUILayout.Button("몬스터 체력 감소"))
+            {
+                targetObject.Damaged(1);
+            }
+        }
+    }
+    [CustomEditor(typeof(M_Murloc))]
+    public class M_MurlocDamagedButton : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            DrawDefaultInspector(); // 기존 인스펙터 UI 유지
+
+            M_Murloc targetObject = (M_Murloc)target;
+
+            if (targetObject == null)
+            {
+                EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
+                return;
+            }
+
+            if (GUILayout.Button("몬스터 체력 감소"))
+            {
+                targetObject.Damaged(1);
+            }
+        }
+    }
+    [CustomEditor(typeof(M_Splinter))]
+    public class M_SplinterDamagedButton : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            DrawDefaultInspector(); // 기존 인스펙터 UI 유지
+
+            M_Splinter targetObject = (M_Splinter)target;
+
+            if (targetObject == null)
+            {
+                EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
+                return;
+            }
+
+            if (GUILayout.Button("몬스터 체력 감소"))
+            {
+                targetObject.Damaged(1);
+            }
+        }
+    }
+    [CustomEditor(typeof(M_EyeCombat))]
+    public class M_EyeCombatDamagedButton : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            DrawDefaultInspector(); // 기존 인스펙터 UI 유지
+
+            M_EyeCombat targetObject = (M_EyeCombat)target;
+
+            if (targetObject == null)
+            {
+                EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
+                return;
+            }
+
+            if (GUILayout.Button("몬스터 체력 감소"))
+            {
+                targetObject.Damaged(1);
+            }
+        }
+    }
+
+    [CustomEditor(typeof(M_EyePatrol))]
+    public class M_EyePatrolDamagedButton : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            DrawDefaultInspector(); // 기존 인스펙터 UI 유지
+
+            M_EyePatrol targetObject = (M_EyePatrol)target;
+
+            if (targetObject == null)
+            {
+                EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
+                return;
+            }
+
+            if (GUILayout.Button("몬스터 체력 감소"))
+            {
+                targetObject.Damaged(1);
+            }
+        }
+    }
+    #endregion 몬스터 피격 헬퍼 버튼
 }

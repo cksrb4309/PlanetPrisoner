@@ -104,7 +104,7 @@ public class MonsterSpawnManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("※ 부모 오브젝트를 설정해 주세요 ");
+            Debug.LogWarning("※ 부모 오브젝트가 설정되지 않았습니다. ");
         }
     }
 
