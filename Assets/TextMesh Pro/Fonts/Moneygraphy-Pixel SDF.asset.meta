@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/TextMesh Pro/Fonts/Moneygraphy-Pixel SDF.asset.meta
+guid: 2e5f44c3eb3f3374cab933c3ed3d8fbd
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+========
+guid: 9230a754a5a4c4849b17b8bcfdd3d133
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+>>>>>>>> 464f03b032f3256170b5771f1a26b5f6519b90bf:Assets/04_Animation/KimChanGyu/Player/PlayerAnimator.controller.meta
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
