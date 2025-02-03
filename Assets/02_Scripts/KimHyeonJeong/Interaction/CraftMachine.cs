@@ -2,6 +2,7 @@
 using System.Linq;
 using UnityEngine;
 using VInspector;
+using static CraftMachine;
 using static PlasticGui.WorkspaceWindow.CodeReview.ReviewChanges.Summary.CommentSummaryData;
 
 public class CraftMachine : MonoBehaviour, IInteractable
@@ -12,16 +13,16 @@ public class CraftMachine : MonoBehaviour, IInteractable
     [System.Serializable]
     public struct Recipe
     {
-        public string itemName; // 만들 아이템 이름
-        public SerializedDictionary<ItemData, int> ingredients; // 필요한 재료와 수량
+        public GameObject prefab; // 만들 아이템 프리팹
+        public SerializedDictionary<Item, int> ingredients; // 필요한 재료와 수량
     }
 
     [SerializeField] List<Recipe> recipes; // 레시피 목록
-    [SerializeField] GameObject weaponPrefab;
-    [SerializeField] GameObject trapPrefab;
     [SerializeField] Vector3 itemSpawnPosition;
 
-    [SerializeField] Recipe weaponRecipe;
+    // 인스펙터에서 설정
+    [SerializeField] Recipe weaponRecipe; // 무기 레시피 
+    [SerializeField] Recipe trapRecipe; // 덫 레시피
 
     // 전송기에 오브젝트가 들어있다면 제작하기 UI가 뜨게하고 아니면 아무것도 뜨지 않도록
     public string TooltipText => transceiver.objectInTransceiver.Count > 0 ? "제작하기 [E]" : "";
@@ -31,6 +32,10 @@ public class CraftMachine : MonoBehaviour, IInteractable
     private void Start()
     {
         itemSpawnPosition = new Vector3(2.1f, 0.8f, -1.3f);  // 실제 씬에서는 변경 필요
+
+        // 리스트에 넣어주고
+        recipes.Add(weaponRecipe);
+        recipes.Add(trapRecipe);
 
         // 레시피를 수량 기준으로 정렬
         recipes.Sort((recipeA, recipeB) =>
@@ -60,20 +65,21 @@ public class CraftMachine : MonoBehaviour, IInteractable
                 // 필요한 재료 차감
                 foreach(var ingredient in recipe.ingredients)
                 {
-                    string ingredientName=ingredient.Key.itemName;
+                    string ingredientName=ingredient.Key.itemData.itemName;
                     int quantityToRemove = ingredient.Value;
 
-                    // 리스트에서 해당 아이템 제거
+                    // 리스트에서 해당 아이템 찾아서 제거
                     for (int i = 0; i < quantityToRemove; i++)
                     {
-                        var itemToRemove = transceiver.objectInTransceiver.Find(obj => obj.name == ingredientName);
+                        var itemToRemove = transceiver.objectInTransceiver.Find(obj => obj.GetComponent<Item>().itemData.itemName == ingredientName);
                         if (itemToRemove != null)
                         {
-                            transceiver.objectInTransceiver.Remove(itemToRemove);
-                            Destroy(itemToRemove); // 오브젝트 삭제 -> 리스트에서 remove는 OnTriggerExit에서
+                            transceiver.objectInTransceiver.Remove(itemToRemove); //리스트에서 remove는
+                            Destroy(itemToRemove); // 오브젝트 삭제
                         }
                     }
                 }
+                Instantiate(recipe.prefab, itemSpawnPosition, Quaternion.identity);
                 return; // 첫 번째로 제작 가능한 물건만 제작
             }
         }
@@ -83,14 +89,15 @@ public class CraftMachine : MonoBehaviour, IInteractable
     {
         foreach (var ingredient in recipe.ingredients)
         {
-            string ingredientName = ingredient.Key.itemName; // 아이템의 이름을 가져옴
+            string ingredientName = ingredient.Key.itemData.itemName; // 아이템의 이름을 가져옴
 
             // 해당 아이템이 리스트에 있는지 확인하고 수량 계산
-            int ingredientCount = transceiver.objectInTransceiver.Count(obj => obj.name == ingredientName); // 이름으로 수량 확인
+            int ingredientCount = transceiver.objectInTransceiver.Count(obj => obj.GetComponent<Item>().itemData.itemName == ingredientName); // 이름으로 수량 확인
 
             // 수량 확인
             if (ingredientCount < ingredient.Value)
             {
+                Debug.Log($"필요한 아이템 부족: {ingredientName}, 필요 수량: {ingredient.Value}, 보유 수량: {ingredientCount}");
                 return false; // 필요한 아이템이 부족한 경우
             }
         }
