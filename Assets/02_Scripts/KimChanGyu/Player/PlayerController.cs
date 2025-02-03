@@ -78,9 +78,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        NextDayController.Subscribe(EnableMovement, ActionType.SurviveFinished);
-        NextDayController.Subscribe(EnableMovement, ActionType.NextDayFinished);
-
         // InputActionReference 활성화
         keyboardMoveInputAction.action.Enable();
         mouseMoveInputAction.action.Enable();
@@ -90,9 +87,6 @@ public class PlayerController : MonoBehaviour
     }
     private void OnDisable()
     {
-        NextDayController.Unsubscribe(EnableMovement, ActionType.SurviveFinished);
-        NextDayController.Unsubscribe(EnableMovement, ActionType.NextDayFinished);
-
         // InputActionReference 비활성화
         keyboardMoveInputAction.action.Disable();
         mouseMoveInputAction.action.Disable();

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb246189ab5dd4c4a9d419ad48ac4cd0, type: 3}
   m_Name: UISettings
   m_EditorClassIdentifier: 
-  normalButtonSprite: {fileID: 21300000, guid: 53a5ca7658407ea44b0bb12707e4324a, type: 3}
-  highlightedButtonSprite: {fileID: 21300000, guid: 2a43946ab44aa76418e6d181acb55952, type: 3}
-  pressedButtonSprite: {fileID: 21300000, guid: 53a5ca7658407ea44b0bb12707e4324a, type: 3}
-  imageExitColor: {r: 0.5529412, g: 0.854902, b: 1, a: 1}
-  imageEnterColor: {r: 0.2971698, g: 0.7718887, b: 1, a: 1}
+  normalButtonSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  highlightedButtonSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  pressedButtonSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  imageExitColor: {r: 0, g: 0, b: 0, a: 0}
+  imageEnterColor: {r: 0.5529412, g: 0.854902, b: 1, a: 1}
   imageDownColor: {r: 0.5529412, g: 0.71479505, b: 1, a: 1}
   textExitColor: {r: 0.5529412, g: 0.854902, b: 1, a: 1}
   textEnterColor: {r: 0, g: 0, b: 0, a: 1}

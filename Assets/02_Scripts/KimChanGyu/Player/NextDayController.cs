@@ -2,10 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using VInspector;
 
 public class NextDayController : MonoBehaviour
@@ -32,40 +30,30 @@ public class NextDayController : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Debug.Log("싱글톤 패턴에 따라 오브젝트 제거 : " + gameObject.name);
-
-            Destroy(gameObject);
-        }
+        instance = this;
 
         eventActions = new Action[Enum.GetValues(typeof(ActionType)).Length];
 
         for (int i = 0; i < eventActions.Length; i++) eventActions[i] = null;
 
+        Subscribe(ConnectReadyToNext, ActionType.NextDayReady);
+
         buttonCanvasGroup.interactable = false;
     }
-    private void OnEnable()
-    {
-        Subscribe(ConnectReadyToNext, ActionType.NextDayReady);
-    }
-    private void OnDisable()
-    {
-        Unsubscribe(ConnectReadyToNext, ActionType.NextDayReady);
-    }
     void ConnectReadyToNext() => FadeNextDayUI(NextDayOption.Next);
-    public static void SceneStart() => instance.FadeNextDayUI(NextDayOption.FirstSceneMove);
+    public void SceneStart() => FadeNextDayUI(NextDayOption.FirstSceneMove);
     public void OnClickYesOrNo(bool isYes)
     {
         this.isYes = isYes;
 
         isInputReceived = true;
+    }
+    public void Start()
+    {
+        backgroundCanvasGroup.alpha = 1f;
+        textCanvasGroup.alpha = 0f;
+
+        FadeNextDayUI(NextDayOption.Next);
     }
     public static void TriggerFadeNextDayUI(NextDayOption nextDayOption)
     {
@@ -105,9 +93,6 @@ public class NextDayController : MonoBehaviour
     }
     IEnumerator NextCoroutine()
     {
-        // 다음날 전환 성공 시작 이벤트 액션 호출
-        OnEventInvoke(ActionType.NextDayTransition);
-
         // 텍스트 캔버스 활성화
         yield return FadeInOutCoroutine(textCanvasGroup, 1f, FadeType.LinearIncrease);
 
@@ -126,7 +111,7 @@ public class NextDayController : MonoBehaviour
         // 배경 캔버스 비활성화
         yield return FadeInOutCoroutine(backgroundCanvasGroup, 1f, FadeType.LinearDecrease);
 
-        // 다음날 전환 성공 마무리 이벤트 액션 호출
+        // 다음날 전환 성공 이벤트 액션 호출
         OnEventInvoke(ActionType.NextDayFinished);
     }
     IEnumerator SurviveCoroutine()
@@ -204,8 +189,8 @@ public class NextDayController : MonoBehaviour
         // 텍스트 입력
         yield return TextTypingCoroutine(mainTextUI, 0.1f, $"{remainingDays}일 동안 살아남아주세요");
 
-        // 2초 지연
-        yield return new WaitForSecondsRealtime(2f);
+        // 1초 지연
+        yield return new WaitForSecondsRealtime(1f);
 
         // 텍스트 입력
         yield return TextTypingCoroutine(mainTextUI, 0.1f, "추가 설명이 필요하십니까?");
@@ -213,85 +198,7 @@ public class NextDayController : MonoBehaviour
         // 입력 대기
         yield return WaitingInputActionCoroutine();
 
-        // 추가 설명이 필요하다면
-        if (isYes)
-        {
-            yield return TextTypingCoroutine(mainTextUI, 0.1f, "플레이어는 죄를 지은 사형수입니다");
-
-            yield return new WaitForSecondsRealtime(1.5f);
-
-            yield return TextTypingCoroutine(mainTextUI, 0.1f, "자원을 수집하여 산소를 공급받지 못하면");
-
-            yield return new WaitForSecondsRealtime(1.5f);
-
-            yield return TextTypingCoroutine(mainTextUI, 0.1f, "질식사로 인해 죽게 됩니다");
-
-            yield return new WaitForSecondsRealtime(1.5f);
-
-            yield return TextTypingCoroutine(mainTextUI, 0.1f, "타 행성에서 위험한 몹들을 조심하며");
-
-            yield return new WaitForSecondsRealtime(1.5f);
-
-            yield return TextTypingCoroutine(mainTextUI, 0.1f, "하루마다 필요한 납품 퀘스트를 수행해야 합니다");
-
-            yield return new WaitForSecondsRealtime(1.5f);
-
-            yield return TextTypingCoroutine(mainTextUI, 0.1f, "납품 퀘스트를 수행하지 않을 경우");
-
-            yield return new WaitForSecondsRealtime(1.5f);
-
-            yield return TextTypingCoroutine(mainTextUI, 0.1f, "산소 호흡기에 패널티를 가하여");
-
-            yield return new WaitForSecondsRealtime(1.5f);
-
-            yield return TextTypingCoroutine(mainTextUI, 0.1f, "숨 쉬는 것이 더욱 어려워집니다");
-
-            yield return new WaitForSecondsRealtime(1.5f);
-
-            yield return TextTypingCoroutine(mainTextUI, 0.1f, "상점을 통해 필요한 도구를 구입할 수도 있습니다");
-
-            yield return new WaitForSecondsRealtime(1.5f);
-
-            yield return TextTypingCoroutine(mainTextUI, 0.1f, $"{remainingDays}일 동안 잘 버티셨다면");
-
-            yield return new WaitForSecondsRealtime(1.5f);
-
-            yield return TextTypingCoroutine(mainTextUI, 0.1f, "지구로 돌려보내줄테니");
-
-            yield return new WaitForSecondsRealtime(1.5f);
-
-            yield return TextTypingCoroutine(mainTextUI, 0.1f, "여러 요소를 활용해 잘 살아남아주세요");
-        }
-
-        // 추가 설명이 필요없다면
-        else
-        {
-            yield return TextTypingCoroutine(mainTextUI, 0.1f, "생존하시길 바라겠습니다");
-        }
-
-        // 지연
-        yield return new WaitForSecondsRealtime(1.5f);
-
-        // 텍스트 비우기
-        mainTextUI.text = string.Empty;
-
-        // 텍스트 캔버스 비활성화
-        yield return FadeInOutCoroutine(textCanvasGroup, 1f, FadeType.BlinkDecrease);
-
-        // 씬 이동
-        yield return SceneMoveCoroutine();
-
-        // 배경 캔버스 비활성화
-        yield return FadeInOutCoroutine(backgroundCanvasGroup, 1f, FadeType.LinearDecrease);
-
-        // 화면이 켜지고 게임 시작에 필요한 함수 호출
-        OnEventInvoke(ActionType.FirstGameStart);
-    }
-    IEnumerator SceneMoveCoroutine()
-    {
-        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("MainGameScene");
-
-        while (!asyncOperation.isDone) yield return null;
+        
     }
     IEnumerator WaitingInputActionCoroutine()
     {
@@ -341,6 +248,7 @@ public class NextDayController : MonoBehaviour
             yield return delay;
         }
     }
+
     void OnEventInvoke(ActionType actionType) => eventActions[(int)actionType]?.Invoke();
 
     #region 이벤트 액션 구독 및 구독 해제
@@ -371,7 +279,6 @@ public enum ActionType
     SurviveFinished,
     GameOverTransition,
     GameOverFinished,
-    FirstGameStart,
 }
 public enum NextDayOption
 {

@@ -114,18 +114,4 @@ public class PlayerSpaceSuit : MonoBehaviour, IDamagable
 
         scratchImage.color = imageColor;
     }
-    private void OnEnable()
-    {
-        NextDayController.Subscribe(Initilaize, ActionType.NextDayReady);
-    }
-    private void OnDisable()
-    {
-        NextDayController.Unsubscribe(Initilaize, ActionType.NextDayReady);
-    }
-    void Initilaize()
-    {
-        Hp = maxHp;
-
-        SetOxygenDecreaseValue();
-    }
 }

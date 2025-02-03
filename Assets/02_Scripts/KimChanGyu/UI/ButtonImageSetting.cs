@@ -2,14 +2,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using System;
 
 public class ButtonImageSetting : MonoBehaviour, IConfigurable
 {
-    [SerializeField] UISettings settings;
+    public UISettings settings;
 
-    [SerializeField] float fadeDuration = 0.2f;
-    [SerializeField] float speed;
+    float fadeDuration = 0.2f;
 
     Color color = Color.white;
 
@@ -17,6 +15,7 @@ public class ButtonImageSetting : MonoBehaviour, IConfigurable
 
     Image image = null;
 
+    float speed;
 
     private void Awake()
     {
@@ -25,27 +24,27 @@ public class ButtonImageSetting : MonoBehaviour, IConfigurable
         speed = 1f / fadeDuration;
     }
 
-    public void OnColorChange(int order)
+    public void OnColorChange(EventType order)
     {
         if (currCoroutine != null) StopCoroutine(currCoroutine);
 
         Color changeColor = Color.white;
         
-        if (order == (int)EventType.Enter) 
+        if (order == EventType.Exit) 
         {
             changeColor = settings.imageExitColor;
 
             image.sprite = settings.normalButtonSprite;
         }
 
-        else if (order == (int)EventType.Exit) 
+        else if (order == EventType.Enter) 
         {
             changeColor = settings.imageEnterColor;
 
             image.sprite = settings.highlightedButtonSprite;
         }
 
-        else if (order == (int)EventType.Down) 
+        else if (order == EventType.Down) 
         {
             changeColor = settings.imageDownColor;
 
@@ -76,16 +75,13 @@ public class ButtonImageSetting : MonoBehaviour, IConfigurable
     {
         GetComponent<Image>().color = settings.imageExitColor;
         fadeDuration = settings.imageColorFadeDuration;
-        speed = 1f / fadeDuration;
         GetComponent<Image>().sprite = settings.normalButtonSprite;
 
         this.settings = settings;
 
-        UnityEditor.EditorUtility.SetDirty(GetComponent<Image>());
+        UnityEditor.EditorUtility.SetDirty(this);
     }
 }
-
-[Serializable]
 public enum EventType
 {
     Enter,
