@@ -1131,6 +1131,9 @@ MonoBehaviour:
   itemSpawnPosition: {x: 0, y: 0, z: 0}
   itemPrefabs:
   - {fileID: 4109902287456414692, guid: 0db32c46600a2cd479ad6e19c495ce2e, type: 3}
+  - {fileID: 5647434532620816684, guid: 0b617d8aee114e64ab6d285c98248fad, type: 3}
+  - {fileID: 6193327765898163890, guid: f6a7751049dddc748a1114aa49603807, type: 3}
+  - {fileID: 6882137200159460494, guid: 0a70e61584f86b647a7012fe19600dc8, type: 3}
 --- !u!82 &534869881
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5289,93 +5292,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: transceiver
-      value: 
-      objectReference: {fileID: 75112134}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: trapRecipe.prefab
-      value: 
-      objectReference: {fileID: 4626325344983378389, guid: b5f5cc020a9a4794aa95187ee5e7d8e3, type: 3}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: weaponRecipe.prefab
-      value: 
-      objectReference: {fileID: 8618700723030876779, guid: 8d63520b9bd5510458a646367d20fdbf, type: 3}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: trapRecipe.ingredients.dividerPos
-      value: 0.46380287
-      objectReference: {fileID: 0}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: weaponRecipe.ingredients.dividerPos
-      value: 0.4684976
-      objectReference: {fileID: 0}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: trapRecipe.ingredients.serializedKvps.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: weaponRecipe.ingredients.serializedKvps.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: trapRecipe.ingredients.serializedKvps.Array.data[0].Key
-      value: 
-      objectReference: {fileID: 497896813909695700, guid: 3123ad7ea98491046a794276f63565f0, type: 3}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: trapRecipe.ingredients.serializedKvps.Array.data[1].Key
-      value: 
-      objectReference: {fileID: 497896813909695700, guid: 0b69d3867d995de46905e5b6e6cc57f0, type: 3}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: trapRecipe.ingredients.serializedKvps.Array.data[0].Value
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: trapRecipe.ingredients.serializedKvps.Array.data[1].Value
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: trapRecipe.ingredients.serializedKvps.Array.data[1].index
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: weaponRecipe.ingredients.serializedKvps.Array.data[0].Key
-      value: 
-      objectReference: {fileID: 497896813909695700, guid: 3123ad7ea98491046a794276f63565f0, type: 3}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: weaponRecipe.ingredients.serializedKvps.Array.data[1].Key
-      value: 
-      objectReference: {fileID: 497896813909695700, guid: 0b69d3867d995de46905e5b6e6cc57f0, type: 3}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: weaponRecipe.ingredients.serializedKvps.Array.data[0].Value
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: weaponRecipe.ingredients.serializedKvps.Array.data[1].Value
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: weaponRecipe.ingredients.serializedKvps.Array.data[1].index
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: trapRecipe.ingredients.serializedKvps.Array.data[0].isKeyNull
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: trapRecipe.ingredients.serializedKvps.Array.data[1].isKeyNull
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: weaponRecipe.ingredients.serializedKvps.Array.data[0].isKeyNull
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 527978297139127864, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: weaponRecipe.ingredients.serializedKvps.Array.data[1].isKeyRepeated
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2972669490403344630, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
       propertyPath: m_Name
       value: BaseMap
+      objectReference: {fileID: 0}
+    - target: {fileID: 3008336988257218545, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 3494112224727594542, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
       propertyPath: requiredQuest
@@ -5433,9 +5356,9 @@ PrefabInstance:
       propertyPath: inGameUI
       value: 
       objectReference: {fileID: 1622626215}
-    - target: {fileID: 6459682391920802343, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
-      propertyPath: m_Name
-      value: MetalBox
+    - target: {fileID: 6508295750947876490, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
+      propertyPath: oxygen
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 6508295750947876490, guid: 56f08fe1437bb284c83369eb13f2bb7e, type: 3}
       propertyPath: player

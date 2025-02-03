@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VInspector;
@@ -79,10 +80,21 @@ public class CraftMachine : MonoBehaviour, IInteractable
                         }
                     }
                 }
+                StartCoroutine(CraftingEffect());
                 Instantiate(recipe.prefab, itemSpawnPosition, Quaternion.identity);
+                
                 return; // 첫 번째로 제작 가능한 물건만 제작
             }
         }
+    }
+
+    private IEnumerator CraftingEffect()
+    {
+        transceiver.TurnOnEmission(); // Emission 켜기
+
+        yield return new WaitForSeconds(2f); // 2초 대기
+
+        transceiver.TurnOffEmission(); // Emission 끄기
     }
 
     private bool CanCraft(Recipe recipe)

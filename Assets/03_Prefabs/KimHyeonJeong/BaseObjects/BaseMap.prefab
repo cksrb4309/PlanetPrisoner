@@ -3725,7 +3725,7 @@ GameObject:
   - component: {fileID: 4802414560300981234}
   - component: {fileID: 2724116148060540328}
   m_Layer: 11
-  m_Name: CraftingCube
+  m_Name: MetalBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5584,19 +5584,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2702d5a98bb0244cae9cc340c889c06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transceiver: {fileID: 0}
+  transceiver: {fileID: 3494112224727594542}
   recipes: []
   itemSpawnPosition: {x: 0, y: 0, z: 0}
   weaponRecipe:
-    prefab: {fileID: 0}
+    prefab: {fileID: 8618700723030876779, guid: 8d63520b9bd5510458a646367d20fdbf, type: 3}
     ingredients:
-      serializedKvps: []
-      dividerPos: 0.33
+      serializedKvps:
+      - Key: {fileID: 497896813909695700, guid: 3123ad7ea98491046a794276f63565f0, type: 3}
+        Value: 2
+        index: 0
+        isKeyRepeated: 0
+        isKeyNull: 0
+      - Key: {fileID: 497896813909695700, guid: 0b69d3867d995de46905e5b6e6cc57f0, type: 3}
+        Value: 1
+        index: 1
+        isKeyRepeated: 0
+        isKeyNull: 0
+      dividerPos: 0.4684976
   trapRecipe:
-    prefab: {fileID: 0}
+    prefab: {fileID: 4626325344983378389, guid: b5f5cc020a9a4794aa95187ee5e7d8e3, type: 3}
     ingredients:
-      serializedKvps: []
-      dividerPos: 0.33
+      serializedKvps:
+      - Key: {fileID: 497896813909695700, guid: 3123ad7ea98491046a794276f63565f0, type: 3}
+        Value: 4
+        index: 0
+        isKeyRepeated: 0
+        isKeyNull: 0
+      - Key: {fileID: 497896813909695700, guid: 0b69d3867d995de46905e5b6e6cc57f0, type: 3}
+        Value: 2
+        index: 1
+        isKeyRepeated: 0
+        isKeyNull: 0
+      dividerPos: 0.46380287
 --- !u!1 &8665893394669445912
 GameObject:
   m_ObjectHideFlags: 0
