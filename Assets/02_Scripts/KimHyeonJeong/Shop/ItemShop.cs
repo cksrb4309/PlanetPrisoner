@@ -40,8 +40,8 @@ public class ItemShop : MonoBehaviour
 
     public void OnClickedFlashlight() // 손전등 아이템 클릭
     {
-        // 게임매니저에서 산소 0.3L(300ml)감소
-        oxygenTank.ChangeOxygen(-300f);
+        // 게임매니저에서 산소 20L감소
+        oxygenTank.ChangeOxygen(-20f);
         FillOxygenTank(); // 산소 이미지 업데이트
 
         StartCoroutine(InstantiateEffect());
@@ -52,11 +52,56 @@ public class ItemShop : MonoBehaviour
             Instantiate(itemPrefabs[0], itemSpawnPosition, Quaternion.identity);
         }
     }
- 
+
+    public void OnClickedScanner() // 스캐너 아이템 클릭
+    {
+        // 게임매니저에서 산소 35L감소
+        oxygenTank.ChangeOxygen(-35f);
+        FillOxygenTank(); // 산소 이미지 업데이트
+
+        StartCoroutine(InstantiateEffect());
+
+        // 아이템을 SpawnPosition에 생성
+        if (itemPrefabs.Count > 0) // itemPrefabs 리스트에 아이템이 있는지 확인
+        {
+            Instantiate(itemPrefabs[0], itemSpawnPosition, Quaternion.identity);
+        }
+    }
+
+    public void OnClickedNewShoes() // 신형호흡기 아이템 클릭
+    {
+        // 게임매니저에서 산소 60L감소
+        oxygenTank.ChangeOxygen(-60f);
+        FillOxygenTank(); // 산소 이미지 업데이트
+
+        StartCoroutine(InstantiateEffect());
+
+        // 아이템을 SpawnPosition에 생성
+        if (itemPrefabs.Count > 0) // itemPrefabs 리스트에 아이템이 있는지 확인
+        {
+            Instantiate(itemPrefabs[0], itemSpawnPosition, Quaternion.identity);
+        }
+    }
+
+    public void OnClickedNewSuit() // 신형우주복 아이템 클릭
+    {
+        // 게임매니저에서 산소 80L감소
+        oxygenTank.ChangeOxygen(-80f);
+        FillOxygenTank(); // 산소 이미지 업데이트
+
+        StartCoroutine(InstantiateEffect());
+
+        // 아이템을 SpawnPosition에 생성
+        if (itemPrefabs.Count > 0) // itemPrefabs 리스트에 아이템이 있는지 확인
+        {
+            Instantiate(itemPrefabs[0], itemSpawnPosition, Quaternion.identity);
+        }
+    }
+
     public void FillOxygenTank()
     {
         // 산소량을 Tank이미지에 표시
-        oxygenTankForeground.fillAmount = oxygenTank.GetOxygen() / 2000f;
+        oxygenTankForeground.fillAmount = oxygenTank.GetOxygen() / 200f;
     }
 
     private IEnumerator InstantiateEffect()

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class OxygenTank : MonoBehaviour, IInteractable
 {
-    [SerializeField] float oxygen = 2000; // 2L=2000ml
+    [SerializeField] float oxygen = 200; // 200L
     [SerializeField] PlayerOxygen player;
 
     public string TooltipText => "산소충전 [E]";
