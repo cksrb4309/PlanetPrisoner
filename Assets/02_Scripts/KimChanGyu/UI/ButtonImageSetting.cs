@@ -24,16 +24,33 @@ public class ButtonImageSetting : MonoBehaviour, IConfigurable
         speed = 1f / fadeDuration;
     }
 
-    public void OnColorChange(int order)
+    public void OnColorChange(EventType order)
     {
         if (currCoroutine != null) StopCoroutine(currCoroutine);
 
         Color changeColor = Color.white;
         
-        if (order == 0) changeColor = settings.imageExitColor;
-        else if (order == 1) changeColor = settings.imageEnterColor;
-        else if (order == 2) changeColor = settings.imageDownColor;
-        
+        if (order == EventType.Exit) 
+        {
+            changeColor = settings.imageExitColor;
+
+            image.sprite = settings.normalButtonSprite;
+        }
+
+        else if (order == EventType.Enter) 
+        {
+            changeColor = settings.imageEnterColor;
+
+            image.sprite = settings.highlightedButtonSprite;
+        }
+
+        else if (order == EventType.Down) 
+        {
+            changeColor = settings.imageDownColor;
+
+            image.sprite = settings.pressedButtonSprite;
+        }
+
         currCoroutine = StartCoroutine(ColorChangeCoroutine(changeColor));
     }
     IEnumerator ColorChangeCoroutine(Color changeColor)
@@ -58,10 +75,16 @@ public class ButtonImageSetting : MonoBehaviour, IConfigurable
     {
         GetComponent<Image>().color = settings.imageExitColor;
         fadeDuration = settings.imageColorFadeDuration;
-        GetComponent<Image>().sprite = settings.buttonSprite;
+        GetComponent<Image>().sprite = settings.normalButtonSprite;
 
         this.settings = settings;
 
         UnityEditor.EditorUtility.SetDirty(this);
     }
+}
+public enum EventType
+{
+    Enter,
+    Exit,
+    Down,
 }

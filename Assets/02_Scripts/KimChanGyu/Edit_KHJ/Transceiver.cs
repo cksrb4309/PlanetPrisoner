@@ -35,7 +35,8 @@ public class Transceiver : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("Trigger Entered: " + other.gameObject.name);
+        Debug.Log("Enter");
+
         // 자식들 중에 CapsuleCollider만 isTrigger이므로 이 함수는 캡슐에 닿을 때 실행됨
         if (other.gameObject.layer == LayerMask.NameToLayer("Item"))
         {
@@ -49,6 +50,8 @@ public class Transceiver : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        Debug.Log("Exit");
+
         // 마찬가지로 CapsuleCollider에서 나갈 때 실행됨
         if (objectInTransceiver.Contains(other.gameObject))
         {

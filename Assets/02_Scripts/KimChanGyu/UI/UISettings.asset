@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb246189ab5dd4c4a9d419ad48ac4cd0, type: 3}
   m_Name: UISettings
   m_EditorClassIdentifier: 
-  buttonSprite: {fileID: 21300000, guid: 127279d577f25ac4ea17dae3782e5074, type: 3}
+  normalButtonSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  highlightedButtonSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  pressedButtonSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   imageExitColor: {r: 0, g: 0, b: 0, a: 0}
   imageEnterColor: {r: 0.5529412, g: 0.854902, b: 1, a: 1}
   imageDownColor: {r: 0.5529412, g: 0.71479505, b: 1, a: 1}
