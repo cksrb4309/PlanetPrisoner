@@ -9,13 +9,6 @@ public class RequiredQuest : MonoBehaviour
 
     Dictionary<string, int> quests;
 
-    //Dictionary<string, int> quests = new Dictionary<string, int>
-    //{
-    //    { "큐브", 3},
-    //    { "스피어", 1},
-    //    { "캡슐", 1 }
-    //};
-
     [SerializeField] string currentQuest; // 현재 진행중인 퀘스트
     [SerializeField] int currentProgress; // 현재 진행중인 퀘스트 진행도?
     [SerializeField] int totalProgress; // 현재 진행중인 퀘스트 요구사항

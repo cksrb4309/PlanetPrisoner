@@ -1,9 +1,7 @@
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 
 public class Flashlight : Item
 {
-    bool isFlashlightOn = false;
     Light spotLight = null;
 
     private void Awake()
@@ -15,13 +13,12 @@ public class Flashlight : Item
 
     public void ToggleFlashlight()
     {
-        Debug.Log("ToggleFlashlight");
+        spotLight.enabled = !spotLight.enabled;
+    }
+    public override void DisableInHand()
+    {
+        base.DisableInHand();
 
-        spotLight.enabled = !isFlashlightOn;
-        
-        isFlashlightOn = !isFlashlightOn;
-
-
-        Debug.Log("LightEnabled : " + spotLight.enabled.ToString() + " / TriggerBool : " + isFlashlightOn.ToString());
+        spotLight.enabled = false;
     }
 }

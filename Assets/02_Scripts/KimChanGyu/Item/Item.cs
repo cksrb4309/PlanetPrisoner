@@ -14,6 +14,8 @@ public class Item : MonoBehaviour, IInteractable
 
     protected ScanResultDisplay scanResultDisplay = null;
 
+    bool isSubscribed = false;
+
     private void Start()
     {
         // GetComponent로 필요한 클래스 참조 가져오기
@@ -26,12 +28,19 @@ public class Item : MonoBehaviour, IInteractable
     {
         if (!IsGetItem()) return;
 
+        if (isSubscribed)
+        {
+            NextDayController.Unsubscribe(ItemDestroy, ActionType.NextDayTransition);
+
+            isSubscribed = false;
+        }
+
         // 인벤토리로 아이템 전송
         PlayerInventory.Instance.AddItemToInventory(this);
 
         PlayerItemHandler.Instance.EquipItem();
     }
-    public void DisableInHand() // 아이템 숨기기
+    public virtual void DisableInHand() // 아이템 숨기기
     {
         // 렌더 숨기기
         renderer.enabled = false;
@@ -84,7 +93,10 @@ public class Item : MonoBehaviour, IInteractable
         // 충돌체 활성화
         collider.enabled = true;
 
+        // 스캔 가능 상태로 전환
         scanResultDisplay.EnableDisplay();
+
+        NextSceneSetting();
     }
     protected IEnumerator DropItemCoroutine()
     {
@@ -116,4 +128,26 @@ public class Item : MonoBehaviour, IInteractable
         }
     }
     public virtual bool IsGetItem() => true;
+    void NextSceneSetting()
+    {
+        if (!HomeColliderChecker.Instance.IsObjectInsideBox(transform.position))
+        {
+            NextDayController.Subscribe(ItemDestroy, ActionType.NextDayTransition);
+
+            isSubscribed = true;
+        }
+    }
+    void ItemDestroy()
+    {
+        Destroy(gameObject);
+    }
+    private void OnDisable()
+    {
+        if (isSubscribed)
+        {
+            isSubscribed = false;
+
+            NextDayController.Unsubscribe(ItemDestroy, ActionType.NextDayTransition);
+        }
+    }
 }

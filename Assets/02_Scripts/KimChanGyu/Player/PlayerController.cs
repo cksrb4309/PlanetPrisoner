@@ -1,5 +1,4 @@
-﻿using Codice.Client.BaseCommands;
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,6 +8,7 @@ public class PlayerController : MonoBehaviour
     [Header("Need Reference")] // Header 정리
     [SerializeField] Transform cameraTransform; // 카메라의 Transform
     [SerializeField] Transform playerPivotTransform; // 플레이어 피벗 Transform
+    [SerializeField] PlayerGroundChecker playerGroundChecker;
 
     [Header("Move Attribute")]                  // Header 정리
     [SerializeField] float walkMoveSpeed = 3.5f; // 걷기 이동속도
@@ -41,7 +41,6 @@ public class PlayerController : MonoBehaviour
     CharacterController characterController = null; // 플레이어 캐릭터 컨트롤러
     Transform playerTransform = null; // 플레이어 트랜스폼
 
-
     Vector2 moveDelta = Vector2.zero; // 키보드 이동 입력 값 저장 변수
     Vector2 rotateDelta = Vector2.zero; // 마우스 이동 입력 값 저장 변수
 
@@ -65,10 +64,6 @@ public class PlayerController : MonoBehaviour
     bool characterEnabled = true;
     event Action<float> animMoveSpeedSetAction = null; // 애니메이터 이동속도 설정 Action
 
-    Ray groundCheckRay = new Ray(); // 지면 확인 Ray
-
-    LayerMask groundLayerMask;
-
     float coyoteTime = 0.2f;
     float coyoteTimeCounter = 0;
     float jumpPivotHeight = -0.3f; // 점프 했을 시의 높이
@@ -78,6 +73,11 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
+        Debug.Log("OnEnable PlayerController");
+
+        NextDayController.Subscribe(EnableMovement, ActionType.SurviveFinished);
+        NextDayController.Subscribe(EnableMovement, ActionType.NextDayFinished);
+
         // InputActionReference 활성화
         keyboardMoveInputAction.action.Enable();
         mouseMoveInputAction.action.Enable();
@@ -87,6 +87,11 @@ public class PlayerController : MonoBehaviour
     }
     private void OnDisable()
     {
+        Debug.Log("OnDisable PlayerController");
+
+        NextDayController.Unsubscribe(EnableMovement, ActionType.SurviveFinished);
+        NextDayController.Unsubscribe(EnableMovement, ActionType.NextDayFinished);
+
         // InputActionReference 비활성화
         keyboardMoveInputAction.action.Disable();
         mouseMoveInputAction.action.Disable();
@@ -110,8 +115,6 @@ public class PlayerController : MonoBehaviour
 
         // 현재 카메라 높이 설정
         currCameraHeight = cameraStandHeight;
-
-        groundLayerMask = LayerMask.GetMask("Ground");
     }
     private void Update()
     {
@@ -188,7 +191,7 @@ public class PlayerController : MonoBehaviour
         #region Velocity Y 값 설정
 
         // 플레이어가 땅에 있거나 코요테 타임 값이 남아있거나, 바로 밑에 오브젝트가 있을 때
-        if (characterController.isGrounded || coyoteTimeCounter > 0f || Physics.Raycast(groundCheckRay,0.1f, groundLayerMask))
+        if (characterController.isGrounded || coyoteTimeCounter > 0f || playerGroundChecker.IsGround)
         {
             // 점프 중이 아닐 때, 앉고 있지 않을 때, 점프 키를 눌렀다면
             if (velocityY <= 0f && jumpInputAction.action.WasPressedThisFrame() && canMove && !isCrouch)
@@ -231,12 +234,8 @@ public class PlayerController : MonoBehaviour
             // 코요테 타임 감소
             coyoteTimeCounter -= Time.deltaTime;
 
-            // 지면 확인 Ray 설정
-            groundCheckRay.origin = transform.position;
-            groundCheckRay.direction = Vector3.down;
-
             // 만약 아래에 맞는 오브젝트가 없다면
-            if (!Physics.Raycast(groundCheckRay, 0.13f))
+            if (playerGroundChecker.IsColliderBelow)
             {
                 // 중력 적용
                 velocityY += Time.deltaTime * gravity;
