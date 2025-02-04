@@ -3,17 +3,17 @@ using static Monster;
 
 public class MonsterAnimEvent : MonoBehaviour
 {
-    private Monster monster;
+    // 이 스크립트를 갖고 있는 몬스터는 누구인가?
+    private Monster monster; 
 
     Collider[] hitRangeColliders;
     AudioSource audio;
-
 
     AudioClip[] basicSounds;              // Idle, Move 소리들
     AudioClip[] attackSounds;             // 공격 소리들
     AudioClip[] dieSounds;                // 사망 소리들
 
-    private void Start()
+    public void Initialize()
     {
         monster = GetComponentInParent<Monster>();
         hitRangeColliders = monster.GetHitRangeColliders(); // 공격 판정에 사용될 몬스터 콜라이더 연동
