@@ -94,7 +94,7 @@ public class InGameTime : MonoBehaviour
 
         if (requiredQuest.questCompeleted) // 퀘스트 성공했는지 여부
         {
-            // TODO: 패널티
+            PlayerOxygen.SetPenalty(1.5f); // 산소가 1.5배 빠르게 닳도록 패널티
         }
         requiredQuest.UpdateQuest(); // 퀘스트 업데이트
     }
