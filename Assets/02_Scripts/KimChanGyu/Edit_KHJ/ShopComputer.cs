@@ -9,21 +9,12 @@ public class ShopComputer : MonoBehaviour, IInteractable
 
     public string TooltipText => "상호작용 [E]";
 
-    void Start()
-    {
-    
-    }
-
     public void Interact()
     {
-        //Debug.Log("함수 진입");
-        //player.canMove = false;
         inGameUI.SetActive(false);
         shopUI.SetActive(true);
 
         CursorController.EnableCursor();
         PlayerItemHandler.Instance.GetComponent<PlayerController>().DisableMovement();
     }
-
-    
 }

@@ -81,19 +81,26 @@ public class ScanResultDisplay : MonoBehaviour
     public void DisableDisplay() => isDisplay = false;
     public void OnDisplay()
     {
+        Debug.Log("OnDisplay A :" + transform.parent.gameObject.name);
+
         if (!isDisplay) return;
+
+        Debug.Log("OnDisplay B : " + transform.parent.gameObject.name);
 
         t = 0;
 
         if (displayCoroutine == null)
         {
+
+            Debug.Log("OnDisplay C : " + transform.parent.gameObject.name);
+
             displayCoroutine = StartCoroutine(DisplayCoroutine());
         }
     }
 
     IEnumerator DisplayCoroutine()
     {
-        alpha = 0;
+        alpha = mainGroup.alpha;
 
         for (; t < duration; t += Time.deltaTime)
         {
@@ -116,5 +123,7 @@ public class ScanResultDisplay : MonoBehaviour
         mainGroup.alpha = 0;
 
         displayCoroutine = null;
+
+        Debug.Log("OnDisplay D : " + transform.parent.gameObject.name);
     }
 }

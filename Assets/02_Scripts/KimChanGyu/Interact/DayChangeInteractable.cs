@@ -16,7 +16,14 @@ public class DayChangeInteractable : MonoBehaviour, IInteractable
 
         DisableSleepTime();
     }
-
+    private void OnEnable()
+    {
+        NextDayController.Subscribe(DisableSleepTime, ActionType.NextDayTransition);
+    }
+    private void OnDisable()
+    {
+        NextDayController.Unsubscribe(DisableSleepTime, ActionType.NextDayTransition);
+    }
     public void EnableSleepTime() => sleepTimeTrigger = true;
-    public void DisableSleepTime() => sleepTimeTrigger = true;
+    public void DisableSleepTime() => sleepTimeTrigger = false;
 }

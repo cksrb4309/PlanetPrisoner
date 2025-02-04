@@ -53,7 +53,6 @@ public class CraftMachine : MonoBehaviour, IInteractable
             return totalB.CompareTo(totalA); // 수량이 많은 레시피가 먼저 오도록 정렬
         });
     }
-
     public void Interact()
     {
         foreach (var recipe in recipes) // 정렬된 레시피 돌면서
