@@ -80,7 +80,7 @@ public class TMPlayer : MonoBehaviour, IDamagable
         transform.rotation = Quaternion.Euler(0f, yaw, 0f);  // 플레이어의 좌우 회전
     }
 
-    public void Damaged(int damage)
+    public void Damaged(float damage)
     {
         Debug.Log($"플레이어 피격 {damage}");
     }

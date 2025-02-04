@@ -2058,6 +2058,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transceiver: {fileID: 3494112224727594542}
   requiredQuest: {fileID: 0}
+  oxygenTank: {fileID: 0}
 --- !u!1 &2972669490403344630
 GameObject:
   m_ObjectHideFlags: 0
@@ -5586,7 +5587,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transceiver: {fileID: 3494112224727594542}
   recipes: []
-  itemSpawnPosition: {x: 0, y: 0, z: 0}
+  itemSpawnPosition: {fileID: 0}
   weaponRecipe:
     prefab: {fileID: 8618700723030876779, guid: 8d63520b9bd5510458a646367d20fdbf, type: 3}
     ingredients:

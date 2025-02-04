@@ -31,8 +31,7 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
     protected AudioSource audio;
     public MonsterAnimEvent monsterAnimEvent;
 
-    [SerializeField] // 스텟 확인용으로 달아줬음
-    public M_Stat Stat { get; private set; } // json으로부터 데이터를 받아온다.
+    [SerializeField] public M_Stat Stat { get; private set; } // json으로부터 데이터를 받아온다.
 
     #region FSM
     public enum EState
@@ -104,6 +103,10 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
         MonsterHearing.AddAudioSource(audio);
 
         playerLayerMask = LayerMask.GetMask("Player");
+
+        // 애니메이션 세팅
+        monsterAnimEvent = gameObject.AddComponent<MonsterAnimEvent>();
+        monsterAnimEvent.Initialize();
     }
 
     // Update is called once per frame
@@ -270,7 +273,7 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
     }
 
     // 공격하는 쪽에서 호출할 수 있도록 public으로 뚫어줌
-    public void Damaged(int damage)
+    public void Damaged(float damage)
     {
         Stat.hp -= damage;
         if (Stat.hp < 0)

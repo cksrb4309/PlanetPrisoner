@@ -42,7 +42,7 @@ public class MonsterSpawnManager : MonoBehaviour
     private void Start()
     {
         // 시작과 돵시에 적당히 몬스터를 풀어 놓는다. (일단 1세트씩)
-        OnCheckMonsterSpawn((float)1e10);
+        OnCheckMonsterSpawn(100000f);
 
         // TODO 임시로 여기서 호출하지만 라운드가 시작될 때마다 GameManager 등에서 호출해준다.
         MonsterHearing.InitializeAudioSources();

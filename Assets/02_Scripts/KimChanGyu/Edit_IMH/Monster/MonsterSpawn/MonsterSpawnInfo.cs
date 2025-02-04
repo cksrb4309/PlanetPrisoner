@@ -19,7 +19,12 @@ public class MonsterSpawnInfo : ScriptableObject
     {
         // InGameTime 값은 1초 단위기 때문에 인스펙터에서 몬스터의 스폰 시간을 넣을 때는 편의상 1시간 단위로 넣기 위해
         // currentTime 값을 3600으로 나눈다
+
+        Debug.Log("들어온 값 : " + currentTime);
+
         currentTime /= 3600;
+
+        Debug.Log("나눈 값 : " + currentTime);
 
         // 모든 SpawnTimerData를 확인해서 
         foreach (SpawnTimerData spawnTimerData in spawnTimerDataList)
