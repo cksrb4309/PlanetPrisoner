@@ -904,6 +904,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 63514322d3b69d041aa1a0f786899b26, type: 3}
   - {fileID: 8300000, guid: ac70710424c0c1f4fa0018529b78d9e0, type: 3}
   monsterAnimEvent: {fileID: 0}
+  monsterRagdoll: {fileID: 0}
   parterEye: {fileID: 0}
 --- !u!82 &5971534182948225758
 AudioSource:
