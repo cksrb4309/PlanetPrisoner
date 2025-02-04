@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class OxygenTank : MonoBehaviour, IInteractable
 {
-    [SerializeField] float oxygen = 2000; // 2L = 2000ml
+    [SerializeField] float oxygen = 200f; // 2L = 2000ml
 
     [SerializeField] PlayerOxygen playerOxygen;
 
@@ -34,6 +34,7 @@ public class OxygenTank : MonoBehaviour, IInteractable
 
             return;
         }
+
         // 산소 필요 요구량 가져오기
         float needFillAmount = playerOxygen.NeedFillOxygen();
 

@@ -9,22 +9,17 @@ public class Transceiver : MonoBehaviour
     private Material objectMaterials;
 
     // 전송기 collider에 들어온 오브젝트 리스트
-    public List<GameObject> objectInTransceiver = new List<GameObject>(); 
-
-    //private Color OriginalEmissionColor;
+    public List<GameObject> objectInTransceiver = new List<GameObject>();
 
     void Start()
     {
         objectRenderer = GetComponent<Renderer>();
         objectMaterials = objectRenderer.materials[2]; // index 2 
         objectMaterials.DisableKeyword("_EMISSION"); // 중앙만 꺼두기
-
-        //OriginalEmissionColor = objectMaterials.GetColor("_EmissionColor");
     }
 
     public void TurnOffEmission()
     {
-        //objectMaterials.SetColor("_EmissionColor",Color.black);
         objectMaterials.DisableKeyword("_EMISSION");
     }
 

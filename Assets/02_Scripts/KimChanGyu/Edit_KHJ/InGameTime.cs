@@ -14,17 +14,16 @@ public class InGameTime : MonoBehaviour
     [SerializeField] float timeCounter;
     [SerializeField] float morningTime = 25200f; // 07:00
 
-    float updateInterval = 30f;
+    [SerializeField] float updateInterval = 30f;
 
     [SerializeField] RequiredQuest requiredQuest;
 
     [SerializeField] CanvasGroup fadeUI;
     [SerializeField] TMP_Text d_dayText;
 
-
     [SerializeField] DayChangeInteractable dayChangeInteractable;
 
-    float timeSpeed = 60f;
+    [SerializeField] float timeSpeed = 60f;
 
     void Start()
     {
@@ -42,7 +41,7 @@ public class InGameTime : MonoBehaviour
         {
             timeCounter = 0;
             UpdateTimeText();
-            SpawnManager.Instance.OnSpawnCheck(inGameTime);
+            MonsterSpawnManager.Instance.OnCheckMonsterSpawn(inGameTime);
 
             if (inGameTime >= 79200)
             {
@@ -55,8 +54,8 @@ public class InGameTime : MonoBehaviour
         if (inGameTime >= 86400) // 24시간 지나면
         {
             inGameTime = 0f; // 시간 초기화
-            UpdateTimeText();
-            DayChangeSetting();
+            //UpdateTimeText();
+            StartCoroutine(FadeInOutCoroutine(2f));
         }
 
         UpdateLightPosition();
@@ -82,45 +81,42 @@ public class InGameTime : MonoBehaviour
     #region 날짜와 퀘스트 셋팅
     public void DayChangeSetting()
     {
-        if (gameManager.d_days > 0)
-        {
-            gameManager.d_days -= 1;
-            if (gameManager.d_days == 0)
-            {
-                d_dayText.text = "D - day";
-
-            }
-            else
-            {
-                d_dayText.text = $"D - {gameManager.d_days}";
-            }
-
-            StartCoroutine(FadeInOutCoroutine(1f)); // d-day화면 fadeIn/out
-        }
-        else
+        if (gameManager.d_days == 0)
         {
             // TODO : 씬 변경
         }
-
-        if (requiredQuest.questCompeleted) // 퀘스트 성공했는지 여부
+        else
         {
-            // TODO: 패널티
+            if (requiredQuest.questCompeleted) // 퀘스트 성공했는지 여부
+            {
+                // TODO: 패널티
+            }
+            else
+            {
+                // TODO: 패널티
+            }
+
+            requiredQuest.UpdateQuest(); // 퀘스트 업데이트
         }
-        requiredQuest.UpdateQuest(); // 퀘스트 업데이트
+        inGameTime = 0f;
+        timeCounter = 0f;
+
     }
     #endregion
-
-    public void OnClickedSkipNight()
-    {
-        inGameTime = 7 * 3600; // 오전 7시로 변경
-        UpdateTimeText();
-        DayChangeSetting();
-    }
-
 
     #region 1초 fadeIn 1초 fadeOut 코루틴
     IEnumerator FadeInOutCoroutine(float fadeDuration)
     {
+        gameManager.d_days -= 1;
+        if (gameManager.d_days == 0)
+        {
+            d_dayText.text = "D - day";
+        }
+        else
+        {
+            d_dayText.text = $"D - {gameManager.d_days}";
+        }
+
         fadeUI.gameObject.SetActive(true);
 
         float fadeCount = 0f;
@@ -135,6 +131,8 @@ public class InGameTime : MonoBehaviour
 
         yield return new WaitForSeconds(2f); // 2초 대기
 
+        NextDayController.TriggerEventInvoke(ActionType.NextDayTransition);
+
         fadeCount = 0f; 
         while (fadeCount < fadeDuration)
         {
@@ -146,6 +144,20 @@ public class InGameTime : MonoBehaviour
         fadeUI.alpha = 0f;
 
         fadeUI.gameObject.SetActive(false);
+
+        NextDayController.TriggerEventInvoke(ActionType.NextDayFinished);
     }
     #endregion
+    void Initialize()
+    {
+
+    }
+    private void OnEnable()
+    {
+        NextDayController.Subscribe(DayChangeSetting, ActionType.NextDayTransition);
+    }
+    private void OnDisable()
+    {
+        NextDayController.Unsubscribe(DayChangeSetting, ActionType.NextDayTransition);
+    }
 }
