@@ -1603,7 +1603,6 @@ GameObject:
   - component: {fileID: 1281764968658751551}
   - component: {fileID: 156654109454381944}
   - component: {fileID: -5308428653528831488}
-  - component: {fileID: 5713418372078194984}
   m_Layer: 10
   m_Name: M_Golem
   m_TagString: Monster
@@ -1700,6 +1699,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9b47d8d15e81a5c4e80ad450c7200320, type: 3}
   - {fileID: 8300000, guid: 27415756c51762c40871daa6dc4c318d, type: 3}
   monsterAnimEvent: {fileID: 0}
+  monsterRagdoll: {fileID: 0}
 --- !u!195 &104361778716058710
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1892,18 +1892,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5713418372078194984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6835976750419113153}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73f50177a88e0f340b3ad242b5017d3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6861364066958545990
 GameObject:
   m_ObjectHideFlags: 0
