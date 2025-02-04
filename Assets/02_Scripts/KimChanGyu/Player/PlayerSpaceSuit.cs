@@ -10,10 +10,6 @@ public class PlayerSpaceSuit : MonoBehaviour, IDamagable
     [SerializeField] float minOxygenDrain = 0.05f;
     [SerializeField] float maxOxygenDrain = 3f;
 
-    // 강화 우주복의 산소 소모량
-    [SerializeField] float minExSuitOxygenDrain = 0.025f;
-    [SerializeField] float maxExSuitOxygenDrain = 2f;
-
     [SerializeField] float maxHp = 3f;
 
     [SerializeField] Volume volume;
@@ -27,6 +23,9 @@ public class PlayerSpaceSuit : MonoBehaviour, IDamagable
     Coroutine damagedCoroutine = null;
 
     float currHp = 0;
+
+    float damageFactor = 1f;
+
     float Hp
     {
         get
@@ -61,6 +60,8 @@ public class PlayerSpaceSuit : MonoBehaviour, IDamagable
     {
         if (currHp <= 0) return;
 
+        damage *= damageFactor;
+
         // 체력 감소
         Hp -= damage;
 
@@ -74,10 +75,7 @@ public class PlayerSpaceSuit : MonoBehaviour, IDamagable
     }
     public void EquipEnhancedSuit()
     {
-        minOxygenDrain = minExSuitOxygenDrain;
-        maxOxygenDrain = maxExSuitOxygenDrain;
-
-        SetOxygenDecreaseValue();
+        damageFactor = 0.7f;
     }
     void SetOxygenDecreaseValue() =>
         playerOxygen.SetOxygenDecreaseValue(Mathf.Lerp(minOxygenDrain, maxOxygenDrain, Mathf.Pow(1 - (currHp / maxHp), 2f)));

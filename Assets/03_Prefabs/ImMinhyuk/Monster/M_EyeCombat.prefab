@@ -760,7 +760,7 @@ GameObject:
   - component: {fileID: 4632099001677310744}
   - component: {fileID: 7615014997772776533}
   - component: {fileID: 5971534182948225758}
-  - component: {fileID: 2814150264691067770}
+  - component: {fileID: -551353693691176220}
   m_Layer: 10
   m_Name: M_EyeCombat
   m_TagString: Monster
@@ -830,7 +830,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
@@ -1002,7 +1002,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &2814150264691067770
+--- !u!114 &-551353693691176220
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

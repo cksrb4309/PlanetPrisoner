@@ -1411,7 +1411,6 @@ GameObject:
   - component: {fileID: 3190696861130723074}
   - component: {fileID: 2045389609475554467}
   - component: {fileID: 8805922558303906160}
-  - component: {fileID: -7773828099774262419}
   m_Layer: 10
   m_Name: M_Splinter
   m_TagString: Monster
@@ -1556,6 +1555,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 29dd0011451eb4448ae8591438c6ee58, type: 3}
   - {fileID: 8300000, guid: 852f0ed663129a94aa8fab75c1fe1fbe, type: 3}
   monsterAnimEvent: {fileID: 0}
+  monsterRagdoll: {fileID: 0}
 --- !u!82 &8805922558303906160
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1653,18 +1653,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &-7773828099774262419
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4839912140187004875}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73f50177a88e0f340b3ad242b5017d3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4998455786466101935
 GameObject:
   m_ObjectHideFlags: 0

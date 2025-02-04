@@ -345,6 +345,8 @@ public class NextDayController : MonoBehaviour
     }
     void OnEventInvoke(ActionType actionType) => eventActions[(int)actionType]?.Invoke();
 
+    public static void TriggerEventInvoke(ActionType actionType) => instance.OnEventInvoke(actionType);
+
     #region 이벤트 액션 구독 및 구독 해제
     public static void Subscribe(Action action, ActionType actionType)
     {

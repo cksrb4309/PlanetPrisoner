@@ -68,7 +68,7 @@ public class PlayerStateUI : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
 
-        while (alpha > 0.3f)
+        while (alpha > 0.5f)
         {
             alpha -= Time.deltaTime * 3f;
 
@@ -77,6 +77,6 @@ public class PlayerStateUI : MonoBehaviour
             yield return null;
         }
 
-        spaceSuitCanvasGroup.alpha = 0.3f;
+        spaceSuitCanvasGroup.alpha = 0.5f;
     }
 }

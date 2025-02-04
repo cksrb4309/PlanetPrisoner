@@ -5240,7 +5240,6 @@ GameObject:
   - component: {fileID: 6819175162369719524}
   - component: {fileID: 4042259179517996373}
   - component: {fileID: -8490283514692771590}
-  - component: {fileID: -2035164977145824560}
   m_Layer: 10
   m_Name: M_Murloc
   m_TagString: Monster
@@ -5385,6 +5384,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 987e5ef34f0a29f4d93deb5182b157b3, type: 3}
   - {fileID: 8300000, guid: 79cc7dd0f4283a24a8b68924610d700a, type: 3}
   monsterAnimEvent: {fileID: 0}
+  monsterRagdoll: {fileID: 0}
   id: 0
   groupMurloc: []
 --- !u!82 &-8490283514692771590
@@ -5484,18 +5484,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &-2035164977145824560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8118258632014096957}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73f50177a88e0f340b3ad242b5017d3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8149599731807716210
 GameObject:
   m_ObjectHideFlags: 0
