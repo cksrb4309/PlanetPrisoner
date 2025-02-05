@@ -35,6 +35,7 @@ public class M_Murloc : Monster
 
     protected override void UpdateIdle()
     {
+        SetAnimDefault();
         // 타게팅이 되어있을 경우 추적한다. 
         if (target != null)
         {
@@ -67,6 +68,11 @@ public class M_Murloc : Monster
                 nextDecisionTime = 0f;
             }
         }
+    }
+
+    protected override void UpdateAttack()
+    {
+        SetAnimFaster();
     }
 
     protected override void UpdateDeath()
