@@ -36,7 +36,7 @@ public class M_Splinter : Monster
     {
         M_Stat _stat;
 
-        if (MonsterStat.Instance.StatDict.TryGetValue("Splinter", out _stat))
+        if (!MonsterStat.Instance.StatDict.TryGetValue("Splinter", out _stat))
         {
             Debug.LogWarning($"Splinter not found in stat Dictionary");
         }

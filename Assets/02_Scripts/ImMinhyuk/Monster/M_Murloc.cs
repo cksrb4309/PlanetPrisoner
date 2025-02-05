@@ -126,13 +126,6 @@ public class M_Murloc : Monster
         groupMurloc[no] = null;
     }
 
-    // TODO : 동료가 죽었을 때 효과
-    void StatUp()
-    {
-        Stat.attackPower *= 2;
-        Stat.speed *= 2;
-    }
-
     // Json에서 스텟을 가져온다.
     protected override M_Stat SetStat()
     {
