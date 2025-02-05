@@ -532,6 +532,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 50.39391
       objectReference: {fileID: 0}
+    - target: {fileID: 7615014997772776533, guid: 6b7be24b65c2be241b2fd0c022bffed4, type: 3}
+      propertyPath: hitRangeColliders.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7615014997772776533, guid: 6b7be24b65c2be241b2fd0c022bffed4, type: 3}
+      propertyPath: 'hitRangeColliders.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2549927601137228285}
     - target: {fileID: 7769260684918380486, guid: 6b7be24b65c2be241b2fd0c022bffed4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 7.314068
@@ -764,6 +772,11 @@ PrefabInstance:
 --- !u!4 &1567730665537830438 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2798934646227835995, guid: 6b7be24b65c2be241b2fd0c022bffed4, type: 3}
+  m_PrefabInstance: {fileID: 3681238050927534717}
+  m_PrefabAsset: {fileID: 0}
+--- !u!136 &2549927601137228285 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 1185936696811748224, guid: 6b7be24b65c2be241b2fd0c022bffed4, type: 3}
   m_PrefabInstance: {fileID: 3681238050927534717}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5190837423125672565
