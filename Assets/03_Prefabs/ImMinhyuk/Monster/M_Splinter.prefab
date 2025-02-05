@@ -1554,8 +1554,8 @@ MonoBehaviour:
   dieSounds:
   - {fileID: 8300000, guid: 29dd0011451eb4448ae8591438c6ee58, type: 3}
   - {fileID: 8300000, guid: 852f0ed663129a94aa8fab75c1fe1fbe, type: 3}
+  patrolList: []
   monsterAnimEvent: {fileID: 0}
-  monsterRagdoll: {fileID: 0}
 --- !u!82 &8805922558303906160
 AudioSource:
   m_ObjectHideFlags: 0

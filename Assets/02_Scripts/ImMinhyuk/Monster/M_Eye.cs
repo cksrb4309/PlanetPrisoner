@@ -20,7 +20,18 @@ public class M_Eye : Monster
         monsterSight.Initialize(this, headSight, target);
 
         // 타게팅(플레이어) 무한루프 코루틴
-        StartCoroutine(CoFindTarget()); 
+        StartCoroutine(CoFindTarget());
+    }
+
+    protected override void UpdateIdle()
+    {
+        base.UpdateIdle();
+        SetAnimDefault();
+    }
+
+    protected override void UpdateAttack()
+    {
+        SetAnimFaster();
     }
 
     protected override void UpdateDeath()

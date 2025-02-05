@@ -317,6 +317,9 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
 
     public void SetPatrolList(GameObject[] _patrolList) => patrolList = _patrolList;
 
+    protected void SetAnimFaster() => animator.speed = 2.0f;
+    protected void SetAnimDefault() => animator.speed = 1.0f;
+
     #region MonsterAnimEvent 초기화 함수
     public CapsuleCollider[] GetHitRangeColliders() => hitRangeColliders;
     public Rigidbody GetRigidBody() => rigid;
