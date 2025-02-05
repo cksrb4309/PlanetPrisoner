@@ -2,7 +2,7 @@
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] public int d_days;
+    public int d_days;
 
     public static GameManager Instance{ get; private set; }
 

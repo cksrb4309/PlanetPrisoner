@@ -10,6 +10,9 @@ public class TitleManager : MonoBehaviour
 
     [SerializeField] float gameStartDelay = 1f;
     [SerializeField] float fadeSpeed = 5f;
+
+    bool isSceneMove = false;
+
     public void Start()
     {
         StartCoroutine(GameStartDelayCoroutine());
@@ -36,9 +39,14 @@ public class TitleManager : MonoBehaviour
 
         interactableGroup.interactable = true;
     }
-    public void SceneLoad(string sceneName)
+    
+    public void SceneLoad()
     {
-        StartCoroutine(SceneLoadCoroutine(sceneName));
+        if (isSceneMove) return;
+
+        isSceneMove = true;
+
+        NextDayController.SceneStart();
     }
     IEnumerator SceneLoadCoroutine(string sceneName)
     {
