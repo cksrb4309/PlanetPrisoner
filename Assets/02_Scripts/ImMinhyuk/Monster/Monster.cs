@@ -1,10 +1,7 @@
 ﻿using System.Collections;
 using System.Linq;
-using UnityEditor;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.AI;
-using static Codice.Client.Common.EventTracking.TrackFeatureUseEvent.Features.DesktopGUI.Filters;
 
 public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
 {
@@ -25,10 +22,15 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
 
     LayerMask playerLayerMask;    // 주변에 플레이어가 있는 지 확인할 레이어마스크
 
+    [SerializeField] GameObject[] patrolList; // 몬스터의 패트롤 리스트 지정
+
     // 하위 컴포넌트
     protected Animator animator;
     protected NavMeshAgent agent;
     protected AudioSource audio;
+    protected Rigidbody rigid;
+
+    // 하위 스크립트
     public MonsterAnimEvent monsterAnimEvent;
 
     [SerializeField] public M_Stat Stat { get; private set; } // json으로부터 데이터를 받아온다.
@@ -207,7 +209,7 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
         Vector3 flatPosition = new Vector3(transform.position.x, 0, transform.position.z);
         Vector3 flatDestination = new Vector3(destination.x, 0, destination.z);
 
-        if (Vector3.Distance(flatPosition, flatDestination) < 0.2f)
+        if (Vector3.Distance(flatPosition, flatDestination) < 0.5f)
         {
             isArrivedDestination = true;
             State = EState.Idle;
@@ -218,10 +220,7 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
         }
     }
 
-    protected virtual void UpdateAlert() 
-    {
-        State = EState.Idle;
-    }
+    protected virtual void UpdateAlert()  =>  State = EState.Idle;
 
     protected virtual void UpdateAttack() { }
 
@@ -237,14 +236,29 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
     // 네브매쉬 영역에서 이동할 랜덤 위치를 반환
     protected Vector3 GetRandomDestination_InNavMesh()
     {
-        Vector3 randomPosition = Random.insideUnitSphere * Stat.patrolRange; // 반경 내 임의의 지점
-        randomPosition += transform.position; // 현재 위치 기준으로 계산
+        if (patrolList.Length == 0)
+        {
+            Debug.LogError(" MonsterSpawnManager 인스펙터에서 패트롤 후보 위치를 넣어주세요 ");
+            return transform.position;
+        }
+
+        // 랜덤 패트롤 위치 지정
+        Vector3 randomPosition;
+        randomPosition = patrolList[Random.Range(0, patrolList.Length)].transform.position;
 
         NavMeshHit hit;
-        // NavMesh.SamplePosition()은 randomPosition 기준 가장 가깝고 유효한 NavMesh지점을 찾아줌
-        if (NavMesh.SamplePosition(randomPosition, out hit, Stat.patrolRange, NavMesh.AllAreas))
+        if (!NavMesh.Raycast(randomPosition, randomPosition, out hit, NavMesh.AllAreas))
         {
-            return hit.position; // NavMesh 위의 유효한 위치 반환
+            return randomPosition; // NavMesh 위에 있다면 그대로 반환
+        }
+        else
+        {
+            // 이 코드로 들어오면 로직 에러임.
+            Debug.Log("[Warn] 목표 위치가 Navmesh 범위 밖이어서 가까운 도착지를 설정합니다.");
+            if (NavMesh.SamplePosition(randomPosition, out hit, Stat.patrolRange, NavMesh.AllAreas))
+            {
+                return hit.position; // NavMesh 위의 유효한 위치 반환
+            }
         }
 
         return transform.position; // 유효한 위치를 찾지 못하면 현재 위치 유지
@@ -286,43 +300,30 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
     {
         // TODO : 트랩 대미지는 N? 1? 0?
         // 아 이걸 협의해야한다고 했던거구나. 일단 1
-        Damaged(1);
+        Damaged(1.0f);
         State = EState.Stun;
     }
 
     private void OnTriggerEnter(Collider other)
-    {
+    {   
         if (other.tag == "Player" && State != EState.Death)
         {
             other.GetComponent<IDamagable>().Damaged(Stat.attackPower);
         }
     }
 
+    public void SetPatrolList(GameObject[] _patrolList) => patrolList = _patrolList;
+
+    protected void SetAnimFaster() => animator.speed = 2.0f;
+    protected void SetAnimDefault() => animator.speed = 1.0f;
+
     #region MonsterAnimEvent 초기화 함수
-    public CapsuleCollider[] GetHitRangeColliders()
-    {
-        return hitRangeColliders;
-    }
-
-    public AudioSource GetAudioSoruce()
-    {
-        return audio;
-    }
-
-    public AudioClip[] GetoBasicAudioClip()
-    {
-        return basicSounds;
-    }
-
-    public AudioClip[] GetAttackAudioClip()
-    {
-        return attackSounds;
-    }
-
-    public AudioClip[] GetDieAudioClip()
-    {
-        return dieSounds;
-    }
+    public CapsuleCollider[] GetHitRangeColliders() => hitRangeColliders;
+    public Rigidbody GetRigidBody() => rigid;
+    public AudioSource GetAudioSoruce() => audio;
+    public AudioClip[] GetoBasicAudioClip() => basicSounds;
+    public AudioClip[] GetAttackAudioClip() => attackSounds;
+    public AudioClip[] GetDieAudioClip() => dieSounds;
     #endregion MonsterAnimEvent 초기화 함수
 
     #region 기즈모
@@ -354,113 +355,5 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
     }
     #endregion 기즈모
 
-    #region 몬스터 피격 헬퍼 버튼
-
-    [CustomEditor(typeof(M_Golem))]
-    public class M_GolemDamagedButton : Editor
-    {
-        public override void OnInspectorGUI()
-        {
-            DrawDefaultInspector(); // 기존 인스펙터 UI 유지
-
-            M_Golem targetObject = (M_Golem)target;
-
-            if (targetObject == null)
-            {
-                EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
-                return;
-            }
-
-            if (GUILayout.Button("몬스터 체력 감소"))
-            {
-                targetObject.Damaged(1);
-            }
-        }
-    }
-    [CustomEditor(typeof(M_Murloc))]
-    public class M_MurlocDamagedButton : Editor
-    {
-        public override void OnInspectorGUI()
-        {
-            DrawDefaultInspector(); // 기존 인스펙터 UI 유지
-
-            M_Murloc targetObject = (M_Murloc)target;
-
-            if (targetObject == null)
-            {
-                EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
-                return;
-            }
-
-            if (GUILayout.Button("몬스터 체력 감소"))
-            {
-                targetObject.Damaged(1);
-            }
-        }
-    }
-    [CustomEditor(typeof(M_Splinter))]
-    public class M_SplinterDamagedButton : Editor
-    {
-        public override void OnInspectorGUI()
-        {
-            DrawDefaultInspector(); // 기존 인스펙터 UI 유지
-
-            M_Splinter targetObject = (M_Splinter)target;
-
-            if (targetObject == null)
-            {
-                EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
-                return;
-            }
-
-            if (GUILayout.Button("몬스터 체력 감소"))
-            {
-                targetObject.Damaged(1);
-            }
-        }
-    }
-    [CustomEditor(typeof(M_EyeCombat))]
-    public class M_EyeCombatDamagedButton : Editor
-    {
-        public override void OnInspectorGUI()
-        {
-            DrawDefaultInspector(); // 기존 인스펙터 UI 유지
-
-            M_EyeCombat targetObject = (M_EyeCombat)target;
-
-            if (targetObject == null)
-            {
-                EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
-                return;
-            }
-
-            if (GUILayout.Button("몬스터 체력 감소"))
-            {
-                targetObject.Damaged(1);
-            }
-        }
-    }
-
-    [CustomEditor(typeof(M_EyePatrol))]
-    public class M_EyePatrolDamagedButton : Editor
-    {
-        public override void OnInspectorGUI()
-        {
-            DrawDefaultInspector(); // 기존 인스펙터 UI 유지
-
-            M_EyePatrol targetObject = (M_EyePatrol)target;
-
-            if (targetObject == null)
-            {
-                EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
-                return;
-            }
-
-            if (GUILayout.Button("몬스터 체력 감소"))
-            {
-                targetObject.Damaged(1);
-            }
-        }
-    }
-    #endregion 몬스터 피격 헬퍼 버튼
+   
 }

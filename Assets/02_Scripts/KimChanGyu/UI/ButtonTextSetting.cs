@@ -13,6 +13,8 @@ public class ButtonTextSetting : MonoBehaviour, IConfigurable
 
     [SerializeField] TMP_Text text = null;
 
+    [SerializeField] bool isNextDayControllerButton = false;
+
     Color color;
 
     float speed = 0;
@@ -28,9 +30,11 @@ public class ButtonTextSetting : MonoBehaviour, IConfigurable
 
         Color changeColor = Color.white;
 
-        if (order == (int)EventType.Enter) changeColor = settings.textExitColor;
-        else if (order == (int)EventType.Exit) changeColor = settings.textEnterColor;
-        else if (order == (int)EventType.Down) changeColor = settings.textDownColor;
+        if (order == (int)EventType.Enter) changeColor = isNextDayControllerButton? settings.redTextExitColor: settings.textExitColor;
+
+        else if (order == (int)EventType.Exit) changeColor = isNextDayControllerButton ? settings.redTextEnterColor : settings.textEnterColor;
+
+        else if (order == (int)EventType.Down) changeColor = isNextDayControllerButton ? settings.redTextDownColor : settings.textDownColor;
 
         currCoroutine = StartCoroutine(ColorChangeCoroutine(changeColor));
     }
@@ -42,7 +46,7 @@ public class ButtonTextSetting : MonoBehaviour, IConfigurable
 
         while (t < 1f)
         {
-            t += Time.deltaTime * speed;
+            t += Time.unscaledDeltaTime * speed;
 
             color = Color.Lerp(currColor, changeColor, t);
 
@@ -54,14 +58,28 @@ public class ButtonTextSetting : MonoBehaviour, IConfigurable
     }
     public void Configure(UISettings settings)
     {
-        this.settings = settings;
-        text = GetComponent<TMP_Text>();
-        text.color = settings.textExitColor;
-        text.fontSize = settings.buttonTextSize;
+        //this.settings = settings;
 
-        fadeDuration = settings.textColorFadeDuration;
-        speed = 1f / fadeDuration;
+        //text = GetComponent<TMP_Text>();
 
-        UnityEditor.EditorUtility.SetDirty(this);
+        //text.color = isNextDayControllerButton ? settings.redTextExitColor : settings.textExitColor;
+
+        //if (isNextDayControllerButton)
+        //{
+        //    text.color = settings.textExitColor;
+        //    text.fontSize = settings.buttonTextSize;
+        //}
+        //else
+        //{
+        //    text.color = settings.textExitColor;
+        //    text.fontSize = settings.buttonTextSize;
+        //}
+
+
+
+        //fadeDuration = settings.textColorFadeDuration;
+        //speed = 1f / fadeDuration;
+
+        //UnityEditor.EditorUtility.SetDirty(this);
     }
 }

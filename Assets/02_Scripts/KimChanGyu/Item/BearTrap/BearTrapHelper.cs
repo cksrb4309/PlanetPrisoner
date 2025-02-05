@@ -3,10 +3,18 @@ using UnityEngine;
 
 public class BearTrapHelper : MonoBehaviour
 {
+    [SerializeField] AudioClip trapTriggerAudioClip;
+
     List<IDamagable> targets = new List<IDamagable>();
+
+    AudioSource audioSource = null;
 
     bool isSet = false;
     bool isAttacked = false;
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     public void InitHelper()
     {
         isSet = false;
@@ -28,6 +36,8 @@ public class BearTrapHelper : MonoBehaviour
     void Attack()
     {
         if (isAttacked) return;
+
+        audioSource.PlayOneShot(trapTriggerAudioClip);
 
         foreach (IDamagable damagable in targets)
         {

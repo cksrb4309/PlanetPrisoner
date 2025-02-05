@@ -28,4 +28,15 @@ public class M_MurlocGroupHelper : MonoBehaviour
             }
         }
     }
+    private void OnEnable()
+    {
+        NextDayController.Subscribe(DestroyMonster, ActionType.NextDayTransition);
+        NextDayController.Subscribe(DestroyMonster, ActionType.GameOverTransition);
+    }
+    private void OnDisable()
+    {
+        NextDayController.Unsubscribe(DestroyMonster, ActionType.NextDayTransition);
+        NextDayController.Unsubscribe(DestroyMonster, ActionType.GameOverTransition);
+    }
+    void DestroyMonster() => Destroy(gameObject);
 }

@@ -8,6 +8,8 @@ public class CursorController : MonoBehaviour
 
     [SerializeField] Image cursorImage;
 
+    [SerializeField] CanvasGroup cursorCanvasGroup;
+
     [SerializeField] InputActionReference mousePositionInputAction;
 
     Vector2 position;
@@ -24,9 +26,9 @@ public class CursorController : MonoBehaviour
     }
     private void Awake()
     {
-        isView = false;
-
         instance = this;
+
+        isView = false;
 
         screenSize = new Vector2((float)Screen.width / 2f, (float)Screen.height / 2f);
 
@@ -43,7 +45,7 @@ public class CursorController : MonoBehaviour
     }
     public static void DisableCursor()
     {
-        instance.cursorImage.enabled = false;
+        instance.cursorCanvasGroup.alpha = 0f;
         instance.isView = false;
 
         Cursor.visible = false;
@@ -51,10 +53,10 @@ public class CursorController : MonoBehaviour
     }
     public static void EnableCursor()
     {
-        instance.cursorImage.enabled = true;
+        instance.cursorCanvasGroup.alpha = 1f;
         instance.isView = true;
 
-        Cursor.visible = true;
+        Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
     }
 }

@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     [Header("Need Reference")] // Header 정리
     [SerializeField] Transform cameraTransform; // 카메라의 Transform
     [SerializeField] Transform playerPivotTransform; // 플레이어 피벗 Transform
+    [SerializeField] Transform initPosition;
     [SerializeField] PlayerGroundChecker playerGroundChecker;
 
     [Header("Move Attribute")]                  // Header 정리
@@ -59,10 +60,11 @@ public class PlayerController : MonoBehaviour
     Coroutine cameraHeightCoroutine = null;
 
     bool isCrouch = false; // 앉은 상태 여부
-
-    bool canMove = true;
+    bool canMove = false;
     bool characterEnabled = true;
+
     event Action<float> animMoveSpeedSetAction = null; // 애니메이터 이동속도 설정 Action
+    event Action<float> audioMoveValueAddAction = null; // 발걸음 소리를 위한 Action
 
     float coyoteTime = 0.2f;
     float coyoteTimeCounter = 0;
@@ -77,6 +79,12 @@ public class PlayerController : MonoBehaviour
 
         NextDayController.Subscribe(EnableMovement, ActionType.SurviveFinished);
         NextDayController.Subscribe(EnableMovement, ActionType.NextDayFinished);
+        NextDayController.Subscribe(EnableMovement, ActionType.FirstGameFinished);
+
+        NextDayController.Subscribe(DisableMovement, ActionType.OnPlayerDie);
+
+        NextDayController.Subscribe(InitPosition, ActionType.SurviveTransition);
+        NextDayController.Subscribe(InitPosition, ActionType.NextDayTransition);
 
         // InputActionReference 활성화
         keyboardMoveInputAction.action.Enable();
@@ -91,6 +99,12 @@ public class PlayerController : MonoBehaviour
 
         NextDayController.Unsubscribe(EnableMovement, ActionType.SurviveFinished);
         NextDayController.Unsubscribe(EnableMovement, ActionType.NextDayFinished);
+        NextDayController.Unsubscribe(EnableMovement, ActionType.FirstGameFinished);
+
+        NextDayController.Unsubscribe(DisableMovement, ActionType.OnPlayerDie);
+
+        NextDayController.Unsubscribe(InitPosition, ActionType.SurviveTransition);
+        NextDayController.Unsubscribe(InitPosition, ActionType.NextDayTransition);
 
         // InputActionReference 비활성화
         keyboardMoveInputAction.action.Disable();
@@ -99,6 +113,27 @@ public class PlayerController : MonoBehaviour
         crouchInputAction.action.Disable();
         runInputAction.action.Disable();
     }
+
+    void InitPosition()
+    {
+        StartCoroutine(InitPositionCoroutine());
+    }
+    IEnumerator InitPositionCoroutine()
+    {
+        characterEnabled = false;
+
+        characterController.enabled = false;
+
+        transform.position = initPosition.position;
+        transform.rotation = initPosition.rotation;
+
+        yield return null;
+
+        characterEnabled = true;
+
+        characterController.enabled = true;
+    }
+
     private void Start()
     {
         // GetComponent로 필요 컴포넌트 가져오기
@@ -191,10 +226,10 @@ public class PlayerController : MonoBehaviour
         #region Velocity Y 값 설정
 
         // 플레이어가 땅에 있거나 코요테 타임 값이 남아있거나, 바로 밑에 오브젝트가 있을 때
-        if (characterController.isGrounded || coyoteTimeCounter > 0f || playerGroundChecker.IsGround)
+        if (playerGroundChecker.IsGrounded || coyoteTimeCounter > 0f)
         {
             // 점프 중이 아닐 때, 앉고 있지 않을 때, 점프 키를 눌렀다면
-            if (velocityY <= 0f && jumpInputAction.action.WasPressedThisFrame() && canMove && !isCrouch)
+            if (velocityY <= float.Epsilon && jumpInputAction.action.WasPressedThisFrame() && canMove && !isCrouch)
             {
                 // 코요테 타임 초기화
                 coyoteTimeCounter = 0;
@@ -204,13 +239,36 @@ public class PlayerController : MonoBehaviour
 
                 // 점프 애니메이션 트리거 및 플레이어 높이 조절
                 PlayerJumpHeightAnim(playerAnimator.SetJumpTrigger());
+
+                PlayerAudioController.PlayerAudioPlay(AudioName.PlayerJump);
             }
         }
 
-        // 만약 캐릭터가 지상 위에 있다면
-        if (characterController.isGrounded)
+        // 만약 캐릭터가 무언가 위에 있지만 점프할 수 있는 Ground가 아닐 경우
+        if (playerGroundChecker.IsColliderBelow && !playerGroundChecker.IsGrounded)
         {
-            // 캐릭터가 떨어지고 있거나 가만히 있을 때
+            // 중력 적용
+            velocityY = Mathf.Clamp(velocityY + Time.deltaTime * gravity, -10f, 1000f);
+
+            // 애니메이터에게 땅 위 없다고 알린다
+            playerAnimator.SetIsGround(false);
+
+            // 코요테 타임 감소
+            coyoteTimeCounter -= Time.deltaTime;
+        }
+        else if (!playerGroundChecker.IsColliderBelow)
+        {
+            // 중력 적용
+            velocityY += Time.deltaTime * gravity;
+
+            // 애니메이터에게 땅 위 없다고 알린다
+            playerAnimator.SetIsGround(false);
+
+            // 코요테 타임 감소
+            coyoteTimeCounter -= Time.deltaTime;
+        }
+        else if (playerGroundChecker.IsGrounded)
+        {
             if (velocityY <= 0f)
             {
                 // velocityY를 0으로 초기화
@@ -222,17 +280,24 @@ public class PlayerController : MonoBehaviour
                 // 땅 위에 있으므로 피벗을 standPivotHeight 위치로 적용한다
                 pivotLocalPosition.y = standPivotHeight;
                 playerPivotTransform.localPosition = pivotLocalPosition;
-            }
 
-            // 코요테 타임 갱신
-            coyoteTimeCounter = coyoteTime;
+                // 코요테 타임 갱신
+                coyoteTimeCounter = coyoteTime;
+            }
         }
 
+        /*
         // 만약 캐릭터가 땅 위에 없다면
         else
         {
             // 코요테 타임 감소
             coyoteTimeCounter -= Time.deltaTime;
+
+            // 중력 적용
+            velocityY += Time.deltaTime * gravity;
+
+            // 애니메이터에게 땅 위에 없다고 알림
+            playerAnimator.SetIsGround(false);
 
             // 만약 아래에 맞는 오브젝트가 없다면
             if (playerGroundChecker.IsColliderBelow)
@@ -245,6 +310,24 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        // 캐릭터가 떨어지고 있거나 가만히 있을 때
+        if (velocityY <= 0f)
+        {
+            // velocityY를 0으로 초기화
+            velocityY = 0;
+
+            // 애니메이터에게 땅 위에 있다고 알린다
+            playerAnimator.SetIsGround(true);
+
+            // 땅 위에 있으므로 피벗을 standPivotHeight 위치로 적용한다
+            pivotLocalPosition.y = standPivotHeight;
+            playerPivotTransform.localPosition = pivotLocalPosition;
+        }
+
+        // 코요테 타임 갱신
+        coyoteTimeCounter = coyoteTime;
+*/
+
         #endregion
         #region velocity 값 갱신
 
@@ -253,9 +336,6 @@ public class PlayerController : MonoBehaviour
         // 제한을 둔 후인 currMagnitude 값을 만든다
         float prevMagnitude = new Vector2(velocityX, velocityZ).magnitude;
         float currMagnitude = prevMagnitude > moveSpeedLimit ? moveSpeedLimit : prevMagnitude;
-
-        // 만약 벡터 크기의 값이 이동속도보다 크다면 벡터 크기 값을 이동속도 값으로 초기화 한다
-        // if (prevMagnitude > moveSpeedLimit) prevMagnitude = moveSpeedLimit; // TODO 확인
 
         velocity.Set(
             prevMagnitude > float.Epsilon ? (velocityX / prevMagnitude) * currMagnitude * shoesSpeed : 0f,
@@ -324,6 +404,9 @@ public class PlayerController : MonoBehaviour
 
         // Animator 이동속도 값 제공
         animMoveSpeedSetAction?.Invoke(currMagnitude);
+
+        // AudioController 값 제공
+        audioMoveValueAddAction?.Invoke(!isCrouch ? currMagnitude : currMagnitude * crouchRatioSpeed);
 
         // 서있을 때의 이동 적용
         if (!isCrouch)
@@ -473,6 +556,16 @@ public class PlayerController : MonoBehaviour
     {
         animMoveSpeedSetAction -= action;
     }
-
+    #region 플레이어 오디오 컨트롤러 Action 바인드
     #endregion
+    public void BindToPlayerAudioController(Action<float> action)
+    {
+        audioMoveValueAddAction += action;
+    }
+    public void UnbindFromAudioController(Action<float> action)
+    {
+        audioMoveValueAddAction -= action;
+    }
+    #endregion
+
 }

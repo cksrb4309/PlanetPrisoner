@@ -27,12 +27,9 @@ public class HomeColliderChecker : MonoBehaviour
         {
             if (collider.bounds.Contains(position))
             {
-                Debug.Log("In");
                 return true;
             }
         }
-
-        Debug.Log("Out");
 
         return false;
     }

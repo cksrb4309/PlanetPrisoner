@@ -28,4 +28,15 @@ public class M_EyeGroupHelper : MonoBehaviour
     {
         if (combatEye != null) patrolEye.SetPartnerDie(); // 전투 Eye 사망처리
     }
+    private void OnEnable()
+    {
+        NextDayController.Subscribe(DestroyMonster, ActionType.NextDayTransition);
+        NextDayController.Subscribe(DestroyMonster, ActionType.GameOverTransition);
+    }
+    private void OnDisable()
+    {
+        NextDayController.Unsubscribe(DestroyMonster, ActionType.NextDayTransition);
+        NextDayController.Unsubscribe(DestroyMonster, ActionType.GameOverTransition);
+    }
+    void DestroyMonster() => Destroy(gameObject);
 }

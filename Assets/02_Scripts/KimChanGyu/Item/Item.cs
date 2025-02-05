@@ -7,19 +7,32 @@ public class Item : MonoBehaviour, IInteractable
 
     public ItemData itemData = null; // 아이템 정보
 
-    public Transform rayStartPosition;
+    [SerializeField] Transform rayStartPosition;
+
+    [SerializeField] float offsetY;
 
     protected new MeshRenderer renderer = null; // 렌더러
     protected new Collider collider = null; // 콜라이더
 
     protected ScanResultDisplay scanResultDisplay = null;
 
-    bool isSubscribed = false;
+    protected bool isSubscribed = false;
 
+    bool isInitialized = false;
     private void Start()
     {
+        Init();
+    }
+    void Init()
+    {
+        if (isInitialized) return;
+
+        isInitialized = true;
+
         // GetComponent로 필요한 클래스 참조 가져오기
-        collider = GetComponentInChildren<Collider>();
+        collider = GetComponent<Collider>();
+        if (collider == null) collider = GetComponentInChildren<Collider>();
+
         renderer = GetComponentInChildren<MeshRenderer>();
 
         scanResultDisplay = GetComponentInChildren<ScanResultDisplay>();
@@ -79,6 +92,8 @@ public class Item : MonoBehaviour, IInteractable
     }
     public virtual void Activate() // 활성화
     {
+        Init();
+
         // 부모 해제
         transform.parent = null;
 
@@ -101,12 +116,13 @@ public class Item : MonoBehaviour, IInteractable
     protected IEnumerator DropItemCoroutine()
     {
         LayerMask layerMask = LayerMask.GetMask("Ground");
+        layerMask |= LayerMask.GetMask("Default");
 
         Ray ray = new Ray(rayStartPosition.position, Vector3.down);
 
         if (Physics.Raycast(ray, out RaycastHit hitInfo, 100f, layerMask))
         {
-            float goal = hitInfo.point.y + (ray.origin.y - transform.position.y);
+            float goal = hitInfo.point.y - offsetY;
 
             float positionY = transform.position.y;
 
@@ -125,6 +141,10 @@ public class Item : MonoBehaviour, IInteractable
             position.y = goal;
 
             transform.position = position;
+        }
+        else
+        {
+
         }
     }
     public virtual bool IsGetItem() => true;

@@ -1,13 +1,13 @@
-using TMPro;
-using UnityEditor;
-using UnityEngine;
+//using TMPro;
+//using UnityEditor;
+//using UnityEngine;
 
-public class TextFontSetting : MonoBehaviour, IConfigurable
-{
-    public void Configure(UISettings setting)
-    {
-        GetComponent<TMP_Text>().font = setting.fontAsset;
+//public class TextFontSetting : MonoBehaviour, IConfigurable
+//{
+//    public void Configure(UISettings setting)
+//    {
+//        GetComponent<TMP_Text>().font = setting.fontAsset;
 
-        EditorUtility.SetDirty(GetComponent<TMP_Text>());
-    }
-}
+//        EditorUtility.SetDirty(GetComponent<TMP_Text>());
+//    }
+//}

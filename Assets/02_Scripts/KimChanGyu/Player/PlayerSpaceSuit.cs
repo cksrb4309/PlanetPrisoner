@@ -53,8 +53,10 @@ public class PlayerSpaceSuit : MonoBehaviour, IDamagable
         {
             Debug.LogWarning("Bloom 효과를 찾을 수 없습니다.");
         }
-
-        bloom.tint.Override(Color.white);
+        else
+        {
+            bloom.tint.Override(Color.white);
+        }
     }
     public void Damaged(float damage)
     {
@@ -115,10 +117,12 @@ public class PlayerSpaceSuit : MonoBehaviour, IDamagable
     private void OnEnable()
     {
         NextDayController.Subscribe(Initilaize, ActionType.NextDayReady);
+        NextDayController.Subscribe(Initilaize, ActionType.SurviveTransition);
     }
     private void OnDisable()
     {
         NextDayController.Unsubscribe(Initilaize, ActionType.NextDayReady);
+        NextDayController.Unsubscribe(Initilaize, ActionType.SurviveTransition);
     }
     void Initilaize()
     {

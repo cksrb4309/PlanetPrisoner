@@ -16,6 +16,7 @@ public class TitleManager : MonoBehaviour
     public void Start()
     {
         StartCoroutine(GameStartDelayCoroutine());
+        CursorController.EnableCursor();
     }
     IEnumerator GameStartDelayCoroutine()
     {
@@ -38,6 +39,8 @@ public class TitleManager : MonoBehaviour
         alphaControlGroup.alpha = 1f;
 
         interactableGroup.interactable = true;
+
+        CursorController.EnableCursor();
     }
     
     public void SceneLoad()
@@ -47,26 +50,6 @@ public class TitleManager : MonoBehaviour
         isSceneMove = true;
 
         NextDayController.SceneStart();
-    }
-    IEnumerator SceneLoadCoroutine(string sceneName)
-    {
-        interactableGroup.interactable = false;
-
-        float alpha = 1;
-
-        while (alpha > 0)
-        {
-            alpha -= Time.deltaTime * fadeSpeed;
-
-            alphaControlGroup.alpha = alpha;
-
-            yield return null;
-        }
-        alphaControlGroup.alpha = 0;
-
-        yield return new WaitForSeconds(1f);
-
-        SceneManager.LoadScene(sceneName);
     }
     public void ExitGame()
     {

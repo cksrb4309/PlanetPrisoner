@@ -25,6 +25,10 @@ public class BearTrap : Item
     }
 
     public MeshRenderer meshRenderer;
+    
+    [SerializeField] AudioClip trapInstallAudioClip;
+
+    AudioSource audioSource;
 
     Material material;
 
@@ -44,9 +48,21 @@ public class BearTrap : Item
         material.SetFloat("_TrapOpenAmount", 0.5f);
 
         helper = GetComponentInChildren<BearTrapHelper>();
+
+        audioSource = GetComponent<AudioSource>();
     }
     public void ActivateTrap()
     {
+        if (!isSubscribed)
+        {
+            if (!HomeColliderChecker.Instance.IsObjectInsideBox(transform.position))
+            {
+                NextDayController.Subscribe(ItemDestroy, ActionType.NextDayTransition);
+
+                isSubscribed = true;
+            }
+        }
+
         // 부모 해제
         transform.parent = null;
 
@@ -92,6 +108,8 @@ public class BearTrap : Item
         }
         else if (isBeingSet)
         {
+            audioSource.PlayOneShot(trapInstallAudioClip);
+
             currInstallCount++;
 
             material.SetFloat("_TrapOpenAmount", ((float)currInstallCount / (float)needInstallCount));
@@ -117,4 +135,17 @@ public class BearTrap : Item
         isSet = false;
     }
     public override bool IsGetItem() => !isBeingSet && !isSet;
+    private void OnDisable()
+    {
+        if (isSubscribed)
+        {
+            isSubscribed = false;
+
+            NextDayController.Unsubscribe(ItemDestroy, ActionType.NextDayTransition);
+        }
+    }
+    void ItemDestroy()
+    {
+        Destroy(gameObject);
+    }
 }

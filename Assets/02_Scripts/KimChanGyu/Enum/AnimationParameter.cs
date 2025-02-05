@@ -12,4 +12,6 @@ public enum AnimationParameter
     AttackItem,
     Waist,
     HoldFlashLight,
+    PlayerDie,
+    PlayerAlive,
 }

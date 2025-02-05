@@ -43,8 +43,6 @@ public class ScanResultDisplay : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("확 인 " + Random.value.ToString());
-
         if (other.CompareTag("Player") && isExplain)
             explainGroup.alpha = 1f;
     }
@@ -78,22 +76,27 @@ public class ScanResultDisplay : MonoBehaviour
         isDisplay = true;
     }
     public void EnableDisplay() => isDisplay = true;
-    public void DisableDisplay() => isDisplay = false;
+    public void DisableDisplay()
+    {
+        isDisplay = false;
+            
+        if (displayCoroutine != null)
+        {
+            StopCoroutine(displayCoroutine);
+
+            displayCoroutine = null;
+
+            t = duration;
+        }
+    }
     public void OnDisplay()
     {
-        Debug.Log("OnDisplay A :" + transform.parent.gameObject.name);
-
         if (!isDisplay) return;
-
-        Debug.Log("OnDisplay B : " + transform.parent.gameObject.name);
 
         t = 0;
 
         if (displayCoroutine == null)
         {
-
-            Debug.Log("OnDisplay C : " + transform.parent.gameObject.name);
-
             displayCoroutine = StartCoroutine(DisplayCoroutine());
         }
     }
@@ -123,7 +126,5 @@ public class ScanResultDisplay : MonoBehaviour
         mainGroup.alpha = 0;
 
         displayCoroutine = null;
-
-        Debug.Log("OnDisplay D : " + transform.parent.gameObject.name);
     }
 }

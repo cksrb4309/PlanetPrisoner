@@ -11,18 +11,25 @@ public class ButtonImageSetting : MonoBehaviour, IConfigurable
     [SerializeField] float fadeDuration = 0.2f;
     [SerializeField] float speed;
 
+    [SerializeField] bool isNextDayControllerButton = false;
+
     Color color = Color.white;
 
     Coroutine currCoroutine = null;
 
     Image image = null;
 
+    AudioSource audioSource = null;
 
     private void Awake()
     {
         image = GetComponent<Image>();
 
+        image.color = isNextDayControllerButton ? settings.redImageExitColor : settings.imageExitColor;
+
         speed = 1f / fadeDuration;
+
+        audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     public void OnColorChange(int order)
@@ -33,21 +40,25 @@ public class ButtonImageSetting : MonoBehaviour, IConfigurable
         
         if (order == (int)EventType.Enter) 
         {
-            changeColor = settings.imageExitColor;
+            audioSource.PlayOneShot(settings.buttonEnterClip);
+
+            changeColor = isNextDayControllerButton ? settings.redImageExitColor: settings.imageExitColor;
 
             image.sprite = settings.normalButtonSprite;
         }
 
         else if (order == (int)EventType.Exit) 
         {
-            changeColor = settings.imageEnterColor;
+            changeColor = isNextDayControllerButton ? settings.redImageEnterColor : settings.imageEnterColor;
 
             image.sprite = settings.highlightedButtonSprite;
         }
 
-        else if (order == (int)EventType.Down) 
+        else if (order == (int)EventType.Down)
         {
-            changeColor = settings.imageDownColor;
+            audioSource.PlayOneShot(settings.buttonDownClip);
+
+            changeColor = isNextDayControllerButton ? settings.redImageDownColor : settings.imageDownColor;
 
             image.sprite = settings.pressedButtonSprite;
         }
@@ -62,7 +73,7 @@ public class ButtonImageSetting : MonoBehaviour, IConfigurable
 
         while (t < 1f)
         {
-            t += Time.deltaTime * speed;
+            t += Time.unscaledDeltaTime * speed;
 
             color = Color.Lerp(currColor, changeColor, t);
 
@@ -74,14 +85,23 @@ public class ButtonImageSetting : MonoBehaviour, IConfigurable
     }
     public void Configure(UISettings settings)
     {
-        GetComponent<Image>().color = settings.imageExitColor;
-        fadeDuration = settings.imageColorFadeDuration;
-        speed = 1f / fadeDuration;
-        GetComponent<Image>().sprite = settings.normalButtonSprite;
+        //Image editImage = GetComponent<Image>();
 
-        this.settings = settings;
+        //if (isNextDayControllerButton)
+        //    editImage.color = settings.imageExitColor;
+        
+        //else
+        //    editImage.color = settings.imageExitColor;
+        
+        //editImage.sprite = settings.normalButtonSprite;
 
-        UnityEditor.EditorUtility.SetDirty(GetComponent<Image>());
+        //fadeDuration = settings.imageColorFadeDuration;
+        //speed = 1f / fadeDuration;
+
+        //this.settings = settings;
+
+        //UnityEditor.EditorUtility.SetDirty(editImage);
+        //UnityEditor.EditorUtility.SetDirty(this);
     }
 }
 

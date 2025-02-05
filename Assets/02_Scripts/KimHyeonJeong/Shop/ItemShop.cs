@@ -12,30 +12,20 @@ public class ItemShop : MonoBehaviour
     [SerializeField] Image oxygenTankForeground;
     [SerializeField] Transceiver transceiver;
 
-    [SerializeField] Vector3 itemSpawnPosition;
+    [SerializeField] Transform itemSpawnPosition;
 
     [SerializeField] List<GameObject> itemPrefabs = new List<GameObject>();
 
-    void Start()
-    {
-        itemSpawnPosition = new Vector3(2.1f, 0.8f, -1.3f);
-    }
-
-    
-    void Update()
-    {
-        
-    }
-
     public void OnClickedXbutton() // 상점 닫기 클릭
     {
-        if (transceiver != null)
-        {
-            transceiver.TurnOffEmission();
-        }
+        if (transceiver != null) transceiver.TurnOffEmission();
+
         shopUI.SetActive(false);
         inGameUI.SetActive(true);
-        //player.canMove = true;
+
+        player.EnableMovement();
+
+        CursorController.DisableCursor();
     }
 
     public void OnClickedFlashlight() // 손전등 아이템 클릭
@@ -49,7 +39,7 @@ public class ItemShop : MonoBehaviour
         // 아이템을 SpawnPosition에 생성
         if (itemPrefabs.Count > 0) // itemPrefabs 리스트에 아이템이 있는지 확인
         {
-            Instantiate(itemPrefabs[0], itemSpawnPosition, Quaternion.identity);
+            Instantiate(itemPrefabs[0], itemSpawnPosition.position, Quaternion.identity);
         }
     }
 
@@ -64,7 +54,7 @@ public class ItemShop : MonoBehaviour
         // 아이템을 SpawnPosition에 생성
         if (itemPrefabs.Count > 0) // itemPrefabs 리스트에 아이템이 있는지 확인
         {
-            Instantiate(itemPrefabs[1], itemSpawnPosition, Quaternion.identity);
+            Instantiate(itemPrefabs[1], itemSpawnPosition.position, Quaternion.identity);
         }
     }
 
@@ -79,7 +69,7 @@ public class ItemShop : MonoBehaviour
         // 아이템을 SpawnPosition에 생성
         if (itemPrefabs.Count > 0) // itemPrefabs 리스트에 아이템이 있는지 확인
         {
-            Instantiate(itemPrefabs[2], itemSpawnPosition, Quaternion.identity);
+            Instantiate(itemPrefabs[2], itemSpawnPosition.position, Quaternion.identity);
         }
     }
 
@@ -94,7 +84,7 @@ public class ItemShop : MonoBehaviour
         // 아이템을 SpawnPosition에 생성
         if (itemPrefabs.Count > 0) // itemPrefabs 리스트에 아이템이 있는지 확인
         {
-            Instantiate(itemPrefabs[3], itemSpawnPosition, Quaternion.identity);
+            Instantiate(itemPrefabs[3], itemSpawnPosition.position, Quaternion.identity);
         }
     }
 

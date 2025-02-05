@@ -30,6 +30,8 @@ public class PlayerItemHandler : MonoBehaviour
 
     bool isItemUsing = false; // 아이템 사용 중 트리거 변수
 
+    bool isEnabled = false;
+
     int currentSelectedIndex = 0; // 현재 선택 중인 아이템
     int beforeSelectedIndex = 0; // 이전에 선택하던 아이템
     int maxSelectedIndex = 5; // 선택할 수 있는 아이템 최대 인덱스
@@ -62,6 +64,14 @@ public class PlayerItemHandler : MonoBehaviour
         itemSelectHotkey3.action.Enable();
         itemSelectHotkey4.action.Enable();
         itemSelectHotkey5.action.Enable();
+
+        NextDayController.Subscribe(EnableItemHandler, ActionType.FirstGameFinished);
+        NextDayController.Subscribe(EnableItemHandler, ActionType.NextDayFinished);
+        NextDayController.Subscribe(EnableItemHandler, ActionType.SurviveFinished);
+        NextDayController.Subscribe(DisableItemHandler, ActionType.OnPlayerDie);
+        NextDayController.Subscribe(DisableItemHandler, ActionType.NextDayReady);
+
+        NextDayController.Subscribe(ItemDrop, ActionType.SurviveTransition);
     }
     private void OnDisable()
     {
@@ -74,9 +84,40 @@ public class PlayerItemHandler : MonoBehaviour
         itemSelectHotkey3.action.Disable();
         itemSelectHotkey4.action.Disable();
         itemSelectHotkey5.action.Disable();
+
+        NextDayController.Unsubscribe(EnableItemHandler, ActionType.FirstGameFinished);
+        NextDayController.Unsubscribe(EnableItemHandler, ActionType.NextDayFinished);
+        NextDayController.Unsubscribe(EnableItemHandler, ActionType.SurviveFinished);
+        NextDayController.Unsubscribe(DisableItemHandler, ActionType.OnPlayerDie);
+        NextDayController.Unsubscribe(DisableItemHandler, ActionType.NextDayReady);
+
+        NextDayController.Unsubscribe(ItemDrop, ActionType.SurviveTransition);
+    }
+    void EnableItemHandler() => isEnabled = true;
+    void DisableItemHandler() => isEnabled = false;
+    void ItemDrop()
+    {
+        for (int index = 0; index < maxSelectedIndex; index++)
+        {
+            Item dropItem = PlayerInventory.Instance.GetItemFromInventory(index);
+
+            if (dropItem != null)
+            {
+                PlayerInventory.Instance.RemoveItem(currentSelectedIndex);
+
+                playerAnimator.SetItemChangeTrigger(AnimationParameter.NoItem);
+
+                dropItem.transform.position = PlayerOxygen.DeadPosition + Vector3.up * 0.5f;
+
+                // 아이템 오브젝트 활성화 !
+                selectedItem.Activate();
+            }
+        }
     }
     public void Update()
     {
+        if (!isEnabled) return;
+
         #region 아이템 드랍 입력
 
         // 아이템 사용 중이라면 사용 중인 아이템을 버리지 못하도록 리턴

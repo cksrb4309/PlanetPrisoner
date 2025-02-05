@@ -2,27 +2,31 @@
 using TMPro;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class InGameTime : MonoBehaviour
 {
-    [SerializeField] GameManager gameManager;
-
     [SerializeField] Light directionalLight;
-    [SerializeField] TMP_Text timeText;
-    [SerializeField] GameObject skipNight;
+    [SerializeField] TextSet timeText;
 
     [SerializeField] float inGameTime;
     [SerializeField] float timeCounter;
-    float updateInterval = 30f;
+    [SerializeField] float morningTime = 25200f; // 07:00
+
+    [SerializeField] float updateInterval = 30f;
 
     [SerializeField] RequiredQuest requiredQuest;
 
     [SerializeField] CanvasGroup fadeUI;
     [SerializeField] TMP_Text d_dayText;
 
+    [SerializeField] DayChangeInteractable dayChangeInteractable;
+
+    [SerializeField] float timeSpeed = 60f;
+
     void Start()
     {
-        inGameTime = 23 * 3600; // 07:00
+        inGameTime = morningTime; // 07:00
         timeCounter = 0;
         UpdateTimeText();
     }
@@ -30,27 +34,42 @@ public class InGameTime : MonoBehaviour
     void Update()
     {
         timeCounter += Time.deltaTime;
-        inGameTime += Time.deltaTime * 60; // 60배 빠르게 시간흐름
+        inGameTime += Time.deltaTime * timeSpeed;
+
         if (timeCounter >= updateInterval)
         {
             timeCounter = 0;
             UpdateTimeText();
-        }
+            MonsterSpawnManager.Instance.OnCheckMonsterSpawn(inGameTime);
 
-        if(inGameTime >= 79200) // 오후 10시 지나면
-        {
-            skipNight.SetActive(true); // SkipNight버튼 활성화
+            if (inGameTime >= 79200)
+            {
+                Debug.Log("79200 확인 : " + inGameTime.ToString());
+
+                dayChangeInteractable.EnableSleepTime();
+            }
         }
 
         if (inGameTime >= 86400) // 24시간 지나면
         {
-            inGameTime = 0f; // 시간 초기화
-            skipNight.SetActive(false); // SkipNight버튼 비활성화
-            UpdateTimeText();
-            DayChangeSetting();
+            inGameTime = 0;
+
+            GameManager.d_days--;
+
+            StartCoroutine(FadeInOutCoroutine(2f));
         }
 
         UpdateLightPosition();
+    }
+
+    public void SurviveNextFadeInOut()
+    {
+        inGameTime = 0f; // 시간 초기화
+        StartCoroutine(FadeInOutCoroutine(2f, false));
+    }
+    public void NextDayFadeInOut()
+    {
+        StartCoroutine(FadeInOutCoroutine(2f));
     }
 
     void UpdateTimeText()
@@ -58,7 +77,8 @@ public class InGameTime : MonoBehaviour
         // InGameUI속 시간 text 설정
         int hours = Mathf.FloorToInt(inGameTime / 3600);
         int minutes = Mathf.FloorToInt((inGameTime % 3600) / 60);
-        timeText.text = string.Format("{0:D2}:{1:D2}", hours, minutes);
+
+        timeText.Set(string.Format("{0:D2}:{1:D2}", hours, minutes));
     }
 
     void UpdateLightPosition()
@@ -70,73 +90,110 @@ public class InGameTime : MonoBehaviour
         directionalLight.transform.rotation = Quaternion.Euler(rotationAngle, 0, 0);
     }
     #region 날짜와 퀘스트 셋팅
-    void DayChangeSetting()
+    public void DayChangeSetting()
     {
-        if (gameManager.d_days > 0)
+        if (GameManager.d_days == 0)
         {
-            gameManager.d_days -= 1;
-            if (gameManager.d_days == 0)
-            {
-                d_dayText.text = "D - day";
-
-            }
-            else
-            {
-                d_dayText.text = $"D - {gameManager.d_days}";
-            }
-
-            StartCoroutine(FadeInOutCoroutine(1f)); // d-day화면 fadeIn/out
+            // TODO : 씬 변경
+            SceneManager.LoadScene("EndingScene");
         }
         else
         {
-            // TODO : 씬 변경
-        }
+            if (requiredQuest.questCompeleted) // 퀘스트 성공했는지 여부
+            {
+                PlayerOxygen.SetPenalty(1); // 산소 정상화
+            }
+            else
+            {
+                PlayerOxygen.SetPenalty(1.35f); // 산소 패널티
+            }
 
-        if (requiredQuest.questCompeleted) // 퀘스트 성공했는지 여부
-        {
-            PlayerOxygen.SetPenalty(1.5f); // 산소가 1.5배 빠르게 닳도록 패널티
         }
         requiredQuest.UpdateQuest(); // 퀘스트 업데이트
+
+        inGameTime = morningTime;
+        timeCounter = 0f;
+        dayChangeInteractable.DisableSleepTime();
     }
     #endregion
 
-    public void OnClickedSkipNight()
-    {
-        inGameTime = 7 * 3600; // 오전 7시로 변경
-        UpdateTimeText();
-        DayChangeSetting();
-        skipNight.SetActive(false); // 버튼 비활성화
-    }
-
-
     #region 1초 fadeIn 1초 fadeOut 코루틴
-    IEnumerator FadeInOutCoroutine(float fadeDuration)
+    IEnumerator FadeInOutCoroutine(float fadeDuration, bool isNextDay = true)
     {
+        if (isNextDay)
+        {
+            if (GameManager.d_days == 0)
+                d_dayText.text = "D - day";
+            else
+                d_dayText.text = $"D - {GameManager.d_days}";
+        }
+        else
+        {
+                NextDayController.TriggerEventInvoke(ActionType.OnPlayerDie);
+                d_dayText.text = "Life - " + GameManager.chance.ToString();
+        }
+        
+
         fadeUI.gameObject.SetActive(true);
 
         float fadeCount = 0f;
+
         while (fadeCount < fadeDuration)
         {
             fadeCount += Time.deltaTime; // 시간에 따라 증가
+
             float alpha = Mathf.Clamp01(fadeCount / fadeDuration); // 0에서 1 사이의 값으로 클램프
+
             fadeUI.alpha = alpha; // CanvasGroup의 alpha 값을 설정
+
             yield return null; // 다음 프레임까지 대기
         }
         fadeUI.alpha = 1f;
 
         yield return new WaitForSeconds(2f); // 2초 대기
 
+        if (isNextDay)
+        {
+            NextDayController.TriggerEventInvoke(ActionType.NextDayTransition);
+        }
+        else
+        {
+            NextDayController.TriggerEventInvoke(ActionType.SurviveTransition);
+        }
+
+
         fadeCount = 0f; 
+
         while (fadeCount < fadeDuration)
         {
             fadeCount += Time.deltaTime;
+
             float alpha = Mathf.Clamp01(1 - (fadeCount / fadeDuration));
+
             fadeUI.alpha = alpha;
+
             yield return null;
         }
         fadeUI.alpha = 0f;
 
         fadeUI.gameObject.SetActive(false);
+
+        if (isNextDay)
+        {
+            NextDayController.TriggerEventInvoke(ActionType.NextDayFinished);
+        }
+        else
+        {
+            NextDayController.TriggerEventInvoke(ActionType.SurviveFinished);
+        }
     }
     #endregion
+    private void OnEnable()
+    {
+        NextDayController.Subscribe(DayChangeSetting, ActionType.NextDayTransition);
+    }
+    private void OnDisable()
+    {
+        NextDayController.Unsubscribe(DayChangeSetting, ActionType.NextDayTransition);
+    }
 }

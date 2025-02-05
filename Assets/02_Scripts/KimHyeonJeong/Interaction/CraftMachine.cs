@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using VInspector;
 using static CraftMachine;
-using static PlasticGui.WorkspaceWindow.CodeReview.ReviewChanges.Summary.CommentSummaryData;
 
 public class CraftMachine : MonoBehaviour, IInteractable
 {
@@ -54,7 +53,6 @@ public class CraftMachine : MonoBehaviour, IInteractable
             return totalB.CompareTo(totalA); // 수량이 많은 레시피가 먼저 오도록 정렬
         });
     }
-
     public void Interact()
     {
         foreach (var recipe in recipes) // 정렬된 레시피 돌면서
@@ -64,7 +62,7 @@ public class CraftMachine : MonoBehaviour, IInteractable
                 // 필요한 재료 차감
                 foreach(var ingredient in recipe.ingredients)
                 {
-                    string ingredientName=ingredient.Key.itemData.itemName;
+                    string ingredientName = ingredient.Key.itemData.itemName;
                     int quantityToRemove = ingredient.Value;
 
                     // 리스트에서 해당 아이템 찾아서 제거
@@ -100,6 +98,8 @@ public class CraftMachine : MonoBehaviour, IInteractable
         foreach (var ingredient in recipe.ingredients)
         {
             string ingredientName = ingredient.Key.itemData.itemName; // 아이템의 이름을 가져옴
+
+            Debug.Log("확인 1 : " + transceiver.objectInTransceiver);
 
             // 해당 아이템이 리스트에 있는지 확인하고 수량 계산
             int ingredientCount = transceiver.objectInTransceiver.Count(obj => obj.GetComponent<Item>().itemData.itemName == ingredientName); // 이름으로 수량 확인

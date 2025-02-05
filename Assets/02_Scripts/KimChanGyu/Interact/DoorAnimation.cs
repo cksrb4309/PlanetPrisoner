@@ -14,10 +14,12 @@ public class DoorAnimation : MonoBehaviour, IInteractable
 
     [SerializeField] float speed = 1f;
 
+    [SerializeField] AudioClip doorAudioClip;
+    [SerializeField] AudioSource doorAudioSource;
+
     bool isOpen = false;
 
     [HideInInspector] public float value = 1f;
-
     float Value
     {
         get => value;
@@ -38,7 +40,6 @@ public class DoorAnimation : MonoBehaviour, IInteractable
             pair.isOpen = value;
         }
     }
-
     Coroutine coroutine = null;
     private void Awake()
     {
@@ -51,6 +52,8 @@ public class DoorAnimation : MonoBehaviour, IInteractable
         if (IsOpen) coroutine = StartCoroutine(CloseCoroutine());
 
         else coroutine = StartCoroutine(OpenCoroutine());
+
+        doorAudioSource.PlayOneShot(doorAudioClip);
 
         IsOpen = !IsOpen;
     }

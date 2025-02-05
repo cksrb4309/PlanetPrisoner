@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using UnityEngine;
 
 public class ItemSpawnManager : MonoBehaviour
@@ -8,38 +9,41 @@ public class ItemSpawnManager : MonoBehaviour
     [SerializeField] Transform[] spawnPositions;
     [SerializeField] ItemSpawnData[] itemSpawnDatas;
 
+    public bool isStartSpawn = false;
+
     private void OnEnable()
     {
         NextDayController.Subscribe(SpawnItem, ActionType.NextDayTransition);
+        NextDayController.Subscribe(SpawnItem, ActionType.FirstGameTransition);
     }
     private void OnDisable()
     {
         NextDayController.Unsubscribe(SpawnItem, ActionType.NextDayTransition);
+        NextDayController.Unsubscribe(SpawnItem, ActionType.FirstGameTransition);
+    }
+    private void Start()
+    {
+        if (isStartSpawn) SpawnItem();
     }
     void SpawnItem()
     {
-        foreach (var itemSpawnData in itemSpawnDatas) SpawnItem(itemSpawnData);
-    }
-    void SpawnItem(ItemSpawnData itemSpawnData)
-    {
-        int spawnCount = itemSpawnData.GetRandomCount(UnityEngine.Random.value);
+        List<Transform> spawnPositionList = spawnPositions.ToList();
 
-        List<Transform> spawnTransformList = GetRandomTransform(spawnCount);
-    }
-    List<Transform> GetRandomTransform(int count)
-    {
-        HashSet<Transform> result = new HashSet<Transform>();
-
-        int temp = 0;
-
-        while (result.Count < count)
+        foreach (var itemSpawnData in itemSpawnDatas)
         {
-            if (!result.Add(spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Length)])) temp++;
+            int itemCount = itemSpawnData.GetRandomCount();
 
-            if (temp > 5000f) return result.ToList();
+            for (; itemCount > 0; itemCount--)
+            {
+                int spawnPositionIndex = UnityEngine.Random.Range(0, spawnPositionList.Count);
+
+                Item item = Instantiate(itemSpawnData.itemPrefab, spawnPositionList[spawnPositionIndex].position + Vector3.up * 2f, Quaternion.identity, spawnPositionList[spawnPositionIndex]);
+
+                item.Activate();
+
+                spawnPositionList.RemoveAt(spawnPositionIndex);
+            }
         }
-
-        return result.ToList();
     }
 }
 
@@ -51,5 +55,5 @@ public struct ItemSpawnData
     public int minCount;
     public int maxCount;
 
-    public int GetRandomCount(float value) => (int)Mathf.Lerp(minCount, maxCount, value);
+    public int GetRandomCount() => (int)Mathf.Lerp(minCount, maxCount, UnityEngine.Random.value);
 }

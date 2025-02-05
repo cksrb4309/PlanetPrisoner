@@ -2,29 +2,15 @@
 
 public class GameManager : MonoBehaviour
 {
-    public int d_days;
+    public static GameManager Instance { get; private set; }
 
-    public static GameManager Instance{ get; private set; }
-
-
-    void Awake()
+    public static int d_days = 3;
+    public static int chance = 3;
+    private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
+        d_days = 3;
+        chance = 3;
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
-    private void Start()
-    {
-        d_days = 3; // 예시로 3일
-    }
-
-    void Update()
-    {
-        
     }
 }

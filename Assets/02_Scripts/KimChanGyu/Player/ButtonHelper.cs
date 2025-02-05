@@ -1,6 +1,6 @@
-﻿using UnityEngine;
-using UnityEditor;
-using System.Linq;
+﻿//using UnityEngine;
+//using UnityEditor;
+//using System.Linq;
 
 
 //[CustomEditor(typeof(PlayerSpaceSuit))]
@@ -31,47 +31,47 @@ using System.Linq;
 //            }
 //        }
 //    }
+////}
+//[CustomEditor(typeof(PlayerSpaceSuit))]
+//public class ButtonHelper : Editor
+//{
+//    public override void OnInspectorGUI()
+//    {
+//        DrawDefaultInspector(); // 기존 인스펙터 UI 유지
+
+//        PlayerSpaceSuit targetObject = (PlayerSpaceSuit)target;
+
+//        if (targetObject == null)
+//        {
+//            EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
+//            return;
+//        }
+
+//        if (GUILayout.Button("Hit"))
+//        {
+//            targetObject.Damaged(0.1f);
+//        }
+//    }
 //}
-[CustomEditor(typeof(PlayerSpaceSuit))]
-public class ButtonHelper : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector(); // 기존 인스펙터 UI 유지
 
-        PlayerSpaceSuit targetObject = (PlayerSpaceSuit)target;
+//[CustomEditor(typeof(UISettings))]
+//public class UISettingButton : Editor
+//{
+//    public override void OnInspectorGUI()
+//    {
+//        DrawDefaultInspector(); // 기존 인스펙터 UI 유지
 
-        if (targetObject == null)
-        {
-            EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
-            return;
-        }
+//        UISettings targetObject = (UISettings)target;
 
-        if (GUILayout.Button("Hit"))
-        {
-            targetObject.Damaged(0.1f);
-        }
-    }
-}
+//        if (targetObject == null)
+//        {
+//            EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
+//            return;
+//        }
 
-[CustomEditor(typeof(UISettings))]
-public class UISettingButton : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector(); // 기존 인스펙터 UI 유지
-
-        UISettings targetObject = (UISettings)target;
-
-        if (targetObject == null)
-        {
-            EditorGUILayout.HelpBox("No valid target selected.", MessageType.Warning);
-            return;
-        }
-
-        if (GUILayout.Button("Apply"))
-        {
-            targetObject.Execute();
-        }
-    }
-}
+//        if (GUILayout.Button("Apply"))
+//        {
+//            targetObject.Execute();
+//        }
+//    }
+//}

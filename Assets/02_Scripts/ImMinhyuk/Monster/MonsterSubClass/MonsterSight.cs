@@ -1,5 +1,4 @@
-﻿using log4net.Util;
-using UnityEngine;
+﻿using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
 public class MonsterSight : MonoBehaviour

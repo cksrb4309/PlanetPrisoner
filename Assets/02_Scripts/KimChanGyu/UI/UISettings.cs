@@ -16,9 +16,21 @@ public class UISettings : ScriptableObject
     public Color imageEnterColor;
     public Color imageDownColor;
 
+    public Color redImageExitColor;
+    public Color redImageEnterColor;
+    public Color redImageDownColor;
+
     public Color textExitColor;
     public Color textEnterColor;
     public Color textDownColor;
+
+    public Color redTextExitColor;
+    public Color redTextEnterColor;
+    public Color redTextDownColor;
+
+    [Header("Audio Clips")]
+    public AudioClip buttonEnterClip;
+    public AudioClip buttonDownClip;
 
     [Header("Text Size")]
     public float buttonTextSize;

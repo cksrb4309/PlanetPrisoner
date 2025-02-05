@@ -18,9 +18,17 @@ MonoBehaviour:
   imageExitColor: {r: 0.5529412, g: 0.854902, b: 1, a: 1}
   imageEnterColor: {r: 0.2971698, g: 0.7718887, b: 1, a: 1}
   imageDownColor: {r: 0.5529412, g: 0.71479505, b: 1, a: 1}
+  redImageExitColor: {r: 0.7264151, g: 0, b: 0, a: 1}
+  redImageEnterColor: {r: 0.9803922, g: 0, b: 0, a: 1}
+  redImageDownColor: {r: 0.4716981, g: 0, b: 0, a: 1}
   textExitColor: {r: 0.5529412, g: 0.854902, b: 1, a: 1}
   textEnterColor: {r: 0, g: 0, b: 0, a: 1}
-  textDownColor: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
+  textDownColor: {r: 0.5529412, g: 0.7137255, b: 1, a: 1}
+  redTextExitColor: {r: 0.7254902, g: 0, b: 0, a: 1}
+  redTextEnterColor: {r: 0, g: 0, b: 0, a: 1}
+  redTextDownColor: {r: 0.47058827, g: 0, b: 0, a: 1}
+  buttonEnterClip: {fileID: 8300000, guid: 02ece2f09c0d6524da493207433824c2, type: 3}
+  buttonDownClip: {fileID: 8300000, guid: fd5d8d858294b8447a44d5ad0992f341, type: 3}
   buttonTextSize: 40
   itemNameTextSize: 0.3
   itemExplainTextSize: 0.3

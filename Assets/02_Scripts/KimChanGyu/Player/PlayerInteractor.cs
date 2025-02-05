@@ -13,6 +13,8 @@ public class PlayerInteractor : MonoBehaviour
 
     public float range = 1f;
 
+    bool isEnabled = false;
+
     Ray ray = new Ray();
 
     IInteractable interactable = null;
@@ -20,14 +22,45 @@ public class PlayerInteractor : MonoBehaviour
     private void OnEnable()
     {
         interactionInputAction.action.Enable();
+
+        NextDayController.Subscribe(EnableInteractor, ActionType.FirstGameFinished);
+        NextDayController.Subscribe(EnableInteractor, ActionType.NextDayFinished);
+        NextDayController.Subscribe(EnableInteractor, ActionType.SurviveFinished);
+
+        NextDayController.Subscribe(DisableInteractor, ActionType.NextDayReady);
+        NextDayController.Subscribe(DisableInteractor, ActionType.OnPlayerDie);
     }
     private void OnDisable()
     {
         interactionInputAction.action.Disable();
+
+        NextDayController.Unsubscribe(EnableInteractor, ActionType.FirstGameFinished);
+        NextDayController.Unsubscribe(EnableInteractor, ActionType.NextDayFinished);
+        NextDayController.Unsubscribe(EnableInteractor, ActionType.SurviveFinished);
+
+        NextDayController.Unsubscribe(DisableInteractor, ActionType.NextDayReady);
+        NextDayController.Unsubscribe(DisableInteractor, ActionType.OnPlayerDie);
+    }
+
+    void DisableInteractor()
+    {
+        if (interactable != null)
+        {
+            interactable = null;
+        }
+        interactionGuideTextUI.HideInteractText();
+
+        isEnabled = false;
+    }
+    void EnableInteractor()
+    {
+        isEnabled = true;
     }
 
     private void Update()
     {
+        if (!isEnabled) return;
+
         ray.origin = cameraTransform.position;
         ray.direction = cameraTransform.forward;
         

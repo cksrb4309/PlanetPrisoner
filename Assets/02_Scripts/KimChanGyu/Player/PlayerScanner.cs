@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerScanner : MonoBehaviour
 {
+    static PlayerScanner instance = null;
+
     [SerializeField] InputActionReference scanInputAction;
 
     [SerializeField] float range;
@@ -17,22 +19,43 @@ public class PlayerScanner : MonoBehaviour
 
     [SerializeField] LayerMask layerMask;
 
-    Coroutine cooltimeCoroutine = null;
+    bool isEnabled = false;
+
     Coroutine scanCoroutine = null;
     private void Awake()
     {
         scanEffectTransform.parent = null;
+
+        instance = this;
     }
     private void OnEnable()
     {
         scanInputAction.action.Enable();
+
+        NextDayController.Subscribe(EnableScanner, ActionType.FirstGameFinished);
+        NextDayController.Subscribe(EnableScanner, ActionType.NextDayFinished);
+        NextDayController.Subscribe(EnableScanner, ActionType.SurviveFinished);
+
+        NextDayController.Subscribe(DisableScanner, ActionType.NextDayReady);
+        NextDayController.Subscribe(DisableScanner, ActionType.OnPlayerDie);
     }
     private void OnDisable()
     {
         scanInputAction.action.Disable();
+
+        NextDayController.Unsubscribe(EnableScanner, ActionType.FirstGameFinished);
+        NextDayController.Unsubscribe(EnableScanner, ActionType.NextDayFinished);
+        NextDayController.Unsubscribe(EnableScanner, ActionType.SurviveFinished);
+
+        NextDayController.Unsubscribe(DisableScanner, ActionType.NextDayReady);
+        NextDayController.Unsubscribe(DisableScanner, ActionType.OnPlayerDie);
     }
+    void EnableScanner() => isEnabled = true;
+    void DisableScanner() => isEnabled = false;
     private void Update()
     {
+        if (!isEnabled) return;
+
         if (scanInputAction.action.WasPressedThisFrame())
         {
             if (scanCoroutine == null)
@@ -52,6 +75,8 @@ public class PlayerScanner : MonoBehaviour
     }
     IEnumerator ScanCoroutine(float range)
     {
+        PlayerAudioController.PlayerAudioPlay(AudioName.PlayerScan);
+
         scanEffectTransform.position = cameraTransform.position;
 
         Collider[] searchColliders = Physics.OverlapSphere(scanEffectTransform.position, range, layerMask);

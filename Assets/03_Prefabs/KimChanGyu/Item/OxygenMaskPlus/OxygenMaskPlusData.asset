@@ -18,7 +18,7 @@ MonoBehaviour:
   itemPrice: 1
   itemWeight: 1
   itemDropSpeed: 1
-  itemIconImage: {fileID: 21300000, guid: c33b82aa5373c4e1f8e2d43210c97c45, type: 3}
+  itemIconImage: {fileID: 21300000, guid: 64a6c2ccbb5bd1744bccf94148fbf300, type: 3}
   equipTrigger: 5
   useTrigger: 4
   itemUseAction:

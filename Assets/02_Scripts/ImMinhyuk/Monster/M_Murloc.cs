@@ -35,6 +35,7 @@ public class M_Murloc : Monster
 
     protected override void UpdateIdle()
     {
+        SetAnimDefault();
         // 타게팅이 되어있을 경우 추적한다. 
         if (target != null)
         {
@@ -67,6 +68,11 @@ public class M_Murloc : Monster
                 nextDecisionTime = 0f;
             }
         }
+    }
+
+    protected override void UpdateAttack()
+    {
+        SetAnimFaster();
     }
 
     protected override void UpdateDeath()
@@ -118,13 +124,6 @@ public class M_Murloc : Monster
     public void SetMemberDie(int no)
     {
         groupMurloc[no] = null;
-    }
-
-    // TODO : 동료가 죽었을 때 효과
-    void StatUp()
-    {
-        Stat.attackPower *= 2;
-        Stat.speed *= 2;
     }
 
     // Json에서 스텟을 가져온다.

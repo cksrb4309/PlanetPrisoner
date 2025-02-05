@@ -13,6 +13,10 @@ public class PlayerAnimator : MonoBehaviour
         // Animator 가져오기
         playerAnimator = GetComponentInChildren<Animator>();
     }
+    private void Awake()
+    {
+        playerAnimator = GetComponentInChildren<Animator>();
+    }
     #region PlayerController
     protected virtual void SetMoveSpeed(float value) // 이동속도 값 적용 
     {
@@ -69,10 +73,22 @@ public class PlayerAnimator : MonoBehaviour
     {
         // 함수 구독 시켜놓기
         GetComponent<PlayerController>().BindToPlayerAnimator(SetMoveSpeed);
+
+        NextDayController.Subscribe(PlayerDieSetTrigger, ActionType.OnPlayerDie);
+        NextDayController.Subscribe(PlayerAliveSetTrigger, ActionType.SurviveTransition);
+        NextDayController.Subscribe(PlayerAliveSetTrigger, ActionType.FirstGameTransition);
+        NextDayController.Subscribe(PlayerAliveSetTrigger, ActionType.NextDayTransition);
     }
     protected virtual void OnDisable()
     {
         // 함수 구독 해제하기
         GetComponent<PlayerController>().UnbindFromPlayerAnimator(SetMoveSpeed);
+
+        NextDayController.Unsubscribe(PlayerDieSetTrigger, ActionType.OnPlayerDie);
+        NextDayController.Unsubscribe(PlayerAliveSetTrigger, ActionType.SurviveTransition);
+        NextDayController.Unsubscribe(PlayerAliveSetTrigger, ActionType.FirstGameTransition);
+        NextDayController.Unsubscribe(PlayerAliveSetTrigger, ActionType.NextDayTransition);
     }
+    void PlayerDieSetTrigger() => playerAnimator.SetTrigger(AnimationParameter.PlayerDie.ToString());
+    void PlayerAliveSetTrigger() => playerAnimator.SetTrigger(AnimationParameter.PlayerAlive.ToString());
 }

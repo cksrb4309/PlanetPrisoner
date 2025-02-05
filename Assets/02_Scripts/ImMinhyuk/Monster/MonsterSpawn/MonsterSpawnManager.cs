@@ -1,5 +1,4 @@
-﻿using Codice.Client.BaseCommands;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -18,6 +17,8 @@ public class MonsterSpawnManager : MonoBehaviour
     [SerializeField] List<MonsterSpawnInfo> spawnInfoList;
 
     [SerializeField] GameObject monsterObjectRoot;
+
+    [SerializeField] GameObject[] patrolList; // 몬스터의 패트롤 리스트 지정
 
 
     // 주변에 플레이어가 있는 지 확인할 레이어마스크
@@ -105,6 +106,21 @@ public class MonsterSpawnManager : MonoBehaviour
         else
         {
             Debug.LogWarning("※ 부모 오브젝트가 설정되지 않았습니다. ");
+        }
+
+        // 몬스터의 패트롤 리스트 지정
+        Monster[] monsters = spawnedMonster.GetComponentsInChildren<Monster>();
+
+        if (monsters.Length > 0)
+        {
+            foreach (Monster _monster in monsters)
+            {
+                _monster.SetPatrolList(patrolList);
+            }
+        }
+        else
+        {
+            Debug.LogError("※ 생성된 몬스터에서 Monster 클래스를 찾을 수 없습니다!");
         }
     }
 

@@ -32,8 +32,8 @@ public class M_Stat
     public string name;
     public float hp;
     public float speed;
-    public int attackPower;
-    public int attackRange;
+    public float attackPower;
+    public float attackRange;
     public float sightAngle;
     public float maxSightRange;
     public float minSightRange;
