@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1164164519949207364}
   - component: {fileID: 1336812974813800784}
   - component: {fileID: 2347141822066333716}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TempPlayer
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -103,6 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab2de606a94ee024886b36e7e53d90cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 20
 --- !u!54 &1164164519949207364
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -160,13 +161,13 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 16794387997514240}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: f1ef0443b00b1074ea420546cd67891e, type: 3}
   m_Resource: {fileID: 8300000, guid: f1ef0443b00b1074ea420546cd67891e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.28
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -262,7 +263,7 @@ GameObject:
   - component: {fileID: 4183540355111786863}
   - component: {fileID: 8966992353916907581}
   - component: {fileID: 3152959045908878330}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}

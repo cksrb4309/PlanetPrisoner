@@ -24,8 +24,8 @@ public class MonsterHearing : MonoBehaviour
     }
     /// 디버그용
 
-    private float moveChanceLow = 0.1f; // 작은 소리를 들을 때 트래킹 확률 (낮은 확률)
-    private float moveChanceHigh = 0.5f; // 큰 소리일 들을 때 트래킹 확률 (높은 확률)
+    private float moveChanceLow = 0.2f; // 작은 소리를 들을 때 트래킹 확률 (낮은 확률)
+    private float moveChanceHigh = 0.75f; // 큰 소리일 들을 때 트래킹 확률 (높은 확률)
 
     public void Initialize(Monster _monster)
     {
@@ -93,7 +93,6 @@ public class MonsterHearing : MonoBehaviour
             if (distanceToPlayer < monster.Stat.attackRange)
             {
                 // 로직상 Moving 중일 때만 공격 가능
-                // 유연하지 못해 좋은 로직은 아님..
                 if (monster.State == EState.Moving)
                 {
                     // 소리난 방향으로 회전
