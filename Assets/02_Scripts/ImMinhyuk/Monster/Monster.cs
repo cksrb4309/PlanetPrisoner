@@ -290,7 +290,7 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
     }
 
     // 공격하는 쪽에서 호출할 수 있도록 public으로 뚫어줌
-    public void Damaged(int damage)
+    public void Damaged(float damage)
     {
         Stat.hp -= damage;
         if (Stat.hp < 0)
@@ -303,7 +303,7 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
     {
         // TODO : 트랩 대미지는 N? 1? 0?
         // 아 이걸 협의해야한다고 했던거구나. 일단 1
-        Damaged(1);
+        Damaged(1.0f);
         State = EState.Stun;
     }
 
@@ -374,7 +374,7 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
 
             if (GUILayout.Button("몬스터 체력 감소"))
             {
-                targetObject.Damaged(1);
+                targetObject.Damaged(1.0f);
             }
         }
     }
@@ -395,7 +395,7 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
 
             if (GUILayout.Button("몬스터 체력 감소"))
             {
-                targetObject.Damaged(1);
+                targetObject.Damaged(1.0f);
             }
         }
     }
@@ -416,7 +416,7 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
 
             if (GUILayout.Button("몬스터 체력 감소"))
             {
-                targetObject.Damaged(1);
+                targetObject.Damaged(1.0f);
             }
         }
     }
@@ -437,7 +437,7 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
 
             if (GUILayout.Button("몬스터 체력 감소"))
             {
-                targetObject.Damaged(1);
+                targetObject.Damaged(1.0f);
             }
         }
     }
@@ -459,7 +459,7 @@ public abstract class Monster : MonoBehaviour, IDamagable, ITrapable
 
             if (GUILayout.Button("몬스터 체력 감소"))
             {
-                targetObject.Damaged(1);
+                targetObject.Damaged(1.0f);
             }
         }
     }
