@@ -84,6 +84,8 @@ public class ScanResultDisplay : MonoBehaviour
         {
             StopCoroutine(displayCoroutine);
 
+            mainGroup.alpha = 0f;
+
             displayCoroutine = null;
 
             t = duration;

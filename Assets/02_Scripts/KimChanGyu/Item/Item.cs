@@ -82,13 +82,13 @@ public class Item : MonoBehaviour, IInteractable
     }
     public virtual void ConsumeItem()
     {
-        renderer.enabled = false;
-        collider.enabled = false;
-        transform.parent = null;
+        //renderer.enabled = false;
+        //collider.enabled = false;
+        //transform.parent = null;
 
-        scanResultDisplay.DisableDisplay();
+        //scanResultDisplay.DisableDisplay();
 
-        //Destroy(gameObject);
+        Destroy(gameObject);
     }
     public virtual void Activate() // 활성화
     {

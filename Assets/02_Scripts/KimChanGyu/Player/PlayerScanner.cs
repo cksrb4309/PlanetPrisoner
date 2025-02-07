@@ -79,6 +79,8 @@ public class PlayerScanner : MonoBehaviour
 
         scanEffectTransform.position = cameraTransform.position;
 
+        yield return null;
+
         Collider[] searchColliders = Physics.OverlapSphere(scanEffectTransform.position, range, layerMask);
 
         List<(float, Collider)> distances = new List<(float, Collider)>();
@@ -97,6 +99,9 @@ public class PlayerScanner : MonoBehaviour
             for (; currIndex < distances.Count; currIndex++)
             {
                 if (currRange < distances[currIndex].Item1) break;
+
+                Debug.Log(distances[currIndex].Item2.gameObject.name);
+                Debug.Log(distances[currIndex].Item2.GetComponentInChildren<ScanResultDisplay>() == null ? "NULL" : "Not NULL");
 
                 distances[currIndex].Item2.GetComponentInChildren<ScanResultDisplay>().OnDisplay();
             }
