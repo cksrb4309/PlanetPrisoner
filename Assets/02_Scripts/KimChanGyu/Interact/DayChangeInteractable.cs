@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DayChangeInteractable : MonoBehaviour, IInteractable
 {
-    public string TooltipText => sleepTimeTrigger ? "잠 자기 [E]" : "";
+    public string TooltipText => "잠 자기 [E]";
 
     [SerializeField] InGameTime inGameTime;
 
@@ -12,7 +12,13 @@ public class DayChangeInteractable : MonoBehaviour, IInteractable
     bool isTriggered = false;
     public void Interact()
     {
-        if (!sleepTimeTrigger) return;
+        if (!sleepTimeTrigger) 
+        {
+            NotificationTextUI.Instance.NotificationText("23:00부터 잘 수 있습니다");
+
+            return;
+        }
+
 
         if (isTriggered) return;
 
